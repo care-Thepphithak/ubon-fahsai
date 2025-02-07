@@ -1,3 +1,25 @@
-<div class="my-6 w-full bg-amber-100">
-    <%= button_helper("เพิ่มรูปภาพ", icon: "plus", size: 'lg', css_class: 'w-full', onclick: "alert('Hello from Rails!')") %>
+<div class="h-svh w-full flex flex-col items-center py-6 justify-between border" data-controller="report">
+    <div class="w-[90%] relative text-center">
+        <%= button_helper("ย้อนกลับ", icon: "angle-left", size: 'lg', variant: 'plain', css_class: 'absolute px-0 top-0 left-0') %>
+        <h1 class="text-2xl font-bold text-[#FF6159]">รายงานไฟไหม้</h1>
+        <p class="text-base text-gray-500">ตำบลในเมือง อำเภอเมือง</p>
+        <p class="text-sm text-gray-500">27 มกราคม 2567 เวลา 13:00 น.</p>
+    </div>
+
+    <div class="w-[90%] mt-6">
+        <p class="block text-base mb-2 text-gray-400">เลือกแล้ว 0 รูปภาพ</p>
+        <div class="flex mb-6 gap-4" data-target="report.previewImages">
+            <!-- Image preview will be here -->
+            <i class="w-64 h-96 m-2 bg-gray-100 rounded-lg flex items-center justify-center">
+                <i class="fas fa-camera text-5xl text-gray-300"></i>
+            </i>
+        </div>
+  
+        <%= button_helper("เพิ่มรูปภาพ", icon: "plus", size: 'lg', css_class: 'w-full', onclick: "document.getElementById('images').click()") %>
+        <input type="file" id="images" name="images[]" multiple class="hidden" data-target="report.imagesInput" />
+    </div>
+
+    <div class="flex justify-end w-[90%]">
+        <%= button_helper("ถัดไป", iconEnd: "angle-right", size: 'lg', variant: 'plain') %>
+    </div>
 </div>
