@@ -8,4 +8,54 @@
   <%= render "upload_image"%>
 
   <%= link_to "Back to reports", reports_path, class: "ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+
+  <div id="map" style="height: 500px;"></div>
+
+  <script>
+     document.addEventListener("DOMContentLoaded", function() {
+  // ตรวจสอบว่ามี div id="map" หรือไม่
+  const mapElement = document.getElementById('map');
+  if (!mapElement) return;
+
+  // สร้างแผนที่
+  const map = L.map('map').setView([13.736717, 100.523186], 13); // ค่าเริ่มต้น (กรุงเทพฯ)
+
+  // เพิ่มแผนที่ Tile Layer จาก OpenStreetMap
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  // ใช้ Geolocation API เพื่อหาตำแหน่งของผู้ใช้
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+
+        // อัพเดตตำแหน่งของแผนที่
+        map.setView([lat, lng], 15);
+
+        // เพิ่ม Marker
+        const customIcon = L.icon({
+  iconUrl: customIconUrl, // ใช้ตัวแปรจาก Rails
+  iconSize: [40, 40], 
+  iconAnchor: [20, 40], 
+  popupAnchor: [0, -40]
+});
+
+L.marker([lat, lng], { icon: customIcon })
+  .addTo(map)
+  .bindPopup("You are here!")
+  .openPopup();
+      },
+      () => {
+        alert("Geolocation permission denied or unavailable.");
+      }
+    );
+  } else {
+    alert("Geolocation is not supported by this browser.");
+  }
+});
+  </script>
+
 </div>
