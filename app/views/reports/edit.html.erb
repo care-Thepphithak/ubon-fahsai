@@ -1,0 +1,10 @@
+<% content_for :title, "Editing report" %>
+
+<div class="md:w-2/3 w-full">
+  <h1 class="font-bold text-4xl">Editing report</h1>
+
+  <%= render "form", report: @report %>
+
+  <%= link_to "Show this report", @report, class: "ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+  <%= link_to "Back to reports", reports_path, class: "ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+</div>
