@@ -6,17 +6,19 @@
         <p class="text-sm text-gray-500">27 มกราคม 2567 เวลา 13:00 น.</p>
     </div>
 
-    <div class="w-[90%] mt-6">
-        <p class="block text-base mb-2 text-gray-400">เลือกแล้ว 0 รูปภาพ</p>
-        <div class="flex mb-6 gap-4" data-target="report.previewImages">
+    <div class="w-full mt-6">
+        <p class="block text-base w-[90%] mx-auto mb-2 text-gray-400">เลือกแล้ว 0 รูปภาพ</p>
+        <div class="flex w-full px-6 overflow-x-scroll mb-6 gap-5 no-scrollbar" data-target="report.previewImages">
             <!-- Image preview will be here -->
-            <i class="w-64 h-96 m-2 bg-gray-100 rounded-lg flex items-center justify-center">
+            
+            <!-- Show this when no image -->
+            <i class="min-w-64 h-96 m-2 bg-gray-100 rounded-lg flex items-center justify-center">
                 <i class="fas fa-camera text-5xl text-gray-300"></i>
             </i>
         </div>
   
-        <%= button_helper("เพิ่มรูปภาพ", icon: "plus", size: 'lg', css_class: 'w-full', onclick: "document.getElementById('images').click()") %>
-        <input type="file" id="images" name="images[]" multiple class="hidden" data-target="report.imagesInput" />
+        <%= button_helper("เพิ่มรูปภาพ", icon: "plus", size: 'lg', css_class: 'w-[90%] mx-auto', onclick: "document.getElementById('images').click()") %>
+        <input type="file" id="images" name="images[]" multiple class="hidden" data-target="report.imagesInput" data-action="change->report#handleImageUpload" />
     </div>
 
     <div class="flex justify-end w-[90%]">
