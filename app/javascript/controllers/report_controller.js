@@ -12,6 +12,9 @@ export default class extends Controller {
     }
     console.log("Map element found in the DOM");
     this.initializzedMap();
+
+    // Image upload
+    this.selectedFiles = [];
   }
 
   initializzedMap() {
@@ -54,6 +57,55 @@ export default class extends Controller {
 
   }
 
-  // Handle images Input
-  
+  handleImageUpload(event) {
+    const files = Array.from(event.target.files);
+    const previewContainer = this.previewImagesTarget;
+
+    previewContainer.innerHTML = ""; // clear existing images
+
+    if (files.length === 0) {
+      previewContainer.innerHTML = `
+        <i class="min-w-64 h-96 m-2 bg-gray-100 rounded-lg flex items-center justify-center">
+          <i class="fas fa-camera text-5xl text-gray-300"></i>
+        </i>
+      `;
+      return;
+    }
+
+    files.forEach((file, index) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const div = document.createElement("div");
+        div.classList.add("relative");
+
+        const img = document.createElement("img");
+        img.src = e.target.result;
+        img.classList.add("min-w-64", "h-96", "w-64", "object-cover", "rounded-lg", "shadow-md");
+
+        const deleteButton = document.createElement("button");
+        deleteButton.classList.add("absolute", "h-7", "w-7", "top-2", "right-2", "bg-gray-100", "text-gray-500", "rounded-full");
+        deleteButton.dataset.action = "click->report#removeImage";
+        deleteButton.innerHTML = `<i class="fas fa-times"></i>`;
+
+        deleteButton.addEventListener("click", () => this.removeImage(index));
+
+        div.appendChild(img);
+        div.appendChild(deleteButton);
+        previewContainer.appendChild(div);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.querySelector("p.text-gray-400").textContent = `เลือกแล้ว ${files.length} รูปภาพ`;
+  }
+
+  removeImage(index) {
+    this.selectedFiles.splice(index, 1);
+
+    const previewContainer = this.previewImagesTarget;
+    previewContainer.children[index].remove();
+
+    const filesCount = this.selectedFiles.length;
+    document.querySelector("p.text-gray-400").textContent = `เลือกแล้ว ${filesCount} รูปภาพ`;
+  }
 }
