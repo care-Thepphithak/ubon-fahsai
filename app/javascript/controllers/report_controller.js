@@ -4,6 +4,8 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["map"]
 
+  static targets = ["imagesInput", "previewImages"]
+
   connect() {
     console.log("Report controller is connected");
     if (!this.mapTarget) {
@@ -49,4 +51,7 @@ export default class extends Controller {
     }
 
   }
+
+  // Handle images Input
+  
 }
