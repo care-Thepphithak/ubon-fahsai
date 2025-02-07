@@ -2,9 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="report"
 export default class extends Controller {
-  static targets = ["map"]
-
-  static targets = ["imagesInput", "previewImages"]
+  static targets = ["map", "imagesInput", "previewImages"]
 
   connect() {
     console.log("Report controller is connected");
