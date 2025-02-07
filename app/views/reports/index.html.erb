@@ -1,4 +1,5 @@
 <% content_for :title, "New report" %>
+<%= render "upload_image" %>
 <div data-controller="bottom-sheet">
   <!-- Button to Open Modal -->
     <%= button_helper("รายงาน", icon: "plus", size: 'lg', css_class: 'w-full', data: {action: "click->bottom-sheet#open"}) %>
