@@ -31,16 +31,20 @@ export default class extends Controller {
           const customIcon = L.icon({
             iconUrl: customIconUrl, // ใช้ตัวแปรจาก Rails
             iconSize: [20, 30],
-            iconAnchor: [20, 40],
-            popupAnchor: [0, -40]
+            iconAnchor: [10, 0],
+            popupAnchor: [0, 0]
           });
 
-          map.setView([lat, lng], 15);
-          L.marker([lat, lng], { icon: customIcon })
+          const marker = L.marker(map.getCenter(), { icon: customIcon })
             .addTo(map)
             .bindPopup("You are here!")
-            .openPopup();
+            .openPopup();;
 
+          map.on("move", function () {
+            marker.setLatLng(map.getCenter());
+            console.log("Map center moved to", map.getCenter());
+          });
+          map.setView([lat, lng], 15);
         }, () => alert("Geolocation permission denied or unavailable.")
       );
 
