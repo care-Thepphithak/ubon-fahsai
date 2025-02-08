@@ -1,22 +1,6 @@
 name: ubon-fahsai-local
 
 services:
-  web:
-    build: 
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      - SECRET_KEY_BASE=dummy
-      - DATABASE_URL=postgresql://ubon-fahsai-local:postgres@db/ubon-fahsai-local
-    volumes:
-      - .:/myapp
-    ports:
-      - "3000:3000"
-    networks:
-      - database
-    depends_on:
-      - db
-
   db:
     image: postgres:14
     environment:
@@ -31,9 +15,21 @@ services:
     networks:
       - database
 
+  minio:
+    image: minio/minio
+    environment:
+      MINIO_ACCESS_KEY: minio-dev
+      MINIO_SECRET_KEY: ubon-fahsai-local-key
+    command: server /data
+    ports:
+      - "9000:9000"
+    volumes:
+      - minio_data:/data
+
 networks:
   database:
     driver: bridge
 
 volumes:
   postgres_data:
+  minio_data:
