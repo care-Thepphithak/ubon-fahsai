@@ -1,3 +1,11 @@
+minio:
+  service: S3
+  access_key_id: minio-dev
+  secret_access_key: ubon-fahsai-local-key
+  bucket: ubon-fahsai-local
+  endpoint: http://localhost:9000
+  force_path_style: true
+
 test:
   service: Disk
   root: <%= Rails.root.join("tmp/storage") %>
