@@ -62,8 +62,8 @@ export default class extends Controller {
     }).addTo(map);
 
     // Add custom location control
-    const locationButton = L.control({position: 'bottomright'});
-    
+    const locationButton = L.control({ position: 'bottomright' });
+
     locationButton.onAdd = () => {
       const div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
       const button = L.DomUtil.create('a', '', div);
@@ -76,18 +76,21 @@ export default class extends Controller {
       button.style.display = 'flex';
       button.style.alignItems = 'center';
       button.style.justifyContent = 'center';
-      
+
       L.DomEvent.on(button, 'click', (e) => {
         L.DomEvent.preventDefault(e);
-        this.locateUser();
+        this.locateUser(map);
       });
-      
+
       return div;
     };
 
     locationButton.addTo(map);
+    this.locateUser(map);
 
+  }
 
+  locateUser(map) {
     if (navigator.geolocation) {
       console.log("Geolocation API is available");
 
@@ -118,7 +121,6 @@ export default class extends Controller {
     } else {
       alert("Geolocation is not supported by this browser.");
     }
-
   }
 
   handleImageUpload(event) {
