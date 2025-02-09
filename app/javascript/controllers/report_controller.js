@@ -111,7 +111,8 @@ export default class extends Controller {
             .openPopup();;
 
           map.on("move", function () {
-            marker.setLatLng(map.getCenter());
+            // delay for 0.5 seconds
+            setTimeout(() => marker.setLatLng(map.getCenter()), 300);
             console.log("Map center moved to", map.getCenter());
           });
           map.setView([lat, lng], 15);
