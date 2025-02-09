@@ -7,29 +7,20 @@ export default class extends Controller {
   connect() {
     console.log("Location controller is connected");
     if (!this.mapTarget) {
-      console.error("No map element found in the DOM");
+      console.error("Map element not found.");
       return;
     }
-    console.log("Map element found in the DOM");
+
     this.initializzedMap();
   }
 
   initializzedMap() {
-    const map = L.map('map').setView([13.736717, 100.523186], 13); // ค่าเริ่มต้น (กรุงเทพฯ)
+    const map = L.map('map').setView([13.736717, 100.523186], 15);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    const customIcon = L.icon({
-      // TODO: Find a better way to load the icon, currently it is loaded by line: 26 in application.html.erb
-      iconUrl: customIconUrl,
-      iconSize: [20, 30],
-      iconAnchor: [10, 0],
-      popupAnchor: [0, 0]
-    });
-
-    // Add custom location control
     const locationButton = L.control({ position: 'bottomright' });
 
     locationButton.onAdd = () => {
@@ -46,28 +37,19 @@ export default class extends Controller {
 
       L.DomEvent.on(button, 'click', (e) => {
         L.DomEvent.preventDefault(e);
-        this.locateUser(map, marker);
+        this.locateUser(map);
       });
 
       return div;
     };
 
     map.on("dragend", () => {
-      console.log("on dragend called");
-
-      let newLatLng = map.getCenter();
-
-      setTimeout(() => {
-        marker.setLatLng(newLatLng);
-        map.setView([newLatLng.lat, newLatLng.lng], 15);
-      }, 150);
-
-      this.handleLatLongChange(newLatLng.lat, newLatLng.lng);
-      console.log("Map center moved to", newLatLng);
+      map.setView(map.getCenter(), map.getZoom());
+      this.handleLatLongChange(map.getCenter().lat, map.getCenter().lng);
     });
 
     locationButton.addTo(map);
-    this.locateUser(map, marker);
+    this.locateUser(map);
   }
 
   handleLatLongChange(lat, long) {
@@ -75,17 +57,14 @@ export default class extends Controller {
     this.longTarget.value = long;
   }
 
-  locateUser(map, marker) {
+  locateUser(map) {
     if (navigator.geolocation) {
-      console.log("Geolocation API is available");
-
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
 
           this.handleLatLongChange(lat, lng);
-          marker.setLatLng([lat, lng]);
           map.setView([lat, lng], 15);
 
         }, () => alert("Geolocation permission denied or unavailable.")
