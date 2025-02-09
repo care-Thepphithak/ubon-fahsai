@@ -16,12 +16,17 @@ export default class extends Controller {
   next(event) {
     event.preventDefault();
     if (this.stepValue < this.stepTargets.length - 1) {
+      const currentStep = this.stepValue;
+      const nextStep = this.stepTargets[currentStep + 1];
+
+      nextStep.addEventListener('animationend', () => {
+          if (currentStep === 0) {
+            this.dispatch("initMap", { target: this.locationContainerTarget })
+          }
+        }, { once: true });
+
       this.stepValue++;
       this.showStep();
-    }
-
-    if (this.stepValue === 1) { // assuming 1 is the location step
-      this.dispatch("initMap", { target: this.locationContainerTarget })
     }
   }
 
