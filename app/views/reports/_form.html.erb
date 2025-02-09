@@ -37,17 +37,20 @@
           <p class="text-sm text-gray-500">27 มกราคม 2567 เวลา 13:00 น.</p>
         </div>
 
-        <%= render "location" %>
+        <div data-controller="location">
+          <%= render "location" %>
+       
 
         <div class="my-5">
           <%= form.label :lat %>
-          <%= form.text_field :lat, data: { report_target: "lat" }, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": report.errors[:lat].none?, "border-red-400 focus:outline-red-600": report.errors[:lat].any?}] %>
+          <%= form.text_field :lat, data: { location_target: "lat" }, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": report.errors[:lat].none?, "border-red-400 focus:outline-red-600": report.errors[:lat].any?}] %>
         </div>
 
         <div class="my-5">
           <%= form.label :long %>
-          <%= form.text_field :long, data: { report_target: "long" }, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": report.errors[:long].none?, "border-red-400 focus:outline-red-600": report.errors[:long].any?}] %>
+          <%= form.text_field :long, data: { location_target: "long" }, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": report.errors[:long].none?, "border-red-400 focus:outline-red-600": report.errors[:long].any?}] %>
         </div>
+         </div>
 
         <div class="w-[90%]" data-controller="bottom-sheet">
           <%= button_helper("ส่งรายงาน", size: 'lg', css_class: 'w-full', data: {action: "click->bottom-sheet#open"}) %>
