@@ -37,7 +37,10 @@
           <p class="text-sm text-gray-500">27 มกราคม 2567 เวลา 13:00 น.</p>
         </div>
 
-        <div data-controller="location" class="w-[90%]">
+        <div data-report-target="locationContainer" 
+             data-controller="location"
+             data-action="report:initMap->location#initMap" 
+             class="w-[90%]">
           <%= render "location" %>
 
           <div class="my-5">
