@@ -17,14 +17,18 @@ services:
 
   minio:
     image: minio/minio
+    container_name: minio1
     environment:
-      MINIO_ACCESS_KEY: minio-dev
-      MINIO_SECRET_KEY: ubon-fahsai-local-key
-    command: server /data
-    ports:
-      - "9000:9000"
+      - MINIO_ROOT_USER=username
+      - MINIO_ROOT_PASSWORD=password
     volumes:
       - minio_data:/data
+    ports:
+      - "9000:9000"  # MinIO API
+      - "9001:9001"  # MinIO Console
+    command: server /data --console-address ":9001"
+    user: "${UID}:${GID}"
+    restart: unless-stopped
 
 networks:
   database:
