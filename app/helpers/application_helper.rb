@@ -1,5 +1,5 @@
 module ApplicationHelper
-  def button_helper(text, variant: :solid, size: :md, icon: nil, iconEnd: nil, css_class: nil, type: 'button', **options)
+  def button_helper(text, variant: :solid, size: :md, icon: nil, iconEnd: nil, css_class: nil, type: "button", **options)
     variant_classes = {
       solid: "bg-[#FF6159] text-white hover:bg-[#FF6C64]",
       subtle: "bg-[#FF6159] text-white hover:bg-[#FF6C64]",
