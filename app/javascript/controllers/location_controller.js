@@ -10,16 +10,23 @@ export default class extends Controller {
       console.error("Map element not found.");
       return;
     }
-
-    this.initializzedMap();
   }
 
-  initializzedMap() {
-    const map = L.map('map').setView([13.736717, 100.523186], 15);
+  initMap = async ()  => {
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    await delay(300);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
+    console.log("Initializing map...");
+    const map = L.map('map', {
+      center: [15.2313, 104.8567],
+      zoom: 13
+    });
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap'
     }).addTo(map);
+
+    this.locateUser(map);
 
     const locationButton = L.control({ position: 'bottomright' });
 
@@ -44,12 +51,11 @@ export default class extends Controller {
     };
 
     map.on("dragend", () => {
-      map.setView(map.getCenter(), map.getZoom());
       this.handleLatLongChange(map.getCenter().lat, map.getCenter().lng);
     });
 
     locationButton.addTo(map);
-    this.locateUser(map);
+    console.log("Map initialized.");
   }
 
   handleLatLongChange(lat, long) {
@@ -65,7 +71,7 @@ export default class extends Controller {
           const lng = position.coords.longitude;
 
           this.handleLatLongChange(lat, lng);
-          map.setView([lat, lng], 15);
+          map.flyTo([lat, lng], 16);
 
         }, () => alert("Geolocation permission denied or unavailable.")
       );
@@ -74,5 +80,4 @@ export default class extends Controller {
       alert("Geolocation is not supported by this browser.");
     }
   }
-
 }
