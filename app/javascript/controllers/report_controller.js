@@ -128,6 +128,17 @@ export default class extends Controller {
     }
   }
 
+  toggleNextButton() {
+    const nextButton = document.getElementById("upload-step-next");
+    if (this.selectedFiles.length === 0) {
+      nextButton.setAttribute("disabled", "true");
+      nextButton.classList.add("opacity-50");
+    } else {
+      nextButton.removeAttribute("disabled");
+      nextButton.classList.remove("opacity-50");
+    }
+  }
+  
   handleImageUpload(event) {
     let files = Array.from(event.target.files);
 
@@ -141,6 +152,7 @@ export default class extends Controller {
 
     this.renderPreview();
     this.toggleUploadButton();
+    this.toggleNextButton();
   }
 
   removeImage(event) {
@@ -149,6 +161,7 @@ export default class extends Controller {
   
     this.renderPreview();
     this.toggleUploadButton();
+    this.toggleNextButton();
   
     if (this.selectedFiles.length === 0) {
       this.imagesInputTarget.value = "";
