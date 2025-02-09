@@ -1,20 +1,5 @@
 <% content_for :title, "New report" %>
-<%= render "upload_image" %>
-<div data-controller="bottom-sheet">
-  <%= button_helper("รายงาน", icon: "plus", size: 'lg', css_class: 'w-full', data: {action: "click->bottom-sheet#open"}) %>
 
-  <%= render "shared/bottom_sheet" do %>
-      <h2 class="text-lg text-[#FF6159]">ส่งรายงานไฟไหม้</h2>
-      <%= button_helper("รายงาน", size: 'lg', css_class: 'w-full', data: {action: "click->bottom-sheet#close"}) %>
-      <button data-action="click->bottom-sheet#close" class="cursor-pointer">ยกเลิก</button>
-  <% end %>
-</div>
-
-<div class="md:w-2/3 w-full" data-controller="report">
-  <h1 class="font-bold text-4xl">New report</h1>
-
+<div class="w-[90%] max-w-[600px] mx-auto" data-controller="report">
   <%= render "form", report: @report %>
-
-  <%= link_to "Back to reports", reports_path, class: "ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <%= render "location" %>
 </div>
