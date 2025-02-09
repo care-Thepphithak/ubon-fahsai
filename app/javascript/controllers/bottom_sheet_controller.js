@@ -7,12 +7,18 @@ export default class extends Controller {
     console.log("Modal controller connected!");
   }
 
-  open() {
+  open(event) {
+    event.preventDefault();
     this.bottomSheetTarget.classList.remove("hidden");
     this.bottomSheetTarget.classList.add("flex"); 
   }
 
-  close() {
+  submit() {
+    this.bottomSheetTarget.classList.add("hidden");
+  }
+
+  close(event) {
+    event.preventDefault();
     this.bottomSheetTarget.classList.add("hidden");
   }
 }

@@ -49,8 +49,9 @@
 
       
 
-        <div class="inline">
-          <%= form.submit class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+        <div class="inline" data-controller="bottom-sheet">
+          <%= button_helper("รายงาน", size: 'lg', css_class: 'w-full', data: {action: "click->bottom-sheet#open"}) %>
+          <%= render "confirm", form:form %>
         </div>
       </div>
     </div>
