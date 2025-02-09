@@ -13,8 +13,11 @@ export default class extends Controller {
   }
 
   initMap = async ()  => {
-    const delay = ms => new Promise(res => setTimeout(res, ms));
-    await delay(300);
+    // Check if map is already initialized
+    if (this.mapTarget._leaflet_id) {
+      console.log("Map already initialized.");
+      return;
+    }
 
     console.log("Initializing map...");
     const map = L.map('map', {
