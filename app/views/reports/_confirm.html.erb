@@ -1,8 +1,5 @@
 <%= render "shared/bottom_sheet" do %>
     <h2 class="text-lg text-[#FF6159]">ส่งรายงานไฟไหม้</h2>
-    <label class="bg-[#FF6159] w-full text-white hover:bg-[#FF6C64] text-lg px-1 py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] transition-all">
-        รายงาน
-        <%= form.submit data: { action: "click->bottom-sheet#submit" } %>
-    </label>
+    <%= form.submit "รายงาน", data: { action: "click->bottom-sheet#submit" }, class:["cursor-pointer bg-[#FF6159] w-full text-white hover:bg-[#FF6C64] text-lg px-1 py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] transition-all"] %>
     <button data-action="click->bottom-sheet#close" class="cursor-pointer">ยกเลิก</button>
 <% end %>

@@ -47,8 +47,6 @@
           <%= form.text_field :long, data: { report_target: "long" }, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": report.errors[:long].none?, "border-red-400 focus:outline-red-600": report.errors[:long].any?}] %>
         </div>
 
-      
-
         <div class="inline" data-controller="bottom-sheet">
           <%= button_helper("รายงาน", size: 'lg', css_class: 'w-full', data: {action: "click->bottom-sheet#open"}) %>
           <%= render "confirm", form:form %>
