@@ -2,12 +2,11 @@ stages:
   - build
   - deploy
 
-# Default variables for use in the pipeline
 variables:
   IMAGE_NAME: "registry.gitlab.com/codespace8635531/ubon-fahsai"
   IMAGE_TAG: "latest"
-  DEPLOY_DIR: "/home/ubon-fahsai/ubon-fahsai-dev"   # target folder on the Azure VM
-  ENV_FILE: ".env.dev"                               # local copy of the env file
+  DEPLOY_DIR: "/home/ubon-fahsai/ubon-fahsai-dev"  # target folder on the Azure VM
+  ENV_FILE: ".env.dev"                               # local copy of the environment file
 
 build:
   stage: build
@@ -15,32 +14,22 @@ build:
   services:
     - docker:dind
   script:
-    # Log in to GitLab Container Registry
-    - docker login -u "$DEPLOY_KEY_USERNAME" -p "$DEPLOY_KEY_PASSWORD" registry.gitlab.com
-    # Prepare the environment file (adjust as needed)
-    - cp "$PRODUCTION_ENV_FILE" .env.dev
-    # Build the Docker image
-    - docker build -t "$IMAGE_NAME:$IMAGE_TAG" .
-    # Push the Docker image to the registry
-    - docker push "$IMAGE_NAME:$IMAGE_TAG"
+    - "docker login -u \"$DEPLOY_KEY_USERNAME\" -p \"$DEPLOY_KEY_PASSWORD\" registry.gitlab.com"
+    - "cp \"$PRODUCTION_ENV_FILE\" .env.dev"
+    - "docker build -t \"$IMAGE_NAME:$IMAGE_TAG\" ."
+    - "docker push \"$IMAGE_NAME:$IMAGE_TAG\""
   only:
     - development
 
 deploy:
   stage: deploy
-  # Use the official Azure CLI image (which is Debian‑based)
   image: mcr.microsoft.com/azure-cli:latest
   script:
-    # Install jq (needed to extract values from the JSON credentials)
-    - apt-get update && apt-get install -y jq
-    # Decode the Base64-encoded Azure credentials into a JSON file
-    - echo "$AZURE_CREDENTIALS" | base64 --decode > azure_credentials.json
-    # Log in to Azure using the service principal credentials extracted from the JSON file
-    - az login --service-principal --username "$(jq -r .clientId azure_credentials.json)" --password "$(jq -r .clientSecret azure_credentials.json)" --tenant "$(jq -r .tenantId azure_credentials.json)"
-    # Build the deployment command as a single variable
-    - export DEPLOY_SCRIPT="docker system prune -f && docker login registry.gitlab.com -u ${DEPLOY_KEY_USERNAME} -p ${DEPLOY_KEY_PASSWORD} && cd ${DEPLOY_DIR} && docker-compose pull && docker-compose --env-file ${ENV_FILE} up -d"
-    - echo "Deploy script: $DEPLOY_SCRIPT"
-    # Invoke the deployment command on your Azure VM
-    - az vm run-command invoke --resource-group "$RESOURCE_GROUP" --name "$VM_NAME" --command-id RunShellScript --scripts "$DEPLOY_SCRIPT"
+    - "apt-get update && apt-get install -y jq"
+    - "echo \"$AZURE_CREDENTIALS\" | base64 --decode > azure_credentials.json"
+    - "az login --service-principal --username \"$(jq -r .clientId azure_credentials.json)\" --password \"$(jq -r .clientSecret azure_credentials.json)\" --tenant \"$(jq -r .tenantId azure_credentials.json)\""
+    - "DEPLOY_SCRIPT='docker system prune -f && docker login registry.gitlab.com -u ${DEPLOY_KEY_USERNAME} -p ${DEPLOY_KEY_PASSWORD} && cd ${DEPLOY_DIR} && docker-compose pull && docker-compose --env-file ${ENV_FILE} up -d'"
+    - "echo Deploy script: $DEPLOY_SCRIPT"
+    - "az vm run-command invoke --resource-group \"$RESOURCE_GROUP\" --name \"$VM_NAME\" --command-id RunShellScript --scripts \"$DEPLOY_SCRIPT\""
   only:
     - development
