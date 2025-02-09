@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="report"
 export default class extends Controller {
   static values = { step: Number };
-  static targets = ["step", "map", "imagesInput", "previewImages"]
+  static targets = ["step", "map", "lat", "long", "imagesInput", "previewImages"]
   selectedFiles = [];
 
   connect() {
