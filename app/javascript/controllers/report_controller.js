@@ -61,6 +61,33 @@ export default class extends Controller {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
+    // Add custom location control
+    const locationButton = L.control({position: 'bottomright'});
+    
+    locationButton.onAdd = () => {
+      const div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+      const button = L.DomUtil.create('a', '', div);
+      button.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
+      button.href = '#';
+      button.title = 'Show my location';
+      button.style.width = '30px';
+      button.style.height = '30px';
+      button.style.fontSize = '20px';
+      button.style.display = 'flex';
+      button.style.alignItems = 'center';
+      button.style.justifyContent = 'center';
+      
+      L.DomEvent.on(button, 'click', (e) => {
+        L.DomEvent.preventDefault(e);
+        this.locateUser();
+      });
+      
+      return div;
+    };
+
+    locationButton.addTo(map);
+
+
     if (navigator.geolocation) {
       console.log("Geolocation API is available");
 
