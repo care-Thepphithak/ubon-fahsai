@@ -6,7 +6,8 @@ module ApplicationHelper
       surface: "bg-[#FF6159] text-white hover:bg-[#FF6C64]",
       outline: "border border-[#FF6159] text-[#FF6159] hover:bg-[#FF6C64]",
       ghost: "text-[#FF6159] hover:bg-blue-50",
-      plain: "text-[#FF6159] hover:scale-[1.01] hover:text-[#FF6C64]"
+      plain: "text-[#FF6159] hover:scale-[1.01] hover:text-[#FF6C64]",
+      cancel: "text-[#8D8D8D] hover:text-[#5D5D5D]",
     }
 
     size_classes = {
