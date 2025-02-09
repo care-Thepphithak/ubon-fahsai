@@ -14,7 +14,7 @@ build:
   services:
     - docker:dind
   script:
-    - "docker login -u \"$DEPLOY_KEY_USERNAME\" --password-stdin \"$DEPLOY_KEY_PASSWORD\" registry.gitlab.com"
+    - "docker login -u \"$DEPLOY_KEY_USERNAME\" --password-stdin registry.gitlab.com"
     - "docker build -t \"$IMAGE_NAME:$IMAGE_TAG\" ."
     - "docker push \"$IMAGE_NAME:$IMAGE_TAG\""
   only:
