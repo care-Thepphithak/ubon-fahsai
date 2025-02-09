@@ -99,7 +99,8 @@ export default class extends Controller {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
           const customIcon = L.icon({
-            iconUrl: customIconUrl, // ใช้ตัวแปรจาก Rails
+            // TODO: Find a better way to load the icon, currently it is loaded by line: 26 in application.html.erb
+            iconUrl: customIconUrl, 
             iconSize: [20, 30],
             iconAnchor: [10, 0],
             popupAnchor: [0, 0]
@@ -111,7 +112,6 @@ export default class extends Controller {
             .openPopup();;
 
           map.on("move", function () {
-            // delay for 0.5 seconds
             setTimeout(() => marker.setLatLng(map.getCenter()), 300);
             console.log("Map center moved to", map.getCenter());
           });
