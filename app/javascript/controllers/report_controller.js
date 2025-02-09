@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="report"
 export default class extends Controller {
   static values = { step: Number };
-  static targets = ["step", "imagesInput", "previewImages"]
+  static targets = ["step", "imagesInput", "previewImages", "locationContainer"]
   selectedFiles = [];
 
   connect() {
@@ -18,6 +18,10 @@ export default class extends Controller {
     if (this.stepValue < this.stepTargets.length - 1) {
       this.stepValue++;
       this.showStep();
+    }
+
+    if (this.stepValue === 1) { // assuming 1 is the location step
+      this.dispatch("initMap", { target: this.locationContainerTarget })
     }
   }
 
