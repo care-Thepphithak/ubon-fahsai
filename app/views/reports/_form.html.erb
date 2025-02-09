@@ -23,7 +23,7 @@
         <%= render "upload_image", form:form %>
       
         <div class="flex justify-end w-[90%]">
-          <%= button_helper("ถัดไป", iconEnd: "angle-right", size: 'lg', variant: 'plain', data: { "action": "click->report#next" }) %>
+          <%= button_helper("ถัดไป", iconEnd: "angle-right", size: 'lg', variant: 'plain', id: "upload-step-next", data: { "action": "click->report#next" }, css_class: "opacity-50", disabled: true) %>
         </div>
       </div>
     </div>
