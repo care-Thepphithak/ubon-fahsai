@@ -1,17 +1,14 @@
 <div class="w-full mt-6">
-    <p class="block text-base w-[90%] mx-auto mb-2 text-gray-400">เลือกแล้ว 0 รูปภาพ</p>
-    <div class="flex w-full px-6 overflow-x-scroll mb-6 gap-5 no-scrollbar" data-target="report.previewImages">
-        <!-- Image preview will be here -->
-            
-        <!-- Show this when no image -->
-        <i class="min-w-64 h-96 m-2 bg-gray-100 rounded-lg flex items-center justify-center">
+    <p class="block text-base w-[90%] mx-auto mb-3 text-gray-400">เลือกแล้ว 0 รูปภาพ</p>
+    <div class="flex w-full h-96 px-8 overflow-x-scroll mb-6 gap-5 no-scrollbar" data-target="report.previewImages">
+        <i class="min-w-64 h-full bg-gray-100 rounded-lg flex items-center justify-center">
             <i class="fas fa-camera text-5xl text-gray-300"></i>
         </i>
     </div>
   
     <label for="report_images" class="bg-[#FF6159] w-[90%] mx-auto text-white hover:bg-[#FF6C64] text-lg px-1 py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] transition-all">
         <i class="fas fa-plus"></i>
-            เพิ่มรูปภาพ
+        เพิ่มรูปภาพ
         <%= form.file_field :images, multiple: true, class: "hidden", data: { target: "report.imagesInput", action: "change->report#handleImageUpload" } %>
     </label>
 </div>
