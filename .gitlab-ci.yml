@@ -15,7 +15,6 @@ build:
     - docker:dind
   script:
     - "docker login -u \"$DEPLOY_KEY_USERNAME\" -p \"$DEPLOY_KEY_PASSWORD\" registry.gitlab.com"
-    - "cp \"$PRODUCTION_ENV_FILE\" .env.dev"
     - "docker build -t \"$IMAGE_NAME:$IMAGE_TAG\" ."
     - "docker push \"$IMAGE_NAME:$IMAGE_TAG\""
   only:
