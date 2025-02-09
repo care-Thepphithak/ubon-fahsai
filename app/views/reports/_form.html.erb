@@ -1,4 +1,4 @@
-<%= form_with(model: report, class: "contents") do |form| %>
+<%= form_with(model: report, class: "contents", data: { "report-step-value" => "0" }) do |form| %>
   <% if report.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
       <h2><%= pluralize(report.errors.count, "error") %> prohibited this report from being saved:</h2>
@@ -11,17 +11,47 @@
     </div>
   <% end %>
 
-  <div class="my-5">
-    <%= form.label :lat %>
-    <%= form.text_field :lat, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": report.errors[:lat].none?, "border-red-400 focus:outline-red-600": report.errors[:lat].any?}] %>
-  </div>
+    <%# Step 1: ข้อมูลส่วนตัว %>
+    <div data-report-target="step" >
+      <div class="h-svh w-full flex flex-col items-center py-6 justify-between">
+        <div class="w-full relative text-center">
+          <%# <%= button_helper("ย้อนกลับ", icon: "angle-left", size: 'lg', variant: 'plain', css_class: 'absolute px-0 top-0 left-0') %>
+          <h1 class="text-2xl font-bold text-[#FF6159]">รายงานไฟไหม้</h1>
+          <p class="text-base text-gray-500">ตำบลในเมือง อำเภอเมือง</p>
+          <p class="text-sm text-gray-500">27 มกราคม 2567 เวลา 13:00 น.</p>
+        </div>
 
-  <div class="my-5">
-    <%= form.label :long %>
-    <%= form.text_field :long, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": report.errors[:long].none?, "border-red-400 focus:outline-red-600": report.errors[:long].any?}] %>
-  </div>
+        <%= render "upload_image", form:form %>
+      
+        <div class="flex justify-end w-full">
+          <%= button_helper("ถัดไป", iconEnd: "angle-right", size: 'lg', variant: 'plain', data: { "action": "click->report#next" }) %>
+        </div>
+      </div>
+    </div>
 
-  <div class="inline">
-    <%= form.submit class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
-  </div>
+    <%# Step 2: ข้อมูลสถานที่ %>
+    <div data-report-target="step" class="hidden">
+      <div class="h-svh w-full flex flex-col items-center py-6 justify-between">
+        <div class="w-full relative text-center">
+          <%= button_helper("ย้อนกลับ", icon: "angle-left", size: 'lg', variant: 'plain', css_class: 'absolute px-0 top-0 left-0', data: { "action": "click->report#prev" }) %>
+          <h1 class="text-2xl font-bold text-[#FF6159]">รายงานไฟไหม้</h1>
+          <p class="text-base text-gray-500">ตำบลในเมือง อำเภอเมือง</p>
+          <p class="text-sm text-gray-500">27 มกราคม 2567 เวลา 13:00 น.</p>
+        </div>
+
+        <div class="my-5">
+          <%= form.label :lat %>
+          <%= form.text_field :lat, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": report.errors[:lat].none?, "border-red-400 focus:outline-red-600": report.errors[:lat].any?}] %>
+        </div>
+
+        <div class="my-5">
+          <%= form.label :long %>
+          <%= form.text_field :long, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": report.errors[:long].none?, "border-red-400 focus:outline-red-600": report.errors[:long].any?}] %>
+        </div>
+
+        <div class="inline">
+          <%= form.submit class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+        </div>
+      </div>
+    </div>
 <% end %>
