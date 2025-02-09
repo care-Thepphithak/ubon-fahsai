@@ -12,7 +12,7 @@ export default class extends Controller {
     }
   }
 
-  initMap = async ()  => {
+  initMap = async () => {
     // Check if map is already initialized
     if (this.mapTarget._leaflet_id) {
       console.log("Map already initialized.");
@@ -67,20 +67,43 @@ export default class extends Controller {
   }
 
   locateUser(map) {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-
-          this.handleLatLongChange(lat, lng);
-          map.flyTo([lat, lng], 16);
-
-        }, () => alert("Geolocation permission denied or unavailable.")
-      );
-
-    } else {
+    if (!navigator.geolocation) {
       alert("Geolocation is not supported by this browser.");
+      return;
     }
+    const loadingControl = L.control({ position: 'topright' });
+
+    loadingControl.onAdd = () => {
+      const div = L.DomUtil.create('div', 'leaflet-bar leaflet-control bg-white px-3 py-2 rounded-lg shadow-md');
+      div.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-gray-700">Getting location...</span>
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+          </div>
+        `;
+      return div;
+    };
+
+    loadingControl.addTo(map);
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+
+        this.handleLatLongChange(lat, lng);
+        map.flyTo([lat, lng], 16);
+        map.removeControl(loadingControl);
+
+      }, () => {
+        map.removeControl(loadingControl);
+        alert("Geolocation permission denied or unavailable.")
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 30000
+      }
+    );
   }
 }
