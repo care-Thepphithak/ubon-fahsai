@@ -1,12 +1,9 @@
 <% content_for :title, "New report" %>
 <%= render "upload_image" %>
 <div data-controller="bottom-sheet">
-  <!-- Button to Open Modal -->
-    <%= button_helper("รายงาน", icon: "plus", size: 'lg', css_class: 'w-full', data: {action: "click->bottom-sheet#open"}) %>
+  <%= button_helper("รายงาน", icon: "plus", size: 'lg', css_class: 'w-full', data: {action: "click->bottom-sheet#open"}) %>
 
-  <!-- Modal (hidden by default) -->
   <%= render "shared/bottom_sheet" do %>
-    <!-- Content inside the modal -->
       <h2 class="text-lg text-[#FF6159]">ส่งรายงานไฟไหม้</h2>
       <%= button_helper("รายงาน", size: 'lg', css_class: 'w-full', data: {action: "click->bottom-sheet#close"}) %>
       <button data-action="click->bottom-sheet#close" class="cursor-pointer">ยกเลิก</button>

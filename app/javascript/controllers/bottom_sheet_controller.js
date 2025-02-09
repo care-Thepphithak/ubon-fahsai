@@ -9,6 +9,7 @@ export default class extends Controller {
 
   open() {
     this.bottomSheetTarget.classList.remove("hidden");
+    this.bottomSheetTarget.classList.add("flex"); 
   }
 
   close() {
