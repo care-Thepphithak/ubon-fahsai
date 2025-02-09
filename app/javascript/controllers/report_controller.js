@@ -38,7 +38,19 @@ export default class extends Controller {
 
   showStep() {
     this.stepTargets.forEach((el, index) => {
-      el.classList.toggle("hidden", index !== this.stepValue);
+      if (index === this.stepValue) {
+        el.classList.add("fade-in");
+        el.classList.remove("fade-out");
+        setTimeout(() => {
+          el.classList.remove("hidden");
+        }, 300);
+      } else {
+        el.classList.add("fade-out");
+        el.classList.remove("fade-in");
+        setTimeout(() => {
+          el.classList.add("hidden");
+        }, 300);
+      }
     });
   }
 
