@@ -85,7 +85,11 @@ export default class extends Controller {
 
     locationButton.addTo(map);
     this.locateUser(map);
+  }
 
+  handleLatLongChange(lat, long) {
+    this.latTarget.value = lat;
+    this.longTarget.value = long;
   }
 
   locateUser(map) {
@@ -98,7 +102,7 @@ export default class extends Controller {
           const lng = position.coords.longitude;
           const customIcon = L.icon({
             // TODO: Find a better way to load the icon, currently it is loaded by line: 26 in application.html.erb
-            iconUrl: customIconUrl, 
+            iconUrl: customIconUrl,
             iconSize: [20, 30],
             iconAnchor: [10, 0],
             popupAnchor: [0, 0]
@@ -109,9 +113,11 @@ export default class extends Controller {
             .bindPopup("You are here!")
             .openPopup();;
 
-          map.on("move", function () {
+          map.on("move", () => {
             setTimeout(() => marker.setLatLng(map.getCenter()), 150);
-            console.log("Map center moved to", map.getCenter());
+            let newLatLng = map.getCenter();
+            this.handleLatLongChange(newLatLng.lat, newLatLng.lng);
+            console.log("Map center moved to", newLatLng);
           });
           map.setView([lat, lng], 15);
         }, () => alert("Geolocation permission denied or unavailable.")
