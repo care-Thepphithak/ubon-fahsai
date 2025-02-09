@@ -29,6 +29,8 @@ services:
     command: server /data --console-address ":9001"
     user: "${UID}:${GID}"
     restart: unless-stopped
+    networks:
+      - database
 
 networks:
   database:
