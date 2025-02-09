@@ -29,6 +29,6 @@ deploy:
     - "az login --service-principal --username \"$(jq -r .clientId azure_credentials.json)\" --password \"$(jq -r .clientSecret azure_credentials.json)\" --tenant \"$(jq -r .tenantId azure_credentials.json)\""
     - "DEPLOY_SCRIPT='docker system prune -f && docker login registry.gitlab.com -u ${DEPLOY_KEY_USERNAME} -p ${DEPLOY_KEY_PASSWORD} && cd ${DEPLOY_DIR} && docker-compose pull && docker-compose --env-file ${ENV_FILE} up -d'"
     - "echo Deploy script: $DEPLOY_SCRIPT"
-    - "az vm run-command invoke --resource-group \"$RESOURCE_GROUP\" --name \"$VM_NAME\" --command-id RunShellScript --scripts \"$DEPLOY_SCRIPT\""
+    - "az vm run-command invoke --resource-group \"$RESOURCE_GROUP\" --name \"$VM_NAME\" --command-id RunShellScript --scripts docker system prune -f && docker login registry.gitlab.com -u ${DEPLOY_KEY_USERNAME} -p ${DEPLOY_KEY_PASSWORD} && cd /home/ubon-fahsai/ubon-fahsai-dev && docker-compose pull && docker-compose --env-file .env.dev up -d"
   only:
     - development
