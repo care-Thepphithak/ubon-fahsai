@@ -2,9 +2,12 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="report"
 export default class extends Controller {
-  static targets = ["map", "imagesInput", "previewImages"]
+  static values = { step: Number };
+  static targets = ["step", "map", "imagesInput", "previewImages"]
 
   connect() {
+    this.showStep();
+
     console.log("Report controller is connected");
     if (!this.mapTarget) {
       console.error("No map element found in the DOM");
@@ -15,6 +18,28 @@ export default class extends Controller {
 
     // Image upload
     this.selectedFiles = [];
+  }
+
+  next(event) {
+    event.preventDefault();
+    if (this.stepValue < this.stepTargets.length - 1) {
+      this.stepValue++;
+      this.showStep();
+    }
+  }
+
+  prev(event) {
+    event.preventDefault();
+    if (this.stepValue > 0) {
+      this.stepValue--;
+      this.showStep();
+    }
+  }
+
+  showStep() {
+    this.stepTargets.forEach((el, index) => {
+      el.classList.toggle("hidden", index !== this.stepValue);
+    });
   }
 
   initializzedMap() {
@@ -83,7 +108,7 @@ export default class extends Controller {
         img.classList.add("min-w-64", "h-96", "w-64", "object-cover", "rounded-lg", "shadow-md");
 
         const deleteButton = document.createElement("button");
-        deleteButton.classList.add("absolute", "h-7", "w-7", "top-2", "right-2", "bg-gray-100", "text-gray-500", "rounded-full");
+        deleteButton.classList.add("absolute", "h-7", "w-7", "cursor-pointer", "hover:scale-110", "top-2", "right-2", "bg-gray-100", "text-gray-500", "rounded-full");
         deleteButton.dataset.action = "click->report#removeImage";
         deleteButton.innerHTML = `<i class="fas fa-times"></i>`;
 
