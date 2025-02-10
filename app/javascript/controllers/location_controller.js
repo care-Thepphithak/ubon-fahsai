@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="location"
 export default class extends Controller {
-  static targets = ["map", "lat", "long"];
+  static targets = ["map", "lat", "long", "locationName"];
 
 
   connect() {
@@ -70,6 +70,7 @@ export default class extends Controller {
     console.log(`Latitude: ${lat}, Longitude: ${long}`);
     const locationName = await this.getLocationName(lat, long);
     document.getElementById('location-name').innerHTML = locationName;
+    this.locationNameTarget.value = locationName;
   }
 
   async getLocationName(lat, lng) {
@@ -125,10 +126,6 @@ export default class extends Controller {
         this.handleLatLongChange(lat, lng);
         map.flyTo([lat, lng], 16);
         map.removeControl(loadingControl);
-    
-        const locationName = await this.getLocationName(lat, lng);
-        console.log(`คุณอยู่ที่: ${locationName}`);
-        document.getElementById('location-name').innerHTML = locationName;
 
       }, () => {
         map.removeControl(loadingControl);
