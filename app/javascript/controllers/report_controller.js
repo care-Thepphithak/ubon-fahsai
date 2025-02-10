@@ -116,7 +116,7 @@ export default class extends Controller {
 
     if (this.selectedFiles.length === 0) {
       previewContainer.innerHTML = `
-        <i class="min-w-64 h-80 bg-gray-100 rounded-lg flex items-center justify-center">
+        <i class="min-w-64 h-72 bg-gray-100 rounded-lg flex items-center justify-center">
           <i class="fas fa-camera text-5xl text-gray-300"></i>
         </i>
       `;
@@ -129,7 +129,7 @@ export default class extends Controller {
 
           const img = document.createElement("img");
           img.src = e.target.result;
-          img.classList.add("min-w-64", "h-80", "w-64", "object-cover", "rounded-lg", "shadow-md");
+          img.classList.add("min-w-64", "h-72", "w-64", "object-cover", "rounded-lg", "shadow-md");
 
           const deleteButton = document.createElement("button");
           deleteButton.type = "button";
