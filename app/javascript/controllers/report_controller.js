@@ -10,7 +10,7 @@ export default class extends Controller {
     this.showStep();
 
     console.log("Report controller is connected");
-    
+
   }
 
   next(event) {
@@ -20,10 +20,10 @@ export default class extends Controller {
       const nextStep = this.stepTargets[currentStep + 1];
 
       nextStep.addEventListener('animationend', () => {
-          if (currentStep === 0) {
-            this.dispatch("initMap", { target: this.locationContainerTarget })
-          }
-        }, { once: true });
+        if (currentStep === 0) {
+          this.dispatch("initMap", { target: this.locationContainerTarget })
+        }
+      }, { once: true });
 
       this.stepValue++;
       this.showStep();
@@ -66,7 +66,7 @@ export default class extends Controller {
       nextButton.classList.remove("opacity-50");
     }
   }
-  
+
   handleImageUpload(event) {
     let files = Array.from(event.target.files);
 
@@ -78,6 +78,8 @@ export default class extends Controller {
       this.selectedFiles = this.selectedFiles.slice(0, 4);
     }
 
+    this.updateInputFiles();
+
     this.renderPreview();
     this.toggleUploadButton();
     this.toggleNextButton();
@@ -86,16 +88,27 @@ export default class extends Controller {
   removeImage(event) {
     const index = event.currentTarget.dataset.index;
     this.selectedFiles.splice(index, 1);
-  
+
+    this.updateInputFiles();
+
     this.renderPreview();
     this.toggleUploadButton();
     this.toggleNextButton();
-  
+
     if (this.selectedFiles.length === 0) {
       this.imagesInputTarget.value = "";
     }
   }
-  
+
+  updateInputFiles() {
+    const dataTransfer = new DataTransfer();
+
+    this.selectedFiles.forEach(file => {
+      dataTransfer.items.add(file);
+    });
+
+    this.imagesInputTarget.files = dataTransfer.files;
+  }
 
   renderPreview() {
     const previewContainer = this.previewImagesTarget;
@@ -139,11 +152,10 @@ export default class extends Controller {
   toggleUploadButton() {
     const uploadButton = document.querySelector("label[for='report_images']");
     if (this.selectedFiles.length >= 4) {
-      uploadButton.classList.add("opacity-50", "cursor-not-allowed");
-      this.imagesInputTarget.disabled = true;
+      uploadButton.classList.add("hidden", "cursor-not-allowed");
     } else {
-      uploadButton.classList.remove("opacity-50", "cursor-not-allowed");
-      this.imagesInputTarget.disabled = false;
+      uploadButton.classList.remove("hidden", "cursor-not-allowed");
+      uploadButton.classList.add("cursor-pointer", "fade-in");
     }
   }
 }
