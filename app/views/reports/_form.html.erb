@@ -12,11 +12,10 @@
   <% end %>
 
     <div data-report-target="step" >
-      <div class="h-svh w-full flex flex-col items-center py-6 justify-between">
+      <div class="h-svh overflow-y-scroll w-full flex flex-col items-center py-6 justify-between">
         <div class="w-[90%] mx-auto relative text-center">
           <%# <%= button_helper("ย้อนกลับ", icon: "angle-left", size: 'lg', variant: 'plain', css_class: 'absolute px-0 top-0 left-0') %>
           <h1 class="text-2xl font-bold text-[#FF6159]">รายงานไฟไหม้</h1>
-          <p class="text-base text-gray-500">ตำบลในเมือง อำเภอเมือง</p>
           <p class="text-sm text-gray-500"><%= l(Time.current, format: :full, locale: :th) %></p>
         </div>
 
@@ -54,7 +53,7 @@
           </div>
         </div>
 
-        <div class="w-[90%]" data-controller="bottom-sheet">
+        <div class="w-[90%] inset-0" data-controller="bottom-sheet">
           <%= button_helper("ส่งรายงาน", size: 'lg', css_class: 'w-full', data: {action: "click->bottom-sheet#open"}) %>
           <%= render "confirm", form:form %>
         </div>
