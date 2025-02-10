@@ -3,17 +3,6 @@ version: '3.8'
 name: ubon-fahsai-dev
 
 services:
-  web:
-    image: registry.gitlab.com/codespace8635531/ubon-fahsai:latest
-    ports:
-      - "80:3000"
-    environment:
-      - RAILS_ENV=production
-      - SECRET_KEY_BASE=dummy
-    depends_on:
-      - db
-      - minio
-
   db:
     image: postgres:14
     environment:
@@ -33,7 +22,7 @@ services:
     environment:
       - MINIO_ROOT_USER=${MINIO_ROOT_USER}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
-    command: server /data
+    command: server /data --console-address ":9001"
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -42,10 +31,24 @@ services:
     networks:
       - database
 
+  web:
+    image: registry.gitlab.com/codespace8635531/ubon-fahsai:latest
+    ports:
+      - "80:3000"
+    environment:
+      - SECRET_KEY_BASE=dummy
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - minio
+    networks:
+      - database
+
 networks:
   database:
     driver: bridge
   
 volumes:
-  postgres_data:
-  minio_data:
+  postgres_data: {}
+  minio_data: {}

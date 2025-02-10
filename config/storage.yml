@@ -1,4 +1,4 @@
-minio:
+minio_dev:
   service: S3
   access_key_id: uByqRoocKKz5SAaWYasf
   secret_access_key: t0bcOtQnF8b7w0Cd3ISQta8VH2GATlLvJ9o4BVRt
@@ -6,6 +6,15 @@ minio:
   endpoint: http://localhost:9000
   force_path_style: true
   region: us-east-1
+
+minio:
+  service: S3
+  access_key_id: <%= ENV['MINIO_ROOT_USER'] %>
+  secret_access_key: <%= ENV['MINIO_ROOT_PASSWORD'] %>
+  region: us-east-1
+  bucket: <%= ENV['MINIO_BUCKET'] %>
+  endpoint: <%= ENV['MINIO_ENDPOINT'] || "http://localhost:9000" %>
+  force_path_style: true
 
 test:
   service: Disk
