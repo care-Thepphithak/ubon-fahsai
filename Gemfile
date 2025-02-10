@@ -18,6 +18,8 @@ gem "stimulus-rails"
 gem "jbuilder"
 # Use PostgreSQL as the database for Active Record
 gem "pg", "~> 1.5", ">= 1.5.4"
+# Aws S3
+gem "aws-sdk-s3"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
