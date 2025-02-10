@@ -66,6 +66,28 @@ export default class extends Controller {
     this.longTarget.value = long;
   }
 
+  async getLocationName(lat, lng) {
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=th`);
+      const data = await response.json();
+      console.log(data);
+      
+      const subdistrict = data.address.municipality || "";
+      const district = data.address.city || "";
+
+      if (subdistrict && district) {
+        return `ตำบล${subdistrict} อำเภอ${district}`;
+      } else if (district) {
+        return `${district}`;
+      } else {
+        return "ไม่พบข้อมูลตำแหน่ง";
+      }
+    } catch (error) {
+      console.error("Error fetching location name:", error);
+      return "เกิดข้อผิดพลาดในการดึงข้อมูลตำแหน่ง";
+    }
+  }
+
   locateUser(map) {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported by this browser.");
@@ -87,13 +109,18 @@ export default class extends Controller {
     loadingControl.addTo(map);
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
 
         this.handleLatLongChange(lat, lng);
         map.flyTo([lat, lng], 16);
         map.removeControl(loadingControl);
+    
+        const locationName = await this.getLocationName(lat, lng);
+        console.log(`คุณอยู่ที่: ${locationName}`);
+
+        
 
       }, () => {
         map.removeControl(loadingControl);
