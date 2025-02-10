@@ -55,7 +55,7 @@ export default class extends Controller {
     };
 
     map.on("dragend", () => {
-      document.getElementById('location-name').innerHTML = "กำลังโหลด...";
+      document.getElementById('location-name').innerHTML = "กำลังหาตำแหน่ง...";
       this.handleLatLongChange(map.getCenter().lat, map.getCenter().lng);
 
     });
