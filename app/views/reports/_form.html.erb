@@ -56,7 +56,7 @@
         </div>
 
         <div class="w-[90%] inset-0" data-controller="bottom-sheet">
-          <%= button_helper("ส่งรายงาน", size: 'lg', css_class: 'w-full', data: {action: "click->bottom-sheet#open"}) %>
+          <%= button_helper("ส่งรายงาน", size: 'lg', css_class: 'w-full bg-gray-200' ,id: 'confirm', disabled: true, data: {action: "click->bottom-sheet#open"}) %>
           <%= render "confirm", form: form %>
         </div>
       </div>
