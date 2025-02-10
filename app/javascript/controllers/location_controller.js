@@ -64,39 +64,59 @@ export default class extends Controller {
     console.log("Map initialized.");
   }
 
-  async handleLatLongChange(lat, long){
+  async handleLatLongChange(lat, long) {
     this.latTarget.value = lat;
     this.longTarget.value = long;
-    console.log(`Latitude: ${lat}, Longitude: ${long}`);
+
+    this.disableConfirmButton();
+
     const locationName = await this.getLocationName(lat, long);
     document.getElementById('location-name').innerHTML = locationName;
     this.locationNameTarget.value = locationName;
+
+    this.enableConfirmButton();
+  }
+
+  enableConfirmButton() {
+    const confirmButton = document.getElementById('confirm');
+
+    if (confirmButton) {
+      confirmButton.removeAttribute('disabled');
+      confirmButton.classList.remove('bg-gray-200', 'cursor-not-allowed', 'hover:none');
+      confirmButton.classList.add('hover:bg-[#FF6C64]');
+    }
+  }
+
+  disableConfirmButton() {
+    const confirmButton = document.getElementById('confirm');
+
+    if (confirmButton) {
+      confirmButton.setAttribute('disabled', 'true');
+      confirmButton.classList.add('bg-gray-200', 'cursor-not-allowed');
+      confirmButton.classList.remove('hover:bg-[#FF6C64]');
+
+    }
   }
 
   async getLocationName(lat, lng) {
     try {
       const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=th`);
       const data = await response.json();
-      console.log(data); // เช็กข้อมูลที่ได้จาก API
-  
-      let locationString = data.display_name || ""; // 🔹 เปลี่ยนจาก const → let
-  
-      // กรองข้อมูลที่ไม่ต้องการ
+
+      let locationString = data.display_name || "";
+
       locationString = locationString
-        .replace(/, /g, " ")   // เอา "," ออก
-        .replace(/ประเทศไทย/g, "") // เอาคำว่า "ประเทศไทย" ออก
-        .replace(/\d{5}/g, "")  // เอารหัสไปรษณีย์ 5 ตัวเลขออก
-        .trim();               // ตัดช่องว่างหน้า-หลังออก
-  
-      console.log(locationString); // เช็กค่าหลังจากกรองแล้ว
-  
-      return locationString || "ไม่พบข้อมูลตำแหน่ง"; // ✅ ส่งค่ากลับ
+        .replace(/, /g, " ")
+        .replace(/ประเทศไทย/g, "")
+        .replace(/\d{5}/g, "")
+        .trim();
+
+      return locationString || "ไม่พบข้อมูลตำแหน่ง";
     } catch (error) {
       console.error("Error fetching location name:", error);
-      return "เกิดข้อผิดพลาดในการดึงข้อมูลตำแหน่ง";
+      return "ไม่พบข้อมูลตำแหน่ง";
     }
   }
-  
 
   locateUser(map) {
     if (!navigator.geolocation) {
