@@ -4,6 +4,7 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["map", "lat", "long"];
 
+
   connect() {
     console.log("Location controller is connected");
     if (!this.mapTarget) {
@@ -54,39 +55,47 @@ export default class extends Controller {
     };
 
     map.on("dragend", () => {
+      document.getElementById('location-name').innerHTML = "กำลังโหลด...";
       this.handleLatLongChange(map.getCenter().lat, map.getCenter().lng);
+
     });
 
     locationButton.addTo(map);
     console.log("Map initialized.");
   }
 
-  handleLatLongChange(lat, long) {
+  async handleLatLongChange(lat, long){
     this.latTarget.value = lat;
     this.longTarget.value = long;
+    console.log(`Latitude: ${lat}, Longitude: ${long}`);
+    const locationName = await this.getLocationName(lat, long);
+    document.getElementById('location-name').innerHTML = locationName;
   }
 
   async getLocationName(lat, lng) {
     try {
       const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=th`);
       const data = await response.json();
-      console.log(data);
-      
-      const subdistrict = data.address.municipality || "";
-      const district = data.address.city || "";
-
-      if (subdistrict && district) {
-        return `ตำบล${subdistrict} อำเภอ${district}`;
-      } else if (district) {
-        return `${district}`;
-      } else {
-        return "ไม่พบข้อมูลตำแหน่ง";
-      }
+      console.log(data); // เช็กข้อมูลที่ได้จาก API
+  
+      let locationString = data.display_name || ""; // 🔹 เปลี่ยนจาก const → let
+  
+      // กรองข้อมูลที่ไม่ต้องการ
+      locationString = locationString
+        .replace(/, /g, " ")   // เอา "," ออก
+        .replace(/ประเทศไทย/g, "") // เอาคำว่า "ประเทศไทย" ออก
+        .replace(/\d{5}/g, "")  // เอารหัสไปรษณีย์ 5 ตัวเลขออก
+        .trim();               // ตัดช่องว่างหน้า-หลังออก
+  
+      console.log(locationString); // เช็กค่าหลังจากกรองแล้ว
+  
+      return locationString || "ไม่พบข้อมูลตำแหน่ง"; // ✅ ส่งค่ากลับ
     } catch (error) {
       console.error("Error fetching location name:", error);
       return "เกิดข้อผิดพลาดในการดึงข้อมูลตำแหน่ง";
     }
   }
+  
 
   locateUser(map) {
     if (!navigator.geolocation) {
@@ -119,8 +128,7 @@ export default class extends Controller {
     
         const locationName = await this.getLocationName(lat, lng);
         console.log(`คุณอยู่ที่: ${locationName}`);
-
-        
+        document.getElementById('location-name').innerHTML = locationName;
 
       }, () => {
         map.removeControl(loadingControl);
