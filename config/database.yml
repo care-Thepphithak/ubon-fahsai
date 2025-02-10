@@ -34,15 +34,27 @@ production:
     username: <%= ENV['POSTGRES_USER'] %>
     password: <%= ENV['POSTGRES_PASSWORD'] %>
     host: db
+
   cache:
     <<: *default
-    database: storage/production_cache.sqlite3
+    database: <%= ENV['POSTGRES_DB'] %>
+    username: <%= ENV['POSTGRES_USER'] %>
+    password: <%= ENV['POSTGRES_PASSWORD'] %>
+    host: db
     migrations_paths: db/cache_migrate
+
   queue:
     <<: *default
-    database: storage/production_queue.sqlite3
+    database: <%= ENV['POSTGRES_DB'] %>
+    username: <%= ENV['POSTGRES_USER'] %>
+    password: <%= ENV['POSTGRES_PASSWORD'] %>
+    host: db
     migrations_paths: db/queue_migrate
+
   cable:
     <<: *default
-    database: storage/production_cable.sqlite3
+    database: <%= ENV['POSTGRES_DB'] %>
+    username: <%= ENV['POSTGRES_USER'] %>
+    password: <%= ENV['POSTGRES_PASSWORD'] %>
+    host: db
     migrations_paths: db/cable_migrate
