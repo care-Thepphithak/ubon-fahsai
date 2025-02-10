@@ -58,4 +58,4 @@ ENTRYPOINT ["/myapp/bin/docker-entrypoint"]
 EXPOSE 3000
 
 # Start the Rails server
-CMD ["./bin/rails", "server", "-b", "0.0.0.0"]
+CMD ["./bin/rails", "server"]
