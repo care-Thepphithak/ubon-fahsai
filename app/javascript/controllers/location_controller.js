@@ -82,7 +82,7 @@ export default class extends Controller {
 
     if (confirmButton) {
       confirmButton.removeAttribute('disabled');
-      confirmButton.classList.remove('bg-gray-200', 'cursor-not-allowed', 'hover:none');
+      confirmButton.classList.remove('bg-gray-200', 'cursor-not-allowed');
       confirmButton.classList.add('hover:bg-[#FF6C64]');
     }
   }
