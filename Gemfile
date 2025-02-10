@@ -71,5 +71,5 @@ end
 
 gem "tailwindcss-ruby", "~> 4.0"
 gem "font-awesome-rails"
-gem "aws-sdk-s3", "~> 1.180"
+gem "aws-sdk-s3"
 gem "dotenv-rails"
