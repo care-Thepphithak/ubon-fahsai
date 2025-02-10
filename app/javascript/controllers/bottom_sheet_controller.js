@@ -15,16 +15,16 @@ export default class extends Controller {
     this.bottomSheetTarget.classList.add("flex");
     
     const modalContent = this.bottomSheetTarget.querySelector("div");
-    modalContent.classList.remove("fade-out");
-    modalContent.classList.add("fade-in");
+    modalContent.classList.remove("slide-down");
+    modalContent.classList.add("slide-up");
   }
 
   close(event) {
     event.preventDefault();
 
     const modalContent = this.bottomSheetTarget.querySelector("div");
-    modalContent.classList.remove("fade-in");
-    modalContent.classList.add("fade-out");
+    modalContent.classList.remove("slide-up");
+    modalContent.classList.add("slide-down");
 
     setTimeout(() => this.bottomSheetTarget.classList.add("hidden"), 300);
   }
