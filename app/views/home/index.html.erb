@@ -1,7 +1,17 @@
-<div>
-  <h1 class="font-bold text-4xl text-red-300">Home#index</h1>
-  <p>Find me in app/views/home/index.html.erb</p>
-  <i class="fa-brands fa-font-awesome"></i>
-<i class="fa-solid fa-user-secret"></i>
-<i class="fa-regular fa-bell"></i>
+<div class="m-4">
+  <h1 class="font-bold text-4xl mb-6 text-[#FF6159]">อุบลฟ้าใส</h1>
+  <%= link_to "รายงานไฟไหม้", reports_path, class: button_helper("ดูรายงาน", variant: :solid, size: :md, css_class: "inline-block px-4 py-2") %>
+  <div class="grid mt-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <% @reports.each do |report| %>
+      <div class="bg-white p-4 border border-gray-200 rounded-lg shadow-md">
+        <h2 class="font-bold text-xl text-[#FF6159]">lat: <%= report.lat %>, long: <%= report.long %></h2>
+        <p class="text-gray-600">สร้างเมื่อ: <%= report.created_at %></p>
+        <div class="grid grid-cols-2 gap-2">
+          <% report.images.each do |image| %>
+            <%= image_tag image, class: "w-full h-24 object-cover rounded-lg" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>
