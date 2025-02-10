@@ -5,6 +5,7 @@ minio:
   bucket: ubon-fahsai-local
   endpoint: http://localhost:9000
   force_path_style: true
+  region: us-east-1
 
 test:
   service: Disk
