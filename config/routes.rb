@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :reports
+  resources :reports, only: [ :index, :create ]
   # get "home", to: "home#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
