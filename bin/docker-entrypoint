@@ -8,11 +8,10 @@ fi
 
 # If running the rails server then create or migrate existing database
 if [ "$1" = "./bin/rails" ] && [ "$2" = "server" ]; then
-  ./bin/rails db:create
-  ./bin/rails db:migrate
   ./bin/rails db:prepare
+  ./bin/rails db:migrate
   ./bin/rails active_storage:install
-  ./bin/jobs
+  ./bin/jobs &
 fi
 
 exec "${@}"
