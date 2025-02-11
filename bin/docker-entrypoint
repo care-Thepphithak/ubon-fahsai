@@ -12,6 +12,7 @@ if [ "$1" = "./bin/rails" ] && [ "$2" = "server" ]; then
   ./bin/rails db:migrate
   ./bin/rails db:prepare
   ./bin/rails active_storage:install
+  ./bin/jobs
 fi
 
 exec "${@}"

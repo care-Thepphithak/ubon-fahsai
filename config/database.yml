@@ -53,7 +53,7 @@ production:
 
   cable:
     <<: *default
-    database: qube_cable
+    database: queue_cable
     username: <%= ENV['POSTGRES_USER'] %>
     password: <%= ENV['POSTGRES_PASSWORD'] %>
     host: db
