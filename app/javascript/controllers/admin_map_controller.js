@@ -20,7 +20,7 @@ export default class extends Controller {
     map.locate({
       enableHighAccuracy: true,
       timeout: 10000,
-      maximumAge: 0
+      maximumAge: 30000
     });
 
     map.on("locationfound", (e) => {
