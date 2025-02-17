@@ -11,8 +11,6 @@ class Report < ApplicationRecord
     "วิกฤติ" => (81..100)
   }.freeze
 
-  serialize :tags, coder: JSON
-
   validates :tags, presence: true
   validate :tags_must_be_valid
   validates :severity_level, inclusion: { in: SEVERITY_LEVELS.keys }
