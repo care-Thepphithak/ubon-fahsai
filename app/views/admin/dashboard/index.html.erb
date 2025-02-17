@@ -1,4 +1,26 @@
-<div>
-  <h1 class="font-bold text-4xl">Admin::Dashboard#index</h1>
-  <p>Find me in app/views/admin/dashboard/index.html.erb</p>
+<div data-controller="admin-map" class="container mx-auto">
+  <div data-admin-map-target="map" class="rounded-xl h-[800px] mt-4"></div>
+</div>
+<div class="m-4">
+  <h1 class="font-bold text-4xl mb-6 text-[#FF6159]">อุบลฟ้าใส</h1>
+  <%= link_to "รายงานไฟไหม้", reports_path, class: button_helper("ดูรายงาน", variant: :solid, size: :md, css_class: "inline-block px-4 py-2") %>
+  <div class="grid mt-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <% @reports.each do |report| %>
+      <div class="bg-white p-4 border border-gray-200 rounded-lg shadow-md">
+        <h2 class="font-bold text-xl text-[#FF6159]"><%= report.location_name %></h2>
+        <p class="text-gray-500">lat: <%= report.lat %>, long: <%= report.long %></p>
+        <p class="text-gray-500 mb-3">สร้างเมื่อ: <%= report.created_at %></p>
+        <% if report.images.one? %>
+          <%= image_tag report.images.first, class: "w-full h-64 object-cover rounded-lg" %>
+        <% else %>
+          <div class="grid grid-cols-2 gap-2">
+            <% report.images.each do |image| %>
+              <%= image_tag image, class: "w-full h-32 object-cover rounded-lg" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
 </div>
