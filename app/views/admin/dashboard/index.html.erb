@@ -1,5 +1,5 @@
 <div class="w-[100vw] h-[100vh] flex flex-col p-4">
-  <div class="w-[80%] mx-auto">
+  <div class="w-[90%] mx-auto">
     <div class="">
       <h1 class="font-bold text-4xl">Admin</h1>
       <p class="font-bold text-3xl">อุบลฟ้าใส</p>
@@ -10,19 +10,25 @@
         <div data-admin-map-target="map" class="rounded-xl h-[800px]"></div>
       </div>
 
-      <div class="w-[30%] h-[70vh] overflow-y-scroll bg-[#F3F3F3] flex gap-4 flex-col p-5 rounded-xl min-w-[25vw]">
+      <div class="w-[35%] h-[70vh] overflow-y-scroll bg-[#F3F3F3] flex gap-4 flex-col p-5 rounded-xl min-w-[30vw]">
         <p>รายการสถานการณ์ไฟไหม้</p>
         <% @reports.each do |report| %>
-          <div class="flex bg-white py-[10px] pr-[16px]  rounded-lg items-center">
+          <div class="flex bg-white py-3 pr-[16px]  rounded-lg items-center">
             <div class="flex flex-col mx-4 items-center w-fit text-nowrap">
               <svg width="40" height="46" viewBox="0 0 30 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M8.27344 35.0512C1.092 31.0038 -0.798717 27.1728 0.282262 21.9405C1.08029 18.077 3.69339 14.9336 3.94394 11.0775C5.06018 13.1088 5.52659 14.5736 5.65132 16.6963C9.20151 12.3466 11.5475 6.32517 11.6865 0C11.6865 0 20.9334 5.43323 21.5402 13.6402C22.3362 11.9486 22.7369 9.26193 21.9409 7.5207C24.329 9.26202 38.3067 24.7203 20.0476 35.0512C23.4805 28.367 20.9332 19.3479 14.9728 15.1825C15.3709 16.9736 14.673 23.6538 12.036 26.5892C12.7667 21.6845 11.3409 19.6105 11.3409 19.6105C11.3409 19.6105 10.8515 22.3578 8.95276 25.133C7.2189 27.6673 6.01752 30.357 8.27344 35.0512Z" fill="#FF392F"/>
               </svg>
               <p class="text-gray-500">ปานกลาง</p>
             </div>
-            <div class="flex flex-col gap-2 ">
+            <div class="flex flex-col">
               <h2 class="font-bold text-black text-base line-clamp-2"><%= report.location_name %></h2>
-              <p class="text-gray-500 mb-3 text-[14px]"><%= time_ago_in_words(report.created_at, datetime: :distance_in_words, locale: :th) %> ที่แล้ว</p>
+              <p class="text-gray-500 text-[14px]"><%= time_ago_in_words(report.created_at, datetime: :distance_in_words, locale: :th) %> ที่แล้ว</p>
+              <div class="flex gap-1 mt-3 flex-wrap">
+                <p class="px-2 py-0.5 bg-gray-300 rounded-md">ไร่อ้อย</p>
+                <p class="px-2 py-0.5 bg-gray-300 rounded-md">ไร่อ้อย</p>
+                <p class="px-2 py-0.5 bg-gray-300 rounded-md">ไร่อ้อย</p>
+                <p class="px-2 py-0.5 bg-gray-300 rounded-md">ไร่อ้อย</p>
+              </div>
             </div>
           </div>
         <% end %>
