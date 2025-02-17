@@ -6,7 +6,7 @@
       </div>
     </div>
 
-    <div class="absolute left-0 right-0 top-36 mx-auto flex w-[90%] max-w-[1300px] mt-10 gap-[20px]">
+    <div class="absolute pb-12 left-0 right-0 top-36 mx-auto flex flex-col xl:flex-row w-[90%] max-w-[1300px] mt-10 gap-[20px]">
       <div data-controller="admin-map" class="container mx-auto" data-admin-map-reports-value="<%= @reports.to_json %>">
         <div data-admin-map-target="map" class="rounded-xl h-[800px] z-0"></div>
         <div data-admin-map-target="modal" class="hidden">
@@ -18,7 +18,7 @@
           <% end %>
         </div>
       </div>
-      <div class="w-[35%] h-[70vh] overflow-y-scroll bg-[#F3F3F3] flex gap-4 flex-col p-5 rounded-xl min-w-[30vw]">
+      <div class="w-full xl:w-[35%] h-[800px] overflow-y-scroll no-scrollbar bg-[#F3F3F3] flex gap-4 flex-col p-5 rounded-xl min-w-[30vw]">
         <p>รายการสถานการณ์ไฟไหม้</p>
         <% @reports.each do |report| %>
           <div class="flex bg-white py-3 pr-[16px]  rounded-lg items-center">
