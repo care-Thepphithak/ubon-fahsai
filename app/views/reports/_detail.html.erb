@@ -1,0 +1,11 @@
+<div class="w-full mt-6">
+    <div class="flex w-full md:w-[90%] mx-auto h-52 px-6 md:px-0 overflow-x-scroll gap-3 mb-4 no-scrollbar" data-report-target="previewDetailImages">
+        <i class="min-w-64 h-full bg-gray-100 rounded-lg flex items-center justify-center">
+            <i class="fas fa-camera text-5xl text-gray-300"></i>
+        </i>
+    </div>
+   <div class="w-[90%] mx-auto">
+    <%= form.label :description, "รายละเอียด", class: "text-gray-400" %>
+    <%= form.text_area :description, class: "w-full rounded-md bg-white outline-hidden px-3 py-2 mt-2", rows: 4, placeholder: "รายละเอียดเกี่ยวกับสถานการณ์ไฟไหม้" %>
+   </div>   
+</div>
