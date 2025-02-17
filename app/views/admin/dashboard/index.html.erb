@@ -6,7 +6,7 @@
     </div>
 
     <div class="flex mt-10 gap-[20px]">
-      <div data-controller="admin-map" class="container mx-auto">
+      <div data-controller="admin-map" class="container mx-auto" data-admin-map-reports-value="<%= @reports.to_json %>">
         <div data-admin-map-target="map" class="rounded-xl h-[800px]"></div>
       </div>
 
