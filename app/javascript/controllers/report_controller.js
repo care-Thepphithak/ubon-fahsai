@@ -3,8 +3,12 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="report"
 export default class extends Controller {
   static values = { step: Number };
-  static targets = ["step", "imagesInput", "previewImages", "previewDetailImages", "tagContainer", "locationContainer"]
+  static targets = ["step", "imagesInput", "previewImages", "previewDetailImages", "locationContainer",
+                    "tagContainer", "severitySlider", "severityLabel"
+                   ];
   selectedFiles = [];
+  selectedTags = [];
+  severityLevel = "ปานกลาง";
 
   connect() {
     this.showStep();
@@ -169,5 +173,35 @@ export default class extends Controller {
       uploadButton.classList.remove("hidden", "cursor-not-allowed");
       uploadButton.classList.add("cursor-pointer", "fade-in");
     }
+  }
+
+  toggleTag(event) {
+    const tag = event.target.dataset.tag;
+    if (this.selectedTags.includes(tag)) {
+      this.selectedTags = this.selectedTags.filter(t => t !== tag);
+      event.target.classList.remove("bg-blue-500", "text-white");
+      event.target.classList.add("bg-gray-200", "text-gray-700");
+    } else {
+      this.selectedTags.push(tag);
+      event.target.classList.remove("bg-gray-200", "text-gray-700");
+      event.target.classList.add("bg-blue-500", "text-white");
+    }
+    console.log("Selected Tags:", this.selectedTags);
+  }
+
+  updateSeverity(event) {
+    const value = event.target.value;
+    if (value <= 20) {
+      this.severityLevel = "เล็กน้อย";
+    } else if (value <= 40) {
+      this.severityLevel = "ปานกลาง";
+    } else if (value <= 60) {
+      this.severityLevel = "รุนแรง";
+    } else if (value <= 80) {
+      this.severityLevel = "รุนแรงมาก";
+    } else {
+      this.severityLevel = "วิกฤติ";
+    }
+    this.severityLabelTarget.textContent = this.severityLevel;
   }
 }
