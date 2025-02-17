@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    resources :dashboard, only: [ :index ]
+  end
   resources :reports, only: [ :index, :create ]
   # get "home", to: "home#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
