@@ -10,12 +10,14 @@ export default class extends Controller {
       center: [15.2313, 104.8567],
       zoom: 13
     });
+    const loadingControl = L.control({ position: 'topright' });
 
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
-    this.addLocateCurrentPositionButton(map);
+    this.addLocateCurrentPositionButton(map, loadingControl);
+    this.addLoadingLocationMessage(map, loadingControl);
 
     map.locate({
       enableHighAccuracy: true,
@@ -25,6 +27,7 @@ export default class extends Controller {
 
     map.on("locationfound", (e) => {
       map.flyTo(e.latlng, 13);
+      this.removeLoadingLocationMessage(map, loadingControl);
     });
 
     map.on("locationerror", () => {
@@ -48,7 +51,7 @@ export default class extends Controller {
     });
   }
 
-  addLocateCurrentPositionButton(map) {
+  addLocateCurrentPositionButton(map, loadingControl) {
     const locationButton = L.control({ position: 'bottomright' });
 
     locationButton.onAdd = () => {
@@ -64,6 +67,7 @@ export default class extends Controller {
       button.style.justifyContent = 'center';
 
       L.DomEvent.on(button, 'click', (e) => {
+        this.addLoadingLocationMessage(map, loadingControl);
         L.DomEvent.preventDefault(e);
         map.locate();
       });
@@ -72,5 +76,24 @@ export default class extends Controller {
     };
 
     locationButton.addTo(map);
+  }
+
+  addLoadingLocationMessage(map, loadingControl) {
+    loadingControl.onAdd = () => {
+      const div = L.DomUtil.create('div', 'leaflet-bar leaflet-control bg-white px-3 py-2 rounded-lg shadow-md');
+      div.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-gray-700">กำลังหาตำแหน่ง...</span>
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+          </div>
+        `;
+      return div;
+    };
+
+    loadingControl.addTo(map);
+  }
+
+  removeLoadingLocationMessage(map, loadingControl) {
+    map.removeControl(loadingControl);
   }
 }
