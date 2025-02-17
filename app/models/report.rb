@@ -1,8 +1,7 @@
 class Report < ApplicationRecord
   include ActionView::Helpers::DateHelper
-  belongs_to :user
-  has_many_attached :images
 
+  has_many_attached :images
 
   def as_json(options = {})
     super(options).merge(
