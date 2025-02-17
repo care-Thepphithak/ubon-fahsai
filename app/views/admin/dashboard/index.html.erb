@@ -1,26 +1,26 @@
-<div data-controller="admin-map" class="container mx-auto">
-  <div data-admin-map-target="map" class="rounded-xl h-[800px] mt-4"></div>
-</div>
-<div class="m-4">
-  <h1 class="font-bold text-4xl mb-6 text-[#FF6159]">อุบลฟ้าใส</h1>
-  <%= link_to "รายงานไฟไหม้", reports_path, class: button_helper("ดูรายงาน", variant: :solid, size: :md, css_class: "inline-block px-4 py-2") %>
-  <div class="grid mt-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+<div class="w-[100vw] h-[100vh]">
+  <h1 class="font-bold text-4xl">Admin</h1>
+  <p class="font-bold text-3xl">อุบลฟ้าใส</p>
+  
+  <div data-controller="admin-map" class="container mx-auto">
+    <div data-admin-map-target="map" class="rounded-xl h-[800px] mt-4"></div>
+  </div>
+
+  <div class="w-[30%] bg-[#F3F3F3] flex gap-4 flex-col p-5">
+    <p>รายการสถานการณ์ไฟไหม้</p>
     <% @reports.each do |report| %>
-      <div class="bg-white p-4 border border-gray-200 rounded-lg shadow-md">
-        <h2 class="font-bold text-xl text-[#FF6159]"><%= report.location_name %></h2>
-        <p class="text-gray-500">lat: <%= report.lat %>, long: <%= report.long %></p>
-        <p class="text-gray-500 mb-3">สร้างเมื่อ: <%= report.created_at %></p>
-        <% if report.images.one? %>
-          <%= image_tag report.images.first, class: "w-full h-64 object-cover rounded-lg" %>
-        <% else %>
-          <div class="grid grid-cols-2 gap-2">
-            <% report.images.each do |image| %>
-              <%= image_tag image, class: "w-full h-32 object-cover rounded-lg" %>
-            <% end %>
-          </div>
-        <% end %>
+      <div class="flex bg-white py-[10px] pr-[16px]  rounded-lg items-center">
+        <div class="flex flex-col mx-4 items-center w-fit text-nowrap">
+          <svg width="40" height="46" viewBox="0 0 30 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8.27344 35.0512C1.092 31.0038 -0.798717 27.1728 0.282262 21.9405C1.08029 18.077 3.69339 14.9336 3.94394 11.0775C5.06018 13.1088 5.52659 14.5736 5.65132 16.6963C9.20151 12.3466 11.5475 6.32517 11.6865 0C11.6865 0 20.9334 5.43323 21.5402 13.6402C22.3362 11.9486 22.7369 9.26193 21.9409 7.5207C24.329 9.26202 38.3067 24.7203 20.0476 35.0512C23.4805 28.367 20.9332 19.3479 14.9728 15.1825C15.3709 16.9736 14.673 23.6538 12.036 26.5892C12.7667 21.6845 11.3409 19.6105 11.3409 19.6105C11.3409 19.6105 10.8515 22.3578 8.95276 25.133C7.2189 27.6673 6.01752 30.357 8.27344 35.0512Z" fill="#FF392F"/>
+          </svg>
+          <p class="text-gray-500">ปานกลาง</p>
+        </div>
+        <div class="flex flex-col gap-2 ">
+          <h2 class="font-bold text-black text-base line-clamp-2"><%= report.location_name %></h2>
+          <p class="text-gray-500 mb-3 text-[14px]"><%= time_ago_in_words(report.created_at, datetime: :distance_in_words, locale: :th) %> ที่แล้ว</p>
+        </div>
       </div>
     <% end %>
   </div>
-</div>
 </div>
