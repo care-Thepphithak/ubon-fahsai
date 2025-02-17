@@ -22,7 +22,7 @@ Rails.application.configure do
   # config.asset_host = "http://assets.example.com"
 
   # Enable http active storage service without force ssl
-  config.active_storage.asset_host = ENV.fetch("MINIO_ENDPOINT", "http://10.11.0.50:9000")
+  config.active_storage.asset_host = ENV.fetch("MINIO_ENDPOINT")
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :minio
