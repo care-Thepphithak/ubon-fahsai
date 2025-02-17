@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
-  static targets = ["map","modal","reports"]
+  static targets = ["map", "modal", "reports", "fireImage", "locationName", "severityLevel", "createdAt", "description"]
   static values = {
     reports: Array
   }
@@ -34,7 +34,6 @@ export default class extends Controller {
       alert("Geolocation permission denied or unavailable.")
     });
 
-    console.log(this.reportsValue)
     this.displayLocations(map)
   }
 
@@ -49,7 +48,7 @@ export default class extends Controller {
     this.reportsValue.forEach(report => {
       const marker = L.marker([report.lat, report.long], { icon: customIcon }).addTo(map);
       marker.on('click', () => {
-        this.openModals();
+        this.openModal(report);
       });
     });
   }
@@ -100,12 +99,18 @@ export default class extends Controller {
     map.removeControl(loadingControl);
   }
 
-
-  openModals() {
+  openModal(report) {
+    this.fireImageTarget.src = report.images_urls[0];
+    this.locationNameTarget.innerHTML = report.location_name;
+    this.severityLevelTarget.innerHTML = report.severity_level;
+    this.createdAtTarget.innerHTML = report.created_at;
+    this.descriptionTarget.innerHTML = report.description;
     this.modalTarget.classList.remove('hidden');
   }
 
-  closeModals() {
+  closeModal() {
     this.modalTarget.classList.add('hidden');
   }
+
+  modifyModalContent(event) {}
 }
