@@ -4,12 +4,18 @@
       <h1 class="font-bold text-4xl">Admin</h1>
       <p class="font-bold text-3xl">อุบลฟ้าใส</p>
     </div>
-
     <div class="flex mt-10 gap-[20px]">
       <div data-controller="admin-map" class="container mx-auto" data-admin-map-reports-value="<%= @reports.to_json %>">
-        <div data-admin-map-target="map" class="rounded-xl h-[800px]"></div>
+        <div data-admin-map-target="map" class="rounded-xl h-[800px] z-0"></div>
+        <div data-admin-map-target="modal" class="hidden">
+          <%= render "shared/modal" do %>
+            <h2 class="text-2xl text-[#FF6159] pb-[20px]">ส่งรายงานไฟไหม้</h2>
+            <p class="text-sm text-gray-500 pb-2"><%= l(Time.current, format: :full, locale: :th) %></p>
+            <p id="location-name-bottom-sheet" class="text-center text-lg text-gray-500 pb-[30px]"></p>
+            <button data-action="click->admin-map#closeModals"> ปิด</button>
+          <% end %>
+        </div>
       </div>
-
       <div class="w-[35%] h-[70vh] overflow-y-scroll bg-[#F3F3F3] flex gap-4 flex-col p-5 rounded-xl min-w-[30vw]">
         <p>รายการสถานการณ์ไฟไหม้</p>
         <% @reports.each do |report| %>

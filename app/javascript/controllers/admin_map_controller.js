@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
-  static targets = ["map"]
+  static targets = ["map","modal","reports"]
   static values = {
     reports: Array
   }
@@ -47,7 +47,10 @@ export default class extends Controller {
     })
 
     this.reportsValue.forEach(report => {
-      L.marker([report.lat, report.long], { icon: customIcon }).addTo(map)
+      const marker = L.marker([report.lat, report.long], { icon: customIcon }).addTo(map);
+      marker.on('click', () => {
+        this.openModals();
+      });
     });
   }
 
@@ -95,5 +98,14 @@ export default class extends Controller {
 
   removeLoadingLocationMessage(map, loadingControl) {
     map.removeControl(loadingControl);
+  }
+
+
+  openModals() {
+    this.modalTarget.classList.remove('hidden');
+  }
+
+  closeModals() {
+    this.modalTarget.classList.add('hidden');
   }
 }
