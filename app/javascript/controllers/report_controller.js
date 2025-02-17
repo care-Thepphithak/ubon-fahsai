@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="report"
 export default class extends Controller {
-  static values = { step: Number };
+  static values = { step: Number, severityLevels: Object };
   static targets = ["step", "imagesInput", "previewImages", "previewDetailImages", "locationContainer",
                     "tagContainer", "severitySlider", "severityLabel", "severityInput"
                    ];
@@ -192,19 +192,14 @@ export default class extends Controller {
   
 
   updateSeverity(event) {
-    const value = event.target.value;
-    if (value <= 20) {
-      this.severityLevel = "เล็กน้อย";
-    } else if (value <= 40) {
-      this.severityLevel = "ปานกลาง";
-    } else if (value <= 60) {
-      this.severityLevel = "รุนแรง";
-    } else if (value <= 80) {
-      this.severityLevel = "รุนแรงมาก";
-    } else {
-      this.severityLevel = "วิกฤติ";
-    }
-    this.severityLabelTarget.textContent = this.severityLevel;
-    this.severityInputTarget.value = this.severityLevel;
+    const value = event ? event.target.value : this.severitySliderTarget.value;
+    const severityLabel = this.getSeverityLabel(value);
+
+    this.severityLabelTarget.textContent = severityLabel;
+    this.severityInputTarget.value = severityLabel;
+  }
+
+  getSeverityLabel(value) {
+    return Object.entries(this.severityLevelsValue).find(([_, max]) => value <= max)?.[0] || "วิกฤติ";
   }
 }
