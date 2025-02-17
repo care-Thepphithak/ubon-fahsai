@@ -24,7 +24,7 @@ export default class extends Controller {
       const nextStep = this.stepTargets[currentStep + 1];
 
       nextStep.addEventListener('animationend', () => {
-        if (currentStep === 0) {
+        if (currentStep === 1) {
           this.dispatch("initMap", { target: this.locationContainerTarget })
         }
       }, { once: true });
