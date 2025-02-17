@@ -7,7 +7,7 @@
    <div class="w-[90%] mx-auto">
         <div class="flex flex-wrap gap-2 mb-3">
             <% Report::TAGS.each do |tag| %>
-                <button type="button" class="px-4 py-2 rounded-lg bg-gray-200 text-gray-700" 
+                <button type="button" class="px-3 py-2 rounded-lg bg-gray-200 text-gray-600" 
                 data-action="click->report#toggleTag"
                 data-tag="<%= tag %>">
                 <%= tag %>
@@ -17,7 +17,7 @@
         <%= form.hidden_field :tags, data: { report_target: "selectedTags" }, name: "report[tags]" %>
 
         <%= form.label :description, "รายละเอียด", class: "text-gray-400" %>
-        <%= form.text_area :description, class: "w-full rounded-md bg-white outline-hidden px-3 py-2 mt-2", rows: 4, placeholder: "รายละเอียดเกี่ยวกับสถานการณ์ไฟไหม้" %>
+        <%= form.text_area :description, maxlength: 300, class: "w-full rounded-md bg-white outline-hidden px-3 py-2 mt-2 text-base text-gray-600", rows: 4, placeholder: "รายละเอียดเกี่ยวกับสถานการณ์ไฟไหม้" %>
 
         <div class="mt-4">
             <div class="flex items-center">
