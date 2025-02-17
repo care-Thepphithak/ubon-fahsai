@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="report"
 export default class extends Controller {
   static values = { step: Number };
-  static targets = ["step", "imagesInput", "previewImages", "locationContainer"]
+  static targets = ["step", "imagesInput", "previewImages", "previewDetailImages", "tagContainer", "locationContainer"]
   selectedFiles = [];
 
   connect() {
@@ -112,11 +112,13 @@ export default class extends Controller {
 
   renderPreview() {
     const previewContainer = this.previewImagesTarget;
+    const detailPreviewContainer = this.previewDetailImagesTarget;
     previewContainer.innerHTML = "";
+    detailPreviewContainer.innerHTML = "";
 
     if (this.selectedFiles.length === 0) {
       previewContainer.innerHTML = `
-        <i class="min-w-64 h-72 bg-gray-100 rounded-lg flex items-center justify-center">
+        <i class="min-w-64 h-72 bg-white rounded-lg flex items-center justify-center">
           <i class="fas fa-camera text-5xl text-gray-300"></i>
         </i>
       `;
@@ -141,6 +143,15 @@ export default class extends Controller {
           div.appendChild(img);
           div.appendChild(deleteButton);
           previewContainer.appendChild(div);
+
+          const detailDiv = document.createElement("div");
+
+          const detailImg = document.createElement("img");
+          detailImg.src = e.target.result;
+          detailImg.classList.add("min-w-48", "h-52", "w-48", "object-cover", "rounded-lg", "shadow-md");
+
+          detailDiv.appendChild(detailImg);
+          detailPreviewContainer.appendChild(detailDiv);
         };
         reader.readAsDataURL(file);
       });
@@ -148,6 +159,7 @@ export default class extends Controller {
 
     document.querySelector("p.text-gray-400").textContent = `เลือกแล้ว ${this.selectedFiles.length} รูปภาพ`;
   }
+
 
   toggleUploadButton() {
     const uploadButton = document.querySelector("label[for='report_images']");
