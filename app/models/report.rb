@@ -61,6 +61,6 @@ class Report < ApplicationRecord
   end
 
   def images_urls
-    images.map { |image| Rails.application.routes.url_helpers.rails_blob_url(image) }
+    images.attached? ? images.map { |img| Rails.application.routes.url_helpers.rails_blob_url(img, only_path: true) } : []
   end
 end
