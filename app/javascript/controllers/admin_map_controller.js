@@ -1,8 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
-
-// Connects to data-controller="admin-map"
 export default class extends Controller {
   static targets = ["map"]
+  static values = {
+    reports: Array
+  }
 
   connect() {
     const map = L.map(this.mapTarget, {
@@ -13,5 +14,23 @@ export default class extends Controller {
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap'
     }).addTo(map);
+
+    console.log(this.reportsValue)
+    this.DisplayLocations(map)
+  }
+
+  DisplayLocations(map) {
+    const customIcon = L.icon({
+      iconUrl: customIconUrl,
+      iconSize: [32, 37],
+      iconAnchor: [16, 37],
+      popupAnchor: [0, -28]
+    })
+
+    this.reportsValue.forEach(report => {
+      L.marker([report.lat, report.long], { icon: customIcon }).addTo(map)
+
+    });
+
   }
 }

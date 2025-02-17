@@ -2,9 +2,10 @@
   <h1 class="font-bold text-4xl">Admin</h1>
   <p class="font-bold text-3xl">อุบลฟ้าใส</p>
   
-  <div data-controller="admin-map" class="container mx-auto">
+  <div data-controller="admin-map" class="container mx-auto" data-admin-map-reports-value="<%= @reports.to_json %>">
     <div data-admin-map-target="map" class="rounded-xl h-[800px] mt-4"></div>
   </div>
+
 
   <div class="w-[30%] bg-[#F3F3F3] flex gap-4 flex-col p-5">
     <p>รายการสถานการณ์ไฟไหม้</p>
