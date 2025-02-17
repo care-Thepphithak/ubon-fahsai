@@ -15,11 +15,13 @@ export default class extends Controller {
       attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
+    map.locate({ setView: true, maxZoom: 16 });
+
     console.log(this.reportsValue)
-    this.DisplayLocations(map)
+    this.displayLocations(map)
   }
 
-  DisplayLocations(map) {
+  displayLocations(map) {
     const customIcon = L.icon({
       iconUrl: customIconUrl,
       iconSize: [32, 37],
@@ -29,8 +31,6 @@ export default class extends Controller {
 
     this.reportsValue.forEach(report => {
       L.marker([report.lat, report.long], { icon: customIcon }).addTo(map)
-
     });
-
   }
 }
