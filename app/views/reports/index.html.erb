@@ -1,5 +1,5 @@
 <% content_for :title, "New report" %>
 
-<div data-controller="report" class="bg-gray-100">
+<div data-controller="report" class="bg-gray-100" data-report-severity-levels-value="<%= Report.severity_levels_json %>">
   <%= render "form", report: @report %>
 </div>
