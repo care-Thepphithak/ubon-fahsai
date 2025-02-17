@@ -22,6 +22,6 @@ class ReportsController < ApplicationController
   private
     # Only allow a list of trusted parameters through.
     def report_params
-      params.expect(report: [ :lat, :long, :location_name, images: [] ])
+      params.expect(report: [ :lat, :long, :location_name, :description, :tags, :severity_level,  images: [] ])
     end
 end
