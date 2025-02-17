@@ -12,6 +12,7 @@ class Report < ApplicationRecord
   }.freeze
 
   validate :tags_must_be_valid
+  validates :description, length: { maximum: 300 }
   validates :severity_level, inclusion: { in: SEVERITY_LEVELS.keys }
 
   private
