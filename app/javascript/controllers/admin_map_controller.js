@@ -15,7 +15,7 @@ export default class extends Controller {
       attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
-    map.locate({ setView: true, maxZoom: 16 });
+    map.locate({ setView: true, maxZoom: 13 });
 
     console.log(this.reportsValue)
     this.displayLocations(map)
