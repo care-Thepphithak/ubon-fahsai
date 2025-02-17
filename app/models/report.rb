@@ -1,10 +1,14 @@
 class Report < ApplicationRecord
+  include ActionView::Helpers::DateHelper
+  belongs_to :user
   has_many_attached :images
+
 
   def as_json(options = {})
     super(options).merge(
       severity_color: severity_color,
-      images_urls: images_urls
+      images_urls: images_urls,
+      time_ago_message: time_ago_in_words(created_at, datetime: :distance_in_words, locale: :th) + " ที่แล้ว"
     )
   end
 

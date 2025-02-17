@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import { createConsumer } from "@rails/actioncable"
 
 export default class extends Controller {
-  static targets = ["map", "modal", "reports", "fireImage", "locationName", "severityLevel", "createdAt", "description"]
+  static targets = ["map", "modal", "reports", "fireImages", "locationName", "severityLevel", "createdAt", "description"]
   static values = {
     reports: Array
   }
@@ -104,10 +104,19 @@ export default class extends Controller {
   }
 
   openModal(report) {
-    this.fireImageTarget.src = report.images_urls[0];
+    //create images in div (fireImages)
+    this.fireImagesTarget.innerHTML = "";
+    report.images_urls.forEach(imageUrl => {
+      const img = document.createElement('img');
+      img.src = imageUrl;
+      img.classList.add('w-96', 'h-64', 'object-cover', 'rounded-lg', 'mr-2');
+      this.fireImagesTarget.appendChild(img);
+    });
+    
+    // this.fireImagesTarget = report.images_urls[0];
     this.locationNameTarget.innerHTML = report.location_name;
     this.severityLevelTarget.innerHTML = report.severity_level;
-    this.createdAtTarget.innerHTML = report.created_at;
+    this.createdAtTarget.innerHTML = report.time_ago_message;
     this.descriptionTarget.innerHTML = report.description;
     this.modalTarget.classList.remove('hidden');
   }

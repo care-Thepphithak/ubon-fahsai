@@ -9,18 +9,26 @@
     <div class="absolute pb-12 left-0 right-0 top-36 mx-auto flex flex-col xl:flex-row w-[90%] max-w-[1300px] mt-10 gap-[20px]">
       <div data-controller="admin-map" class="container mx-auto" data-admin-map-reports-value="<%= @reports.to_json %>">
         <div data-admin-map-target="map" class="rounded-xl h-[800px] z-0"></div>
+
         <div data-admin-map-target="modal" class="hidden">
           <%= render "shared/modal" do %>
-            <img data-admin-map-target="fireImage" src="" alt="fire-image">
-            <h1 data-admin-map-target="locationName"></h1>
-            <div class="flex justify-between items-center">
-              <p data-admin-map-target="severityLevel" class="text-red-400"></p>
-              <p data-admin-map-target="createdAt" class="text-gray-500 text-[14px]"></p>
+            <div data-admin-map-target="fireImages" class="flex gap-2 no-scrollbar overflow-x-scroll rounded-lg"></div>
+
+            <h1 data-admin-map-target="locationName" class="text-2xl font-bold text-gray-700 mt-4 mb-1"></h1>
+            <div class="flex items-center">
+              <div class="px-4 py-2 rounded-lg bg-red-100 mr-4">
+                <p data-admin-map-target="severityLevel" class="text-red-400 text-md font-semibold"></p>
+              </div>
+              <p data-admin-map-target="createdAt" class="text-gray-500 text-md"></p>
             </div>
-            <p data-admin-map-target="description" class="text-gray-500"></p>
-            <button data-action="click->admin-map#closeModal"> ปิด</button>
+                <p class="text-gray-500 text-lg mt-3 ">รายละเอียด</p>
+                <div class="flex px-4 py-3 flex-col items-start w-ful bg-gray-100 rounded-lg my-2">
+                  <span data-admin-map-target="description" class="text-gray-500 text-lg"></span>
+                </div>
+            <button data-action="click->admin-map#closeModal" class="bg-red-400 p-3 mt-4 rounded-lg text-xl w-full hover:bg-red-500 text-white "> ปิด</button>
           <% end %>
         </div>
+
       </div>
       <div class="w-full xl:w-[35%] h-[800px] bg-[#F3F3F3] flex  flex-col p-5 rounded-xl min-w-[30vw]">
         <p class="mb-2 text-xl">รายการสถานการณ์ไฟไหม้</p>
