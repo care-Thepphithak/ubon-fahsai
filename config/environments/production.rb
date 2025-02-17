@@ -19,7 +19,10 @@ Rails.application.configure do
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  config.asset_host = "http://10.11.0.50:9000"
+  # config.asset_host = "http://assets.example.com"
+
+  # Enable http active storage service without force ssl
+  config.active_storage.asset_host = ENV.fetch("MINIO_ENDPOINT", "http://10.11.0.50:9000")
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :minio
