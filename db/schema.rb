@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_17_085341) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_17_090359) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -49,7 +49,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_17_085341) do
     t.datetime "updated_at", null: false
     t.string "location_name"
     t.text "description"
-    t.text "tags"
+    t.jsonb "tags", default: []
     t.string "severity_level"
   end
 
