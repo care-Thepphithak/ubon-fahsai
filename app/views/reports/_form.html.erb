@@ -14,7 +14,6 @@
     <div data-report-target="step" >
       <div class="h-svh overflow-y-scroll w-full flex flex-col items-center py-6 justify-between">
         <div class="w-[90%] mx-auto relative text-center">
-          <%# <%= button_helper("ย้อนกลับ", icon: "angle-left", size: 'lg', variant: 'plain', css_class: 'absolute px-0 top-0 left-0') %>
           <h1 class="text-2xl font-bold text-[#FF6159]">รายงานไฟไหม้</h1>
           <p class="text-sm text-gray-500"><%= l(Time.current, format: :full, locale: :th) %></p>
         </div>
@@ -23,6 +22,24 @@
       
         <div class="flex justify-end w-[90%]">
           <%= button_helper("ถัดไป", iconEnd: "angle-right", size: 'lg', variant: 'plain', id: "upload-step-next", data: { "action": "click->report#next" }, css_class: "opacity-50 mt-3", disabled: true) %>
+        </div>
+      </div>
+    </div>
+
+    <div data-report-target="step" >
+      <div class="h-svh overflow-y-scroll w-full flex flex-col items-center py-6 justify-between">
+        <div class="w-full flex flex-col items-center">
+          <div class="w-[90%] mx-auto relative text-center">
+            <%= button_helper("", icon: "angle-left", size: 'xl', variant: 'plain', css_class: 'absolute px-0 top-0 left-0', data: { "action": "click->report#prev" }) %>
+            <h1 class="text-2xl font-bold text-[#FF6159]">รายละเอียด</h1>
+            <p class="text-sm text-gray-500"><%= l(Time.current, format: :full, locale: :th) %></p>
+          </div>
+
+          <%= render "detail", form: form %>
+        </div>
+      
+        <div class="flex justify-end w-[90%]">
+          <%= button_helper("ถัดไป", iconEnd: "angle-right", size: 'lg', variant: 'plain', data: { "action": "click->report#next" }) %>
         </div>
       </div>
     </div>
