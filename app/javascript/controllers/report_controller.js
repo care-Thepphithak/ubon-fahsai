@@ -4,7 +4,7 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static values = { step: Number };
   static targets = ["step", "imagesInput", "previewImages", "previewDetailImages", "locationContainer",
-                    "tagContainer", "severitySlider", "severityLabel"
+                    "tagContainer", "severitySlider", "severityLabel", "severityInput"
                    ];
   selectedFiles = [];
   selectedTags = [];
@@ -177,17 +177,19 @@ export default class extends Controller {
 
   toggleTag(event) {
     const tag = event.target.dataset.tag;
+  
     if (this.selectedTags.includes(tag)) {
       this.selectedTags = this.selectedTags.filter(t => t !== tag);
-      event.target.classList.remove("bg-blue-500", "text-white");
+      event.target.classList.remove("bg-[#FF6C64]", "text-white");
       event.target.classList.add("bg-gray-200", "text-gray-700");
     } else {
       this.selectedTags.push(tag);
       event.target.classList.remove("bg-gray-200", "text-gray-700");
-      event.target.classList.add("bg-blue-500", "text-white");
+      event.target.classList.add("bg-[#FF6C64]", "text-white");
     }
-    console.log("Selected Tags:", this.selectedTags);
+    document.querySelector("input[name='report[tags]']").value = JSON.stringify(this.selectedTags);
   }
+  
 
   updateSeverity(event) {
     const value = event.target.value;
@@ -203,5 +205,6 @@ export default class extends Controller {
       this.severityLevel = "วิกฤติ";
     }
     this.severityLabelTarget.textContent = this.severityLevel;
+    this.severityInputTarget.value = this.severityLevel;
   }
 }
