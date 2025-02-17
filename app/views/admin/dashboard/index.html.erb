@@ -7,17 +7,22 @@
     </div>
 
     <div class="absolute pb-12 left-0 right-0 top-36 mx-auto flex flex-col xl:flex-row w-[90%] max-w-[1300px] mt-10 gap-[20px]">
-      <div data-controller="admin-map" class="container mx-auto" data-admin-map-reports-value="<%= @reports.to_json %>">
+      <div data-controller="admin-map" class="container mx-auto" data-admin-map-reports-value="<%= @reports_with_images_url.to_json %>">
         <div data-admin-map-target="map" class="rounded-xl h-[800px] z-0"></div>
         <div data-admin-map-target="modal" class="hidden">
           <%= render "shared/modal" do %>
-            <h2 class="text-2xl text-[#FF6159] pb-[20px]">ส่งรายงานไฟไหม้</h2>
-            <p class="text-sm text-gray-500 pb-2"><%= l(Time.current, format: :full, locale: :th) %></p>
-            <p id="location-name-bottom-sheet" class="text-center text-lg text-gray-500 pb-[30px]"></p>
-            <button data-action="click->admin-map#closeModals"> ปิด</button>
+            <img data-admin-map-target="fireImage" src="" alt="fire-image">
+            <h1 data-admin-map-target="locationName"></h1>
+            <div class="flex justify-between items-center">
+              <p data-admin-map-target="severityLevel" class="text-red-400"></p>
+              <p data-admin-map-target="createdAt" class="text-gray-500 text-[14px]"></p>
+            </div>
+            <p data-admin-map-target="description" class="text-gray-500"></p>
+            <button data-action="click->admin-map#closeModal"> ปิด</button>
           <% end %>
         </div>
       </div>
+
       <div class="w-full xl:w-[35%] h-[800px] overflow-y-scroll no-scrollbar bg-[#F3F3F3] flex gap-4 flex-col p-5 rounded-xl min-w-[30vw]">
         <p>รายการสถานการณ์ไฟไหม้</p>
         <div id="notifications" class="rounded"></div>
