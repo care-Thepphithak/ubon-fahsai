@@ -54,10 +54,15 @@ consumer.subscriptions.create("ReportChannel", {
     }
 
     if (notificationContainer) {
-      // console.log(data.message);
 
       const notification = document.createElement("div");
-      notification.classList.add("rounded", "mb-2");
+      notification.classList.add("rounded");
+
+      const reportContainer = document.getElementById("report-container");
+
+      reportContainer.scrollTop = 0;
+
+
       notification.innerHTML = `
         <div class="flex bg-white py-3 pr-[16px] rounded-lg items-center">
           <div class="flex flex-col mx-4 items-center w-fit text-nowrap">
