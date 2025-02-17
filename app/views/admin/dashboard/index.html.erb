@@ -1,10 +1,12 @@
-<div class="w-[100vw] h-[100vh] flex flex-col p-4">
-  <div class="w-[90%] mx-auto">
-    <div class="">
-      <h1 class="font-bold text-4xl">Admin</h1>
-      <p class="font-bold text-3xl">อุบลฟ้าใส</p>
+<div class="w-full flex flex-col relative">
+    <div class="w-full mx-auto h-64 bg-[#FF6159]">
+      <div class="flex flex-col items-start w-[90%] max-w-[1300px] mx-auto text-white justify-center h-full">
+        <h1 class="text-xl ml-1">Admin</h1>
+        <p class="font-semibold text-5xl mb-16">อุบลฟ้าใส</p>
+      </div>
     </div>
-    <div class="flex mt-10 gap-[20px]">
+
+    <div class="absolute left-0 right-0 top-36 mx-auto flex w-[90%] max-w-[1300px] mt-10 gap-[20px]">
       <div data-controller="admin-map" class="container mx-auto" data-admin-map-reports-value="<%= @reports.to_json %>">
         <div data-admin-map-target="map" class="rounded-xl h-[800px] z-0"></div>
         <div data-admin-map-target="modal" class="hidden">
@@ -40,5 +42,4 @@
         <% end %>
       </div>
     </div>
-  </div>
 </div>
