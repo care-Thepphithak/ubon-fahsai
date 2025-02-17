@@ -1,0 +1,19 @@
+# syntax=docker/dockerfile:1
+# check=error=true
+
+ARG RUBY_VERSION=3.3.1
+ARG BASE_IMAGE=registry.odds.team/khonkaen/ubon-fahsai/ubon-fahsai/base:latest
+FROM ${BASE_IMAGE} AS base
+
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y build-essential git pkg-config && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Install application gems
+COPY Gemfile Gemfile.lock ./
+RUN bundle install && \
+    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
+    bundle exec bootsnap precompile --gemfile
+
+# This image can be pushed to registry for reuse
+# End of buildtool stage

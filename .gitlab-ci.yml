@@ -1,33 +1,138 @@
+
 stages:
+  - base
+  - buildtool
+  - unit_test
   - build
-  - deploy
+  - sqa
+  - push
+  - tag_image
+  - update_tag_deployment
 
 variables:
-  IMAGE_NAME: "registry.gitlab.com/codespace8635531/ubon-fahsai"
-  IMAGE_TAG: "latest"
-  DEPLOY_DIR: "/home/ubon-fahsai/ubon-fahsai-dev"  # target folder on the Azure VM
-  ENV_FILE: ".env.dev"                               # local copy of the environment file
+  UPSTREAM_TAG: $CI_COMMIT_SHA
 
-build:
+base:
+  stage: base
+  image: docker:20.10.16
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE/base:$CI_COMMIT_SHA -f Dockerfile.base .
+    - docker tag $CI_REGISTRY_IMAGE/base:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/base:latest
+    - docker push $CI_REGISTRY_IMAGE/base:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE/base:latest
+  rules:
+    - changes:
+      - .gitlab-ci.yml
+      - Dockerfile.base
+      - Gemfile
+      - Gemfile.lock
+      - .ruby-version
+
+buildtool:
+  stage: buildtool
+  image: docker:dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE/buildtool:$CI_COMMIT_SHA --build-arg BASE_IMAGE=$CI_REGISTRY_IMAGE/base:latest -f Dockerfile.buildtool .
+    - docker tag $CI_REGISTRY_IMAGE/buildtool:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/buildtool:latest
+    - docker push $CI_REGISTRY_IMAGE/buildtool:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE/buildtool:latest
+  rules:
+    - changes:
+      - .gitlab-ci.yml
+      - Gemfile
+      - Gemfile.lock
+      - Dockerfile.base
+      - Dockerfile.buildtool
+
+unit_test:
+  stage: unit_test
+  image: docker:20.10.16
+  script:
+    - echo "Running unit tests"
+
+build_and_push:
   stage: build
   image: docker:20.10.16
   services:
-    - docker:dind
+    - docker:20.10.16-dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - "docker login -u \"$DEPLOY_KEY_USERNAME\" -p \"$DEPLOY_KEY_PASSWORD\" registry.gitlab.com"
-    - "docker build -t \"$IMAGE_NAME:$IMAGE_TAG\" ."
-    - "docker push \"$IMAGE_NAME:$IMAGE_TAG\""
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --build-arg REG_URL=$CI_REGISTRY_IMAGE -f Dockerfile.multi .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - |
+      if [ "$CI_COMMIT_BRANCH" = "main" ]; then
+        docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
+        docker push $CI_REGISTRY_IMAGE:latest
+      fi
   only:
-    - development
+    - main
 
-deploy:
-  stage: deploy
-  image: mcr.microsoft.com/azure-cli:latest
+sonar_scan:
+  stage: sqa
+  image: docker:20.10.16
   script:
-    - apt-get update && apt-get install -y jq
-    - echo "$AZURE_CREDENTIALS" | base64 --decode > azure_credentials.json
-    - az login --service-principal --username "$(jq -r .clientId azure_credentials.json)" --password "$(jq -r .clientSecret azure_credentials.json)" --tenant "$(jq -r .tenantId azure_credentials.json)"
-    - export DEPLOY_SCRIPT="docker system prune -f && docker login registry.gitlab.com -u ${DEPLOY_KEY_USERNAME} -p ${DEPLOY_KEY_PASSWORD} && cd ${DEPLOY_DIR} && docker-compose pull && docker-compose up -d && docker compose run web ./bin/rails db:migrate"
-    - az vm run-command invoke --resource-group "$RESOURCE_GROUP" --name "$VM_NAME" --command-id RunShellScript --scripts "$DEPLOY_SCRIPT"
-  only:
-    - development
+    - echo "Running sqa" 
+
+dependencies_check:
+  stage: sqa
+  image: docker:20.10.16
+  script:
+    - echo "Running dependencies check"
+
+trivy_scan:
+  stage: sqa
+  image: docker:20.10.16
+  script:
+    - echo "Running trivy scan"
+
+# push:
+#   stage: push
+#   image: docker:20.10.16
+#   script:
+#     - echo "Pushing image"
+
+tag_image:
+  stage: tag_image
+  image: docker:dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - |
+      if [[ $CI_COMMIT_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        echo "Tagging image for version $CI_COMMIT_TAG"
+        # Tag with specific version
+        docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA 
+        docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA  $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
+        docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
+
+        # Tag major version (X)
+        major=$(echo $CI_COMMIT_TAG | cut -d. -f1)
+        docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA  $CI_REGISTRY_IMAGE:$major
+        docker push $CI_REGISTRY_IMAGE:$major
+
+        # Tag major.minor version (X.Y)
+        minor=$(echo $CI_COMMIT_TAG | cut -d. -f1,2)
+        docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA  $CI_REGISTRY_IMAGE:$minor
+        docker push $CI_REGISTRY_IMAGE:$minor
+
+        # Tag as latest
+        docker push $CI_REGISTRY_IMAGE:latest
+      else
+        echo "Not a valid semantic version tag"
+        exit 1
+      fi
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^[0-9]+\.[0-9]+\.[0-9]+$/
+
+update_tag_deployment:
+  stage: update_tag_deployment
+  variables:
+    UPSTREAM_TAG: $CI_COMMIT_SHA
+  trigger:
+    project: KhonKaen/Ubon-Fahsai/ubon-fahsai-deployment
+    branch: develop

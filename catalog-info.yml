@@ -1,0 +1,14 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ubon-fahsai
+  description: ubon-fahsai site
+  links:
+    - url: https://gitlab.odds.team/KhonKaen/Ubon-Fahsai/ubon-fahsai
+      title: Gitlab
+      icon: github
+spec:
+  type: website # spec type accept : website, service, library
+  lifecycle: production # accept : experimental, production, deprecated
+  owner: KhonKaen # !required : group , user
+  # system: artist-engagement-portal
