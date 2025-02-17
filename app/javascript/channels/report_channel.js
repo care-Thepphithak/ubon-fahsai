@@ -1,6 +1,5 @@
 import consumer from "channels/consumer";
 
-
 consumer.subscriptions.create("ReportChannel", {
   connected() {
     console.log("Connected to ReportChannel");
@@ -13,40 +12,52 @@ consumer.subscriptions.create("ReportChannel", {
   received(data) {
     const notificationContainer = document.getElementById("notifications");
 
-    const tags = JSON.parse(data.message.tags) || [];
+    let tags = [];
 
-    const tagsHtml = tags.map(tag => {
-      return `<p class="px-2 py-0.5 bg-gray-300 rounded-md">${tag || "ไม่มีข้อมูล"}</p>`;
-    }).join('');
+    try {
+      if (data.message.tags && data.message.tags.trim()) {
+        tags = JSON.parse(data.message.tags);
+      }
+    } catch (error) {
+      console.error("Error parsing tags:", error);
+      tags = []; 
+    }
+
+    console.log(tags);
+
+    const tagsHtml =
+      tags
+        .map((tag) => {
+          return `<p class="px-2 py-0.5 bg-gray-300 rounded-md">${
+            tag || "ไม่มีข้อมูล"
+          }</p>`;
+        })
+        .join("") ?? "";
 
     function timeAgo(dateString) {
       const now = new Date();
       const date = new Date(dateString);
-      const diffInSeconds = Math.floor((now - date) / 1000); // difference in seconds
-      
+      const diffInSeconds = Math.floor((now - date) / 1000); 
+
       const minutes = Math.floor(diffInSeconds / 60);
       const hours = Math.floor(diffInSeconds / 3600);
       const days = Math.floor(diffInSeconds / 86400);
-      const months = Math.floor(diffInSeconds / 2592000); // Roughly 30 days
-      const years = Math.floor(diffInSeconds / 31536000); // 365 days
-      
-      if (years > 0) return `${years} ปี${years > 1 ? 's' : ''}`;
-      if (months > 0) return `${months} เดือน${months > 1 ? 's' : ''}`;
-      if (days > 0) return `${days} วัน${days > 1 ? 's' : ''}`;
-      if (hours > 0) return `${hours} ชั่วโมง${hours > 1 ? 's' : ''}`;
-      if (minutes > 0) return `${minutes} นาที${minutes > 1 ? 's' : ''}`;
+      const months = Math.floor(diffInSeconds / 2592000); 
+      const years = Math.floor(diffInSeconds / 31536000); 
+
+      if (years > 0) return `${years} ปี${years > 1 ? "s" : ""}`;
+      if (months > 0) return `${months} เดือน${months > 1 ? "s" : ""}`;
+      if (days > 0) return `${days} วัน${days > 1 ? "s" : ""}`;
+      if (hours > 0) return `${hours} ชั่วโมง${hours > 1 ? "s" : ""}`;
+      if (minutes > 0) return `${minutes} นาที${minutes > 1 ? "s" : ""}`;
       return `เมื่อสักครู่`;
     }
 
     if (notificationContainer) {
       // console.log(data.message);
 
-      // Create the notification HTML
       const notification = document.createElement("div");
-      notification.classList.add(
-        "rounded",
-        "mb-2"
-      );
+      notification.classList.add("rounded", "mb-2");
       notification.innerHTML = `
         <div class="flex bg-white py-3 pr-[16px] rounded-lg items-center">
           <div class="flex flex-col mx-4 items-center w-fit text-nowrap">
@@ -56,10 +67,14 @@ consumer.subscriptions.create("ReportChannel", {
             <p class="text-gray-500">${data.message.severity_level}</p>
           </div>
           <div class="flex flex-col">
-            <h2 class="font-bold text-black text-base line-clamp-2">${data.message.location_name}</h2>
-            <p class="text-gray-500 text-[14px]">${timeAgo(data.message.created_at)}</p>
+            <h2 class="font-bold text-black text-base line-clamp-2">${
+              data.message.location_name
+            }</h2>
+            <p class="text-gray-500 text-[14px]">${timeAgo(
+              data.message.created_at
+            )}</p>
             <div class="flex gap-1 mt-3 flex-wrap">
-              ${tagsHtml}
+              ${tagsHtml ?? ""}
             </div>
           </div>
         </div>
