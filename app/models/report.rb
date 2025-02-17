@@ -11,14 +11,21 @@ class Report < ApplicationRecord
     "วิกฤติ" => (81..100)
   }.freeze
 
-  validates :tags, presence: true
   validate :tags_must_be_valid
   validates :severity_level, inclusion: { in: SEVERITY_LEVELS.keys }
 
   private
 
   def tags_must_be_valid
-    if tags.any? { |tag| !TAGS.include?(tag) }
+    tags_array = if tags.is_a?(Array)
+      tags
+    elsif tags.present?
+      JSON.parse(tags) rescue []
+    else
+      []
+    end
+
+    if tags_array.any? { |tag| !TAGS.include?(tag) }
       errors.add(:tags, "มีค่าไม่ถูกต้อง")
     end
   end
