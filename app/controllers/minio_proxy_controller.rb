@@ -1,17 +1,25 @@
 class MinioProxyController < ApplicationController
-  require "net/http"
-  require "uri"
+  require "aws-sdk-s3"
 
-  # You may want to skip authentication or CSRF for this endpoint
   skip_before_action :verify_authenticity_token
 
   def proxy
-    file_key = params[:key]
-    # Build the MinIO URI using your HTTP endpoint.
-    uri = URI.parse("http://10.11.0.50:9000/#{file_key}")
-    uri.query = request.query_string if request.query_string.present?
+    s3_client = Aws::S3::Client.new(
+      access_key_id: ENV["MINIO_ROOT_USER"],
+      secret_access_key: ENV["MINIO_ROOT_PASSWORD"],
+      endpoint: ENV["MINIO_ENDPOINT"] || "http://10.11.0.50:9000",
+      region: "us-east-1",
+      force_path_style: true
+    )
 
-    # Stream the file with Net::HTTP
+    bucket = ENV["MINIO_BUCKET"]
+    file_key = params[:key]
+
+    signer = Aws::S3::Presigner.new(client: s3_client)
+    url = signer.presigned_url(:get_object, bucket: bucket, key: file_key, expires_in: 300)
+
+    # Fetch the file using the signed URL
+    uri = URI.parse(url)
     http_response = Net::HTTP.get_response(uri)
     if http_response.code == "200"
       content_type = http_response.content_type || "application/octet-stream"
