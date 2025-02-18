@@ -8,7 +8,7 @@ class MinioProxyController < ApplicationController
   def proxy
     file_key = params[:key]
     # Build the MinIO URI using your HTTP endpoint.
-    uri = URI.parse("http://40.81.22.86:9000/#{file_key}")
+    uri = URI.parse("http://10.11.0.50:9000/#{file_key}")
     uri.query = request.query_string if request.query_string.present?
 
     # Stream the file with Net::HTTP
