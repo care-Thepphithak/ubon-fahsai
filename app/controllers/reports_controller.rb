@@ -10,6 +10,7 @@ class ReportsController < ApplicationController
 
     respond_to do |format|
       if @report.save
+        ActionCable.server.broadcast("report_channel", { message: @report })
         format.html { redirect_to reports_path, notice: "Report was successfully created." }
         format.json { render :show, status: :created, location: @report }
       else
@@ -22,6 +23,6 @@ class ReportsController < ApplicationController
   private
     # Only allow a list of trusted parameters through.
     def report_params
-      params.expect(report: [ :lat, :long, :location_name, images: [] ])
+      params.expect(report: [ :lat, :long, :location_name, :description, :tags, :severity_level,  images: [] ])
     end
 end

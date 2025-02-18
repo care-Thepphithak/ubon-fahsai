@@ -1,0 +1,51 @@
+<div class="w-full mt-6">
+    <div class="flex w-full md:w-[90%] mx-auto h-52 px-6 md:px-0 overflow-x-scroll gap-3 mb-4 no-scrollbar" data-report-target="previewDetailImages">
+        <i class="min-w-64 h-full bg-gray-100 rounded-lg flex items-center justify-center">
+            <i class="fas fa-camera text-5xl text-gray-300"></i>
+        </i>
+    </div>
+   <div class="w-[90%] mx-auto">
+        <div class="flex flex-wrap gap-2 mb-3">
+            <% Report::TAGS.each do |tag| %>
+                <button type="button" class="px-3 py-2 rounded-lg bg-gray-200 text-gray-600" 
+                data-action="click->report#toggleTag"
+                data-tag="<%= tag %>">
+                <%= tag %>
+                </button>
+            <% end %>
+        </div>
+        <%= form.hidden_field :tags, data: { report_target: "selectedTags" }, name: "report[tags]" %>
+
+        <%= form.label :description, "รายละเอียด", class: "text-gray-400" %>
+        <%= form.text_area :description, maxlength: 300, class: "w-full rounded-md bg-white outline-hidden px-3 py-2 mt-2 text-base text-gray-600", rows: 4, placeholder: "รายละเอียดเกี่ยวกับสถานการณ์ไฟไหม้" %>
+
+        <div class="mt-4">
+            <div class="flex items-center">
+                <%= form.label :severity_level, "ระดับความรุนแรง ", class: "text-gray-400" %>
+                <span data-report-target="severityLabel" class="ml-2 text-[#FF6C64]">ปานกลาง</span>
+            </div>
+            
+            <div class="relative mb-6">
+                <input type="range" id="severity-range" min="1" max="100" step="1" value="50"
+                    class="appearance-none h-1 w-full my-2 bg-transparent
+                        [&::-webkit-slider-runnable-track]:h-1 
+                        [&::-webkit-slider-runnable-track]:bg-gray-200 
+                        [&::-webkit-slider-runnable-track]:rounded-full
+                        [&::-webkit-slider-thumb]:appearance-none 
+                        [&::-webkit-slider-thumb]:h-6 
+                        [&::-webkit-slider-thumb]:w-6 
+                        [&::-webkit-slider-thumb]:rounded-full 
+                        [&::-webkit-slider-thumb]:bg-[#FF6C64] 
+                        [&::-webkit-slider-thumb]:-mt-[10px] 
+                        [&::-webkit-slider-thumb]:cursor-pointer"
+                    name="report[severity_level]"
+                    data-action="input->report#updateSeverity"
+                    data-report-target="severitySlider"
+                >
+                <span class="text-sm text-gray-500 absolute start-0 -bottom-6"><%= Report::SEVERITY_LEVELS.keys.first %></span>
+                <span class="text-sm text-gray-500 absolute end-0 -bottom-6"><%= Report::SEVERITY_LEVELS.keys.last %></span>
+            </div>
+            <%= form.hidden_field :severity_level, data: { report_target: "severityInput" }, value: "ปานกลาง" %>        
+        </div>
+   </div>   
+</div>

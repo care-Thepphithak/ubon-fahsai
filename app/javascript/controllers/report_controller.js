@@ -2,9 +2,13 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="report"
 export default class extends Controller {
-  static values = { step: Number };
-  static targets = ["step", "imagesInput", "previewImages", "locationContainer"]
+  static values = { step: Number, severityLevels: Object };
+  static targets = ["step", "imagesInput", "previewImages", "previewDetailImages", "locationContainer",
+                    "tagContainer", "severitySlider", "severityLabel", "severityInput"
+                   ];
   selectedFiles = [];
+  selectedTags = [];
+  severityLevel = "ปานกลาง";
 
   connect() {
     this.showStep();
@@ -20,7 +24,7 @@ export default class extends Controller {
       const nextStep = this.stepTargets[currentStep + 1];
 
       nextStep.addEventListener('animationend', () => {
-        if (currentStep === 0) {
+        if (currentStep === 1) {
           this.dispatch("initMap", { target: this.locationContainerTarget })
         }
       }, { once: true });
@@ -112,11 +116,13 @@ export default class extends Controller {
 
   renderPreview() {
     const previewContainer = this.previewImagesTarget;
+    const detailPreviewContainer = this.previewDetailImagesTarget;
     previewContainer.innerHTML = "";
+    detailPreviewContainer.innerHTML = "";
 
     if (this.selectedFiles.length === 0) {
       previewContainer.innerHTML = `
-        <i class="min-w-64 h-72 bg-gray-100 rounded-lg flex items-center justify-center">
+        <i class="min-w-64 h-72 bg-white rounded-lg flex items-center justify-center">
           <i class="fas fa-camera text-5xl text-gray-300"></i>
         </i>
       `;
@@ -141,6 +147,15 @@ export default class extends Controller {
           div.appendChild(img);
           div.appendChild(deleteButton);
           previewContainer.appendChild(div);
+
+          const detailDiv = document.createElement("div");
+
+          const detailImg = document.createElement("img");
+          detailImg.src = e.target.result;
+          detailImg.classList.add("min-w-48", "h-52", "w-48", "object-cover", "rounded-lg", "shadow-md");
+
+          detailDiv.appendChild(detailImg);
+          detailPreviewContainer.appendChild(detailDiv);
         };
         reader.readAsDataURL(file);
       });
@@ -148,6 +163,7 @@ export default class extends Controller {
 
     document.querySelector("p.text-gray-400").textContent = `เลือกแล้ว ${this.selectedFiles.length} รูปภาพ`;
   }
+
 
   toggleUploadButton() {
     const uploadButton = document.querySelector("label[for='report_images']");
@@ -157,5 +173,33 @@ export default class extends Controller {
       uploadButton.classList.remove("hidden", "cursor-not-allowed");
       uploadButton.classList.add("cursor-pointer", "fade-in");
     }
+  }
+
+  toggleTag(event) {
+    const tag = event.target.dataset.tag;
+  
+    if (this.selectedTags.includes(tag)) {
+      this.selectedTags = this.selectedTags.filter(t => t !== tag);
+      event.target.classList.remove("bg-[#FF6C64]", "text-white");
+      event.target.classList.add("bg-gray-200", "text-gray-700");
+    } else {
+      this.selectedTags.push(tag);
+      event.target.classList.remove("bg-gray-200", "text-gray-700");
+      event.target.classList.add("bg-[#FF6C64]", "text-white");
+    }
+    document.querySelector("input[name='report[tags]']").value = JSON.stringify(this.selectedTags);
+  }
+  
+
+  updateSeverity(event) {
+    const value = event ? event.target.value : this.severitySliderTarget.value;
+    const severityLabel = this.getSeverityLabel(value);
+
+    this.severityLabelTarget.textContent = severityLabel;
+    this.severityInputTarget.value = severityLabel;
+  }
+
+  getSeverityLabel(value) {
+    return Object.entries(this.severityLevelsValue).find(([_, max]) => value <= max)?.[0] || "วิกฤติ";
   }
 }

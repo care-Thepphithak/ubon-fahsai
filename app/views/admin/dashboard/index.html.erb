@@ -1,0 +1,60 @@
+<div class="w-full flex flex-col relative">
+    <div class="w-full mx-auto h-64 bg-[#FF6159]">
+      <div class="flex flex-col items-start w-[90%] max-w-[1300px] mx-auto text-white justify-center h-full">
+        <h1 class="text-xl ml-1">Admin</h1>
+        <p class="font-semibold text-5xl mb-16">อุบลฟ้าใส</p>
+      </div>
+    </div>
+
+    <div class="absolute pb-12 left-0 right-0 top-36 mx-auto flex flex-col xl:flex-row w-[90%] max-w-[1300px] mt-10 gap-[20px]">
+      <div data-controller="admin-map" class="container mx-auto" data-admin-map-reports-value="<%= @reports.to_json %>">
+        <div data-admin-map-target="map" class="rounded-xl h-[800px] z-0"></div>
+
+        <div data-admin-map-target="modal" class="hidden">
+          <%= render "shared/modal" do %>
+            <div data-admin-map-target="fireImages" class="flex gap-2 no-scrollbar overflow-x-scroll rounded-lg"></div>
+
+            <h1 data-admin-map-target="locationName" class="text-2xl font-bold text-gray-700 mt-4 mb-1"></h1>
+            <div class="flex items-center">
+              <div class="px-4 py-2 rounded-lg bg-red-100 mr-4">
+                <p data-admin-map-target="severityLevel" class="text-red-400 text-md font-semibold"></p>
+              </div>
+              <p data-admin-map-target="createdAt" class="text-gray-500 text-md"></p>
+            </div>
+                <p class="text-gray-500 text-lg mt-3 ">รายละเอียด</p>
+                <div class="flex px-4 py-3 flex-col items-start w-ful bg-gray-100 rounded-lg my-2">
+                  <span data-admin-map-target="description" class="text-gray-500 text-lg"></span>
+                </div>
+            <button data-action="click->admin-map#closeModal" class="bg-red-400 p-3 mt-4 rounded-lg text-xl w-full hover:bg-red-500 text-white "> ปิด</button>
+          <% end %>
+        </div>
+
+      </div>
+      <div class="w-full xl:w-[600px] h-[800px] bg-[#F3F3F3] flex  flex-col p-5 rounded-xl">
+        <p class="mb-2 text-xl">รายการสถานการณ์ไฟไหม้</p>
+        <div class="flex flex-col gap-4 overflow-y-scroll no-scrollbar scroll-smooth rounded-lg" id="report-container">
+          <div id="notifications" class="rounded flex flex-col gap-4"></div>
+          <% @reports.each do |report| %>
+            <div class="flex bg-white py-3 pr-[16px] rounded-lg">
+              <div class="flex flex-col gap-1 min-w-14 mx-4 items-center justify-center text-nowrap">
+                <svg width="40" height="46" viewBox="0 0 30 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8.27344 35.0512C1.092 31.0038 -0.798717 27.1728 0.282262 21.9405C1.08029 18.077 3.69339 14.9336 3.94394 11.0775C5.06018 13.1088 5.52659 14.5736 5.65132 16.6963C9.20151 12.3466 11.5475 6.32517 11.6865 0C11.6865 0 20.9334 5.43323 21.5402 13.6402C22.3362 11.9486 22.7369 9.26193 21.9409 7.5207C24.329 9.26202 38.3067 24.7203 20.0476 35.0512C23.4805 28.367 20.9332 19.3479 14.9728 15.1825C15.3709 16.9736 14.673 23.6538 12.036 26.5892C12.7667 21.6845 11.3409 19.6105 11.3409 19.6105C11.3409 19.6105 10.8515 22.3578 8.95276 25.133C7.2189 27.6673 6.01752 30.357 8.27344 35.0512Z" fill="<%= report.severity_color %>"/>
+                </svg>
+                <p class="text-gray-500 text-sm"><%= report.severity_level %></p>
+              </div>
+              <div class="flex flex-col">
+                <h2 class="font-bold text-black text-base line-clamp-2"><%= report.location_name %></h2>
+                <p class="text-gray-500 text-[14px]"><%= time_ago_in_words(report.created_at, datetime: :distance_in_words, locale: :th) %> ที่แล้ว</p>
+                <div class="flex gap-1 mt-3 flex-wrap">
+                  <% tags = JSON.parse(report.tags) rescue [] %> 
+                  <% tags.each do |tag| %>
+                    <p class="px-2 py-0.5 bg-gray-300 rounded-md"><%= tag || "ไม่มีข้อมูล" %></p>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+</div>

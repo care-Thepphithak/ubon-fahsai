@@ -129,7 +129,7 @@ export default class extends Controller {
       const div = L.DomUtil.create('div', 'leaflet-bar leaflet-control bg-white px-3 py-2 rounded-lg shadow-md');
       div.innerHTML = `
           <div class="flex items-center gap-2">
-            <span class="text-sm text-gray-700">Getting location...</span>
+            <span class="text-sm text-gray-700">กำลังหาตำแหน่ง...</span>
             <i class="fa-solid fa-circle-notch fa-spin"></i>
           </div>
         `;

@@ -1,7 +1,7 @@
 minio_dev:
   service: S3
-  access_key_id: uByqRoocKKz5SAaWYasf
-  secret_access_key: t0bcOtQnF8b7w0Cd3ISQta8VH2GATlLvJ9o4BVRt
+  access_key_id: username
+  secret_access_key: password
   bucket: ubon-fahsai-local
   endpoint: http://localhost:9000
   force_path_style: true
