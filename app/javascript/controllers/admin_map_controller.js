@@ -53,6 +53,24 @@ export default class extends Controller {
       marker.on('click', () => {
         this.openModal(report);
       });
+      marker.on('mouseover', () => {
+        marker.bindPopup(report.location_name).openPopup();
+        marker.setIcon(L.icon({
+          iconUrl: this.createColoredMarker(report.severity_color),
+          iconSize: [42, 47],
+          iconAnchor: [21, 47],
+          popupAnchor: [0, -28]
+        }));
+      });
+      marker.on('mouseout', () => {
+        marker.closePopup();
+        marker.setIcon(L.icon({
+          iconUrl: this.createColoredMarker(report.severity_color),
+          iconSize: [32, 37],
+          iconAnchor: [16, 37],
+          popupAnchor: [0, -28]
+        }));
+      });
     });
   }
 
@@ -109,7 +127,11 @@ export default class extends Controller {
     report.images_urls.forEach(imageUrl => {
       const img = document.createElement('img');
       img.src = imageUrl;
-      img.classList.add('w-96', 'h-64', 'object-cover', 'rounded-lg', 'mr-2');
+      if (report.images_urls.length === 1) {
+        img.classList.add('w-full', 'h-64', 'object-cover', 'rounded-lg');
+      } else {
+        img.classList.add('w-96', 'h-64', 'object-cover', 'rounded-lg', 'mr-2');
+      }
       this.fireImagesTarget.appendChild(img);
     });
     
