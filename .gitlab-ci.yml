@@ -136,3 +136,5 @@ update_tag_deployment:
   trigger:
     project: KhonKaen/Ubon-Fahsai/ubon-fahsai-deployment
     branch: develop
+  only:
+    - main
