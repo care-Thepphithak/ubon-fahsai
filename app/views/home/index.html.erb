@@ -13,11 +13,11 @@
           Tags: <%= JSON.parse(report.tags).join(", ") rescue "ไม่มีข้อมูล" %>
         </p>
         <% if report.images.one? %>
-          <%= image_tag report.images.first, class: "w-full h-64 object-cover rounded-lg" %>
+          <%= image_tag minio_proxy_url(report.images.first.blob.key, protocol: "https", host: "ubon-fahsai-dev.odd.works"), class: "w-full h-64 object-cover rounded-lg" %>
         <% else %>
           <div class="grid grid-cols-2 gap-2">
             <% report.images.each do |image| %>
-              <%= image_tag image, class: "w-full h-32 object-cover rounded-lg" %>
+              <%= image_tag minio_proxy_url(image.blob.key, protocol: "https", host: "ubon-fahsai-dev.odd.works"), class: "w-full h-32 object-cover rounded-lg" %>
             <% end %>
           </div>
         <% end %>
