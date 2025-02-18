@@ -22,7 +22,8 @@ Rails.application.configure do
   # config.asset_host = "http://assets.example.com"
 
   # Enable http active storage service without force ssl
-  # config.active_storage.asset_host = ENV.fetch("MINIO_ENDPOINT")
+  # config.active_storage.asset_host = ENV.fetch("MINIO_ENDPOINT", "http://40.81.22.86:9000")
+  config.active_storage.asset_host = "https://ubon-fahsai-dev.odd.works/minio"
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :minio
@@ -84,7 +85,7 @@ Rails.application.configure do
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   config.hosts = [
-    "ubon-fahsai-dev.odd.works"    # Allow requests from example.com
+    "ubon-fahsai-dev.odd.works" # Allow requests from example.com
     # /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
   ]
   #

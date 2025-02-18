@@ -13,5 +13,6 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  get "minio/*key", to: "minio_proxy#proxy", as: :minio_proxy
   root "home#index"
 end
