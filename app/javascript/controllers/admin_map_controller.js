@@ -124,12 +124,10 @@ export default class extends Controller {
   openModal(report) {
     // Create images in div (fireImages)
     this.fireImagesTarget.innerHTML = "";
-    report.images_urls.forEach(imageKey => {
+    report.images_urls.forEach(image => {
       const img = document.createElement('img');
-      const cleanKey = imageKey.replace(/^\/+/, "");
-      console.log(imageKey);
       // Use a relative URL to route the request to your proxy controller
-      img.src = `/minio/${cleanKey}`;
+      img.src = image;
       if (report.images_urls.length === 1) {
         img.classList.add('w-full', 'h-64', 'object-cover', 'rounded-lg');
       } else {
