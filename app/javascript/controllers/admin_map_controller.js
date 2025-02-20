@@ -122,11 +122,12 @@ export default class extends Controller {
   }
 
   openModal(report) {
-    //create images in div (fireImages)
+    // Create images in div (fireImages)
     this.fireImagesTarget.innerHTML = "";
-    report.images_urls.forEach(imageUrl => {
+    report.images_urls.forEach(imageKey => {
       const img = document.createElement('img');
-      img.src = imageUrl;
+      // Build URL via minio proxy endpoint
+      img.src = `/minio/${encodeURIComponent(imageKey)}`;
       if (report.images_urls.length === 1) {
         img.classList.add('w-full', 'h-64', 'object-cover', 'rounded-lg');
       } else {
@@ -134,8 +135,7 @@ export default class extends Controller {
       }
       this.fireImagesTarget.appendChild(img);
     });
-    
-    // this.fireImagesTarget = report.images_urls[0];
+  
     this.locationNameTarget.innerHTML = report.location_name;
     this.severityLevelTarget.innerHTML = report.severity_level;
     this.createdAtTarget.innerHTML = report.time_ago_message;
