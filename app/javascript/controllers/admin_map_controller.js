@@ -127,7 +127,8 @@ export default class extends Controller {
     report.images_urls.forEach(imageKey => {
       const img = document.createElement('img');
       const cleanKey = imageKey.replace(/^\/+/, "");
-      // This routes the request to your MinioProxyController#proxy which will generate a presigned URL.
+      console.log(imageKey);
+      // Use a relative URL to route the request to your proxy controller
       img.src = `/minio/${cleanKey}`;
       if (report.images_urls.length === 1) {
         img.classList.add('w-full', 'h-64', 'object-cover', 'rounded-lg');
