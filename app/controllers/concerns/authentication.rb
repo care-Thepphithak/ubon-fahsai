@@ -35,7 +35,6 @@ module Authentication
     end
 
     def after_authentication_url
-      puts "Current.user.admin? #{Current.user.admin?}"
       if Current.session&.user&.admin?
         admin_dashboard_index_url
       else
