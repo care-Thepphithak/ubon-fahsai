@@ -3,6 +3,22 @@ class Report < ApplicationRecord
 
   has_many_attached :images
 
+  def self.count_today
+    where(created_at: Date.today.beginning_of_day..Date.today.end_of_day).count
+  end
+
+  def self.count_yesterday
+    where(created_at: Date.yesterday.beginning_of_day..Date.yesterday.end_of_day).count
+  end
+
+  def self.count_harmful_today
+    where(severity_level: "วิกฤติ", created_at: Date.today.beginning_of_day..Date.today.end_of_day).count
+  end
+
+  def self.count_harmful_yesterday
+    where(severity_level: "วิกฤติ", created_at: Date.yesterday.beginning_of_day..Date.yesterday.end_of_day).count
+  end
+
   def as_json(options = {})
     super(options).merge(
       severity_color: severity_color,
