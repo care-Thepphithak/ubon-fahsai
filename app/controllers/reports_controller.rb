@@ -15,7 +15,7 @@ class ReportsController < ApplicationController
         ActionCable.server.broadcast("report_channel", {
           message: @report,
           total_count: Report.count,
-          harmful_count: Report.where(severity_level: "วิกฤติ").count
+          harmful_count: Report.where(severity_level: ["วิกฤติ", "รุนแรงมาก"]).count # rubocop:disable Layout/SpaceInsideArrayLiteralBrackets
         })
         format.html { redirect_to root_path, notice: @report.location_name }
         format.json { render :show, status: :created, location: @report }
