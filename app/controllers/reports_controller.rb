@@ -1,4 +1,6 @@
 class ReportsController < ApplicationController
+  allow_unauthenticated_access
+
   # GET /reports or /reports.json
   def index
     @report = Report.new
