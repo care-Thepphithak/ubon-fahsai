@@ -30,10 +30,10 @@ export default class extends Controller {
     this.currentLocationTarget.innerHTML = locationName;
 
     const nearestDistance = this.calculateNearestDistance(lat, long, this.reportsValue);
-    this.nearestDistanceTarget.innerHTML = `${nearestDistance.toFixed(2)}`;
+    this.nearestDistanceTarget.innerHTML = isFinite(nearestDistance) ? nearestDistance.toFixed(2) : " -";
   
     // Remove the specified classes
-    this.nearestDistanceTarget.classList.remove('min-h-[40px]', 'animate-pulse', 'bg-gray-300', 'rounded-md');
+    
   
 
     this.updateReportDistances(lat, long);
