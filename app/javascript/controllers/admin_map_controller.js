@@ -139,7 +139,7 @@ export default class extends Controller {
     this.locationNameTarget.innerHTML = report.location_name;
     this.severityLevelTarget.innerHTML = report.severity_level;
     this.createdAtTarget.innerHTML = report.time_ago_message;
-    this.descriptionTarget.innerHTML = report.description;
+    this.descriptionTarget.innerHTML = report.description || "ไม่มีข้อมูล";
     this.modalTarget.classList.remove('hidden');
   }
 
