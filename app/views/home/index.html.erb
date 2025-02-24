@@ -72,7 +72,7 @@
                     <div class="flex items-center gap-2 px-1 w-full justify-between text-end">
                           <div class="flex flex-col gap-1">
                           <span class="text-md"><%= truncate(report.location_name, length: 65, separator: ' ', omission: '...') %></span>
-                          <p class="text-sm text-gray-400"><%= time_ago_in_words(report.created_at, datetime: :distance_in_words, locale: :th) %> ที่แล้ว</p>
+                          <p class="text-start text-sm text-gray-400"><%= time_ago_in_words(report.created_at, datetime: :distance_in_words, locale: :th) %> ที่แล้ว</p>
                           </div>
 
                          <h3 data-home-target="distance" class="text-2xl text-end min-w-[80px] min-h-[30px] animate-pulse bg-gray-300 rounded-md"></h3>
