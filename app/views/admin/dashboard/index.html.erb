@@ -1,7 +1,17 @@
 <div class="w-full flex flex-col relative">
-    <div class="w-full mx-auto h-64 bg-[#FF6159]">
-      <div class="flex flex-col items-start w-[90%] max-w-[1300px] mx-auto text-white justify-center h-full">
-        <h1 class="text-xl ml-1">Admin</h1>
+    <div class="w-full flex mx-auto h-64 bg-[#FF6159]">
+      <div class="flex flex-col items-start w-[90%] max-w-[1300px] mx-auto text-white justify-center h-full relative">
+        <div class="w-full flex justify-between items-center">
+          <h1 class="text-xl ml-1">Admin</h1>
+          <div>
+            <% if authenticated? %>
+              <%= button_to session_path, method: :delete, class: "px-6 py-2 rounded-lg flex bg-[#F3F3F3] gap-2 items-center text-gray-500 text-base cursor-pointer hover:bg-gray-500 transition-all" do %>
+                <i class="fa fa-sign-out-alt"></i>
+                <span>ออกจากระบบ</span>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
         <p class="font-semibold text-5xl mb-16">อุบลฟ้าใส</p>
       </div>
     </div>
