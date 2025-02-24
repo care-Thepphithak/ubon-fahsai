@@ -62,7 +62,7 @@
           <div class="flex flex-col flex-4 bg-[#F3F3F3] rounded-xl p-5 gap-2">
             <p class="text-lg text-gray-500">สถิติไฟไหม้ตามพื้นที่</p>
             <div class="flex flex-col overflow-scroll gap-2 no-scrollbar">
-            <% @top_locations.each do |location_name, count| %>
+            <% @top_districts.each do |location_name, count| %>
               <div class="flex bg-white rounded-lg px-3 py-1 justify-between">
                 <p class="w-[60%] text-base"><%= location_name.district %></p>
                 <p class="text-[#FF392F]"><%= location_name.district_count %> จุด</p>
