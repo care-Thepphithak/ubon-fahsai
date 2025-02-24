@@ -80,7 +80,7 @@ consumer.subscriptions.create("ReportChannel", {
             <p class="text-gray-500 text-sm">${data.message.severity_level}</p>
           </div>
           <div class="flex flex-col">
-            <h2 class="font-bold text-black text-base line-clamp-2">${
+            <h2 class="font-normal text-black text-base line-clamp-2">${
               data.message.location_name
             }</h2>
             <p class="text-gray-500 text-[14px]">${timeAgo(

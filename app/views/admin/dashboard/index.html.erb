@@ -12,19 +12,19 @@
             <% end %>
           </div>
         </div>
-        <p class="font-semibold text-5xl mb-16">อุบลฟ้าใส</p>
+        <p class="font-medium text-5xl mb-16">อุบลฟ้าใส</p>
       </div>
     </div>
 
 
     <div class="absolute pb-12 left-0 right-0 top-36 mx-auto flex flex-col xl:flex-row w-[90%] max-w-[1300px] mt-10 gap-[20px]">
       <div data-controller="admin-map" class="container mx-auto" data-admin-map-reports-value="<%= @reports.to_json %>">
-        <div class="flex w-[full] h-[11rem] mb-[20px] gap-[20px]">
+        <div class="flex w-[full] h-[12rem] mb-[20px] gap-[20px]">
           <div class="flex flex-col flex-5 bg-[#F3F3F3] rounded-xl p-5 gap-2">
-            <p class="text-lg">สถิติการไฟไหม้</p>
+            <p class="text-lg text-gray-500">สถิติการไฟไหม้</p>
             <div class="flex gap-[20px] w-full h-[80%]">
-              <div class="bg-white flex flex-col flex-1 rounded-xl p-3">
-                <p class="text-gray-500 text-left">พื้นที่ไฟไหม้</p>
+              <div class="bg-white flex flex-col flex-1 rounded-xl p-3 px-5 h-full justify-center">
+                <p class="text-gray-500 text-left mb-2">พื้นที่ไฟไหม้</p>
                 <div class="flex gap-4 justify-between">
                   <p class="text-5xl" id="report_counter"><%= @report_count %></p>
                   <div class="flex flex-col items-end">
@@ -39,8 +39,8 @@
                   </div>
                 </div>
               </div>
-              <div class="bg-white flex flex-col flex-1 rounded-xl p-3">
-                <p class="text-gray-500 text-left">ระดับความรุนแรง</p>
+              <div class="bg-white flex flex-col flex-1 rounded-xl p-3 px-5 h-full justify-center">
+                <p class="text-gray-500 text-left mb-2">ระดับความรุนแรง</p>
                 <div class="flex gap-4 justify-between">
                   <p class="text-5xl text-[#FF392F]" id="report_harmful_counter"><%= @report_harmful_count %></p>
                   <div class="flex flex-col items-end">
@@ -58,10 +58,10 @@
             </div>
           </div>
           <div class="flex flex-col flex-4 bg-[#F3F3F3] rounded-xl p-5 gap-2">
-            <p class="text-lg">สถิติไฟไหม้ตามพื้นที่</p>
+            <p class="text-lg text-gray-500">สถิติไฟไหม้ตามพื้นที่</p>
             <div class="flex flex-col overflow-scroll gap-2 no-scrollbar">
             <% @top_locations.each do |location_name, count| %>
-              <div class="flex bg-white rounded-lg px-3 py-2 justify-between">
+              <div class="flex bg-white rounded-lg px-3 py-1 justify-between">
                 <p class="w-[60%] text-base"><%= location_name.district %></p>
                 <p class="text-[#FF392F]"><%= location_name.district_count %> จุด</p>
               </div>
@@ -69,13 +69,13 @@
             </div>
           </div>
         </div>
-        <div data-admin-map-target="map" class="rounded-xl h-[80vh] z-0"></div>
+        <div data-admin-map-target="map" class="rounded-xl h-[70vh] z-0"></div>
 
         <div data-admin-map-target="modal" class="hidden">
           <%= render "shared/modal" do %>
             <div data-admin-map-target="fireImages" class="flex gap-2 no-scrollbar overflow-x-scroll rounded-lg"></div>
 
-            <h1 data-admin-map-target="locationName" class="text-2xl font-bold text-gray-700 mt-4 mb-1"></h1>
+            <h1 data-admin-map-target="locationName" class="text-2xl font-semibold text-gray-700 mt-4 mb-1"></h1>
             <div class="flex items-center">
               <div class="px-4 py-2 rounded-lg bg-red-100 mr-4">
                 <p data-admin-map-target="severityLevel" class="text-red-400 text-md font-semibold"></p>
@@ -92,7 +92,7 @@
 
       </div>
       <div class="w-full xl:w-[600px] h-screen bg-[#F3F3F3] flex  flex-col p-5 rounded-xl">
-        <p class="mb-2 text-lg">รายการสถานการณ์ไฟไหม้</p>
+        <p class="mb-2 text-lg text-gray-500">รายการสถานการณ์ไฟไหม้</p>
         <div class="flex flex-col gap-4 overflow-y-scroll no-scrollbar scroll-smooth rounded-lg" id="report-container">
           <div id="notifications" class="rounded flex flex-col gap-4"></div>
           <% @reports.each do |report| %>
@@ -104,12 +104,12 @@
                 <p class="text-gray-500 text-sm"><%= report.severity_level %></p>
               </div>
               <div class="flex flex-col">
-                <h2 class="font-bold text-black text-base line-clamp-2"><%= report.location_name %></h2>
+                <h2 class="font-normal text-black text-base line-clamp-2"><%= report.location_name %></h2>
                 <p class="text-gray-500 text-[14px]"><%= time_ago_in_words(report.created_at, datetime: :distance_in_words, locale: :th) %> ที่แล้ว</p>
                 <div class="flex gap-1 mt-3 flex-wrap">
                   <% tags = JSON.parse(report.tags) rescue [] %> 
                   <% tags.each do |tag| %>
-                    <p class="px-2 py-0.5 bg-gray-300 rounded-md"><%= tag || "ไม่มีข้อมูล" %></p>
+                    <p class="px-2 py-0.5 bg-gray-300 rounded-md font-normal"><%= tag || "ไม่มีข้อมูล" %></p>
                   <% end %>
                 </div>
               </div>
