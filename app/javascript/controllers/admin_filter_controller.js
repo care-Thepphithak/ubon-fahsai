@@ -122,7 +122,7 @@ export default class extends Controller {
             </div>
             <div class="flex flex-col">
               <h2 class="font-normal text-black text-base line-clamp-2">${report.location_name}</h2>
-              <p class="text-gray-500 text-[14px]">${this.timeAgo(report.created_at)}</p>
+              <p class="text-gray-500 text-[14px]">${report.time_ago_message}</p>
               <div class="flex gap-1 mt-3 flex-wrap">
                 ${(tagsHtml)}
               </div>
