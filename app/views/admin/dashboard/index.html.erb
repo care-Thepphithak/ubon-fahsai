@@ -97,12 +97,12 @@
         <div class="mb-4">
           <p class="mb-2 text-lg text-gray-500">กรองข้อมูล</p>
           <div class="flex gap-2">
-            <select id="dateFilter" class="bg-white p-2 rounded-lg w-full" data-action="change->admin-filter#filterByDateRange">
+            <select id="dateFilter" class="bg-white text-gray-500 p-2 rounded-lg w-full" data-action="change->admin-filter#filterByDateRange">
               <option value="latest">ล่าสุด</option>
               <option value="oldest">เก่าสุด</option>
             </select>
-            <select id="tag-sort" class="bg-white p-2 rounded-lg w-full" data-action="change->admin-filter#filterByTag">
-              <option value="">เลือกแท็ก</option>
+            <select id="tag-sort" class="bg-white text-gray-500 p-2 rounded-lg w-full" data-action="change->admin-filter#filterByTag">
+              <option value="">ทั้งหมด</option>
               <% Report::TAGS.each do |tag| %>
                 <option value="<%= tag %>"><%= tag %></option>
               <% end %>
