@@ -38,7 +38,8 @@ export default class extends Controller {
     });
 
     map.on("locationerror", () => {
-      alert("Geolocation permission denied or unavailable.")
+      this.removeLoadingLocationMessage(map, loadingControl);
+      alert("Geolocation permission denied or unavailable.");
     });
 
     this.displayLocations(map)
