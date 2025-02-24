@@ -32,6 +32,8 @@ export default class extends Controller {
 
     map.on("locationfound", (e) => {
       map.flyTo(e.latlng, 13);
+      this.oldLatValue = e.latlng.lat;
+      this.oldLongValue = e.latlng.lng;
       this.removeLoadingLocationMessage(map, loadingControl);
     });
 
