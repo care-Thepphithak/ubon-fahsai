@@ -8,7 +8,6 @@ export default class extends Controller {
 
   async connect() {
     this.getCurrentLocation();
-    console.log("Reports:", JSON.stringify(this.reportsValue, null, 2));
     this.renderTags();
   }
 
@@ -130,6 +129,15 @@ export default class extends Controller {
   }
 
   renderTags() {
-    // Your existing renderTags implementation
+    this.tagTargets.forEach((tagTarget, index) => {
+      const report = this.reportsValue[index];
+      const tags = JSON.parse(report.tags) || [];
+      tagTarget.innerHTML = tags.slice(0, 3).map(tag => `
+        <div class="bg-gray-200 px-2 py-1 rounded-md">
+          <span class="text-sm bg-gray-200 px-2 py-1 rounded-lg">${tag}</span>
+        </div>
+      `).join('');
+    });
   }
+
 }
