@@ -28,7 +28,7 @@
               <div class="bg-white flex flex-col flex-1 rounded-xl p-3 px-5 h-full justify-center">
                 <p class="text-gray-500 text-left mb-2">พื้นที่ไฟไหม้วันนี้</p>
                 <div class="flex gap-4 justify-between">
-                  <p class="text-5xl" id="report_counter"><%= @report_count %></p>
+                  <p class="text-5xl text-gray-600" id="report_counter"><%= @report_count %></p>
                   <div class="flex flex-col items-end">
                     <% if @report_count_comparisons[:more] %>
                       <p class="text-[#FF392F]">เพิ่มขึ้น <i class="fa-solid fa-chevron-up"></i></p>
@@ -64,7 +64,7 @@
             <div class="flex flex-col overflow-scroll gap-2 no-scrollbar">
             <% @top_districts.each do |location_name, count| %>
               <div class="flex bg-white rounded-lg px-3 py-1 justify-between">
-                <p class="w-[60%] text-base"><%= location_name.district %></p>
+                <p class="w-[60%] text-gray-600 text-base"><%= location_name.district %></p>
                 <p class="text-[#FF392F]"><%= location_name.district_count %> จุด</p>
               </div>
             <% end %>
@@ -106,12 +106,12 @@
                 <p class="text-gray-500 text-sm"><%= report.severity_level %></p>
               </div>
               <div class="flex flex-col">
-                <h2 class="font-normal text-black text-base line-clamp-2"><%= report.location_name %></h2>
+                <h2 class="font-normal text-gray-600 text-base line-clamp-2"><%= report.location_name %></h2>
                 <p class="text-gray-500 text-[14px]"><%= time_ago_in_words(report.created_at, datetime: :distance_in_words, locale: :th) %> ที่แล้ว</p>
-                <div class="flex gap-1 mt-3 flex-wrap">
+                <div class="flex gap-2 mt-3 flex-wrap">
                   <% tags = JSON.parse(report.tags) rescue [] %> 
                   <% tags.each do |tag| %>
-                    <p class="px-2 py-0.5 bg-gray-300 rounded-md font-normal"><%= tag || "ไม่มีข้อมูล" %></p>
+                    <p class="px-2 py-1 text-gray-500 bg-gray-100 rounded-md font-normal"><%= tag || "ไม่มีข้อมูล" %></p>
                   <% end %>
                 </div>
               </div>
