@@ -31,6 +31,10 @@ export default class extends Controller {
 
     const nearestDistance = this.calculateNearestDistance(lat, long, this.reportsValue);
     this.nearestDistanceTarget.innerHTML = `${nearestDistance.toFixed(2)}`;
+  
+    // Remove the specified classes
+    this.nearestDistanceTarget.classList.remove('min-h-[40px]', 'animate-pulse', 'bg-gray-300', 'rounded-md');
+  
 
     this.updateReportDistances(lat, long);
   }
@@ -85,26 +89,29 @@ export default class extends Controller {
     return nearestDistance;
   }
 
-  updateReportDistances(lat, long) {
+    updateReportDistances(lat, long) {
     const toRad = (value) => (value * Math.PI) / 180;
     const earthRadiusKm = 6371;
-
+  
     this.reportsValue.forEach((report, index) => {
       const dLat = toRad(report.lat - lat);
       const dLong = toRad(report.long - long);
-
+  
       const a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(toRad(lat)) *
           Math.cos(toRad(report.lat)) *
           Math.sin(dLong / 2) *
           Math.sin(dLong / 2);
-
+  
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const distance = earthRadiusKm * c;
-
+  
       const distanceElement = this.distanceTargets[index];
-      distanceElement.innerHTML = `${distance.toFixed(2)} กม.`;
+      distanceElement.innerHTML = `${distance.toFixed(2)} <span class="text-sm text-end">กม.</span>`;
+  
+      // Remove the specified classes
+      distanceElement.classList.remove('min-h-[50px]', 'animate-pulse', 'bg-gray-300', 'rounded-md');
     });
   }
 
