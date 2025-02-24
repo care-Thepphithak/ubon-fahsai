@@ -35,7 +35,12 @@ module Authentication
     end
 
     def after_authentication_url
-      session.delete(:return_to_after_authenticating) || root_url
+      puts "Current.user.admin? #{Current.user.admin?}"
+      if Current.session&.user&.admin?
+        admin_dashboard_index_url
+      else
+        session.delete(:return_to_after_authenticating) || root_url
+      end
     end
 
     def start_new_session_for(user)
