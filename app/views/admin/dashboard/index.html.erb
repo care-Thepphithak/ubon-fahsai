@@ -19,8 +19,8 @@
     </div>
 
 
-    <div class="absolute pb-12 left-0 right-0 top-36 mx-auto flex flex-col xl:flex-row w-[90%] max-w-[1300px] mt-10 gap-[20px]">
-      <div data-controller="admin-map" class="container mx-auto" data-admin-map-reports-value="<%= @reports.to_json %>">
+    <div class="absolute pb-12 left-0 right-0 top-36 mx-auto flex flex-col xl:flex-row w-[90%] max-w-[1300px] h-svh min-h-[700px] mt-10 gap-[20px]">
+      <div data-controller="admin-map" class="flex flex-col w-full mx-auto" data-admin-map-reports-value="<%= @reports.to_json %>">
         <div class="flex flex-col md:flex-row w-[full] md:h-[12rem] mb-[20px] gap-[20px]">
           <div class="flex flex-col flex-5 bg-[#F3F3F3] rounded-xl p-5 gap-2">
             <p class="text-lg text-gray-500">สถิติการไฟไหม้วันนี้</p>
@@ -71,7 +71,7 @@
             </div>
           </div>
         </div>
-        <div data-admin-map-target="map" class="rounded-xl h-[70vh] z-0"></div>
+        <div data-admin-map-target="map" class="rounded-xl h-full z-0"></div>
 
         <div data-admin-map-target="modal" class="hidden">
           <%= render "shared/modal" do %>
@@ -93,7 +93,7 @@
         </div>
 
       </div>
-      <div class="w-full xl:w-[600px] h-screen bg-[#F3F3F3] flex  flex-col p-5 rounded-xl">
+      <div class="w-full xl:w-[600px] bg-[#F3F3F3] flex  flex-col p-5 rounded-xl">
         <p class="mb-2 text-lg text-gray-500">รายการสถานการณ์ไฟไหม้</p>
         <div class="flex flex-col gap-4 overflow-y-scroll no-scrollbar scroll-smooth rounded-lg" id="report-container">
           <div id="notifications" class="rounded flex flex-col gap-4"></div>
