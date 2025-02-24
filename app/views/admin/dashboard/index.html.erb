@@ -23,10 +23,10 @@
       <div data-controller="admin-map" class="container mx-auto" data-admin-map-reports-value="<%= @reports.to_json %>">
         <div class="flex w-[full] h-[12rem] mb-[20px] gap-[20px]">
           <div class="flex flex-col flex-5 bg-[#F3F3F3] rounded-xl p-5 gap-2">
-            <p class="text-lg text-gray-500">สถิติการไฟไหม้</p>
+            <p class="text-lg text-gray-500">สถิติการไฟไหม้วันนี้</p>
             <div class="flex gap-[20px] w-full h-[80%]">
               <div class="bg-white flex flex-col flex-1 rounded-xl p-3 px-5 h-full justify-center">
-                <p class="text-gray-500 text-left mb-2">พื้นที่ไฟไหม้</p>
+                <p class="text-gray-500 text-left mb-2">พื้นที่ไฟไหม้วันนี้</p>
                 <div class="flex gap-4 justify-between">
                   <p class="text-5xl" id="report_counter"><%= @report_count %></p>
                   <div class="flex flex-col items-end">
@@ -42,7 +42,7 @@
                 </div>
               </div>
               <div class="bg-white flex flex-col flex-1 rounded-xl p-3 px-5 h-full justify-center">
-                <p class="text-gray-500 text-left mb-2">ระดับความรุนแรง</p>
+                <p class="text-gray-500 text-left mb-2">ระดับความรุนแรงวันนี้</p>
                 <div class="flex gap-4 justify-between">
                   <p class="text-5xl text-[#FF392F]" id="report_harmful_counter"><%= @report_harmful_count %></p>
                   <div class="flex flex-col items-end">
@@ -60,7 +60,7 @@
             </div>
           </div>
           <div class="flex flex-col flex-4 bg-[#F3F3F3] rounded-xl p-5 gap-2">
-            <p class="text-lg text-gray-500">สถิติไฟไหม้ตามพื้นที่</p>
+            <p class="text-lg text-gray-500">สถิติไฟไหม้ตามพื้นที่วันนี้</p>
             <div class="flex flex-col overflow-scroll gap-2 no-scrollbar">
             <% @top_districts.each do |location_name, count| %>
               <div class="flex bg-white rounded-lg px-3 py-1 justify-between">

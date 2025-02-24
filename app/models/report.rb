@@ -26,6 +26,7 @@ class Report < ApplicationRecord
   def self.top_districts
     select("split_part(reverse(split_part(reverse(location_name), 'จังหวัด', 1)), ' ', -2) AS district, COUNT(*) AS district_count")
       .where("location_name LIKE ?", "%จังหวัด%")
+      .where("created_at >= ?", Date.today.beginning_of_day)
       .group("district")
       .order(Arel.sql("district_count DESC"))
       .limit(3)
