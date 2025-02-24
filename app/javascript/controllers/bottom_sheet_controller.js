@@ -53,6 +53,10 @@ export default class extends Controller {
     setTimeout(() => this.bottomSheetTarget.classList.add("hidden"), 300);
 
     this.bottomSheetTarget.removeEventListener('click', this.handleBackdropClick);
+
+    if (this.data.get("open") === "true") {
+      setTimeout(() => this.bottomSheetTarget.remove(), 300);
+    }
   }
 
   handleBackdropClick = (event) => {
