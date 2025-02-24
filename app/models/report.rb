@@ -12,15 +12,15 @@ class Report < ApplicationRecord
   end
 
   def self.count_harmful_today
-    where(severity_level: ["วิกฤติ", "รุนแรงมาก"], created_at: Date.today.beginning_of_day..Date.today.end_of_day).count # rubocop:disable Layout/SpaceInsideArrayLiteralBrackets
+    where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ], created_at: Date.today.beginning_of_day..Date.today.end_of_day).count
   end
 
   def self.count_harmful_yesterday
-    where(severity_level: ["วิกฤติ", "รุนแรงมาก"], created_at: Date.yesterday.beginning_of_day..Date.yesterday.end_of_day).count # rubocop:disable Layout/SpaceInsideArrayLiteralBrackets
+    where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ], created_at: Date.yesterday.beginning_of_day..Date.yesterday.end_of_day).count
   end
 
   def self.count_harmful_reports
-    where(severity_level: ["วิกฤติ", "รุนแรงมาก"]).count # rubocop:disable Layout/SpaceInsideArrayLiteralBrackets
+    where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ]).count
   end
 
   def self.top_districts
