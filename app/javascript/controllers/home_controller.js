@@ -1,16 +1,21 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["currentLocation"];
+  static targets = ["currentLocation", "nearestDistance", "reports", "tag", "distance"];
+  static values = {
+    reports: Array
+  }
 
-  connect() {
+  async connect() {
     this.getCurrentLocation();
+    console.log("Reports:", JSON.stringify(this.reportsValue, null, 2));
+    this.renderTags();
   }
 
   getCurrentLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        this.showCerrentLocation.bind(this),
+        this.showCurrentLocation.bind(this),
         this.showError.bind(this)
       );
     } else {
@@ -19,12 +24,89 @@ export default class extends Controller {
     }
   }
 
-  async showCerrentLocation(position) {
+  async showCurrentLocation(position) {
     const lat = position.coords.latitude;
     const long = position.coords.longitude;
     const locationName = await this.getLocationName(lat, long);
     this.currentLocationTarget.innerHTML = locationName;
-    // You can also use a reverse geocoding API to get the location name from lat and long
+
+    const nearestDistance = this.calculateNearestDistance(lat, long, this.reportsValue);
+    this.nearestDistanceTarget.innerHTML = `${nearestDistance.toFixed(2)}`;
+
+    this.updateReportDistances(lat, long);
+  }
+
+  async getLocationName(lat, lng) {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=th`
+      );
+      const data = await response.json();
+
+      let locationString = data.display_name || "";
+
+      locationString = locationString
+        .replace(/, /g, " ")
+        .replace(/ประเทศไทย/g, "")
+        .replace(/\d{5}/g, "")
+        .trim();
+
+      return locationString || "ไม่พบข้อมูลตำแหน่ง";
+    } catch (error) {
+      console.error("Error fetching location name:", error);
+      return "ไม่พบข้อมูลตำแหน่ง";
+    }
+  }
+
+  calculateNearestDistance(lat, long, reports) {
+    const toRad = (value) => (value * Math.PI) / 180;
+    const earthRadiusKm = 6371;
+
+    let nearestDistance = Infinity;
+
+    reports.forEach((report) => {
+      const dLat = toRad(report.lat - lat);
+      const dLong = toRad(report.long - long);
+
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat)) *
+          Math.cos(toRad(report.lat)) *
+          Math.sin(dLong / 2) *
+          Math.sin(dLong / 2);
+
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = earthRadiusKm * c;
+
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+      }
+    });
+
+    return nearestDistance;
+  }
+
+  updateReportDistances(lat, long) {
+    const toRad = (value) => (value * Math.PI) / 180;
+    const earthRadiusKm = 6371;
+
+    this.reportsValue.forEach((report, index) => {
+      const dLat = toRad(report.lat - lat);
+      const dLong = toRad(report.long - long);
+
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat)) *
+          Math.cos(toRad(report.lat)) *
+          Math.sin(dLong / 2) *
+          Math.sin(dLong / 2);
+
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = earthRadiusKm * c;
+
+      const distanceElement = this.distanceTargets[index];
+      distanceElement.innerHTML = `${distance.toFixed(2)} กม.`;
+    });
   }
 
   showError(error) {
@@ -47,29 +129,7 @@ export default class extends Controller {
     }
   }
 
-  async getLocationName(lat, lng) {
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=th`
-      );
-      const data = await response.json();
-
-      let locationString = data.display_name || "";
-
-      locationString = locationString
-        .replace(/, /g, " ")
-        .replace(/ประเทศไทย/g, "")
-        .replace(/\d{5}/g, "")
-        .trim();
-
-      // Split the string into an array, remove the last two elements, and join it back into a string
-      const locationArray = locationString.split(" ");
-      locationString = locationArray.slice(-2).join(" ");
-
-      return locationString || "ไม่พบข้อมูลตำแหน่ง";
-    } catch (error) {
-      console.error("Error fetching location name:", error);
-      return "ไม่พบข้อมูลตำแหน่ง";
-    }
+  renderTags() {
+    // Your existing renderTags implementation
   }
 }
