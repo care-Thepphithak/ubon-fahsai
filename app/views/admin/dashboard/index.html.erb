@@ -33,7 +33,7 @@
                     <% if @report_count_comparisons[:more] %>
                       <p class="text-red-400">เพิ่มขึ้น <i class="ml-1 fa-solid fa-angles-up"></i></p>
                     <% elsif @report_count_comparisons[:less] %>
-                      <p class="text-[#2fff4b]">ลดลง <i class="fa-solid fa-chevron-down"></i></p>
+                      <p class="text-[#2fff4b]">ลดลง <i class="fa-solid fa-angles-down"></i></p>
                     <% else %>
                       <p class="text-gray-500">เท่าเดิม <i class="fa-solid fa-minus"></i></p>
                     <% end %>
@@ -42,18 +42,18 @@
                 </div>
               </div>
               <div class="bg-white flex flex-col flex-1 rounded-xl p-3 px-5 h-full justify-center">
-                <p class="text-gray-500 text-left mb-2">ระดับความรุนแรงวันนี้</p>
+                <p class="text-gray-500 text-left mb-2">พื้นที่เฝ้าระวังวันนี้</p>
                 <div class="flex gap-4 justify-between">
                   <p class="text-5xl text-red-400" id="report_harmful_counter"><%= @report_harmful_count %></p>
                   <div class="flex flex-col items-end">
                     <% if @report_harmful_count_comparisons[:more] %>
                       <p class="text-red-400">เพิ่มขึ้น <i class="ml-1 fa-solid fa-angles-up"></i></p>
                     <% elsif @report_harmful_count_comparisons[:less] %>
-                      <p class="text-[#2fff4b]">ลดลง <i class="fa-solid fa-chevron-down"></i></p>
+                      <p class="text-[#2fff4b]">ลดลง <i class="fa-solid fa-angles-down"></i></p>
                     <% else %>
                       <p class="text-gray-500">เท่าเดิม <i class="fa-solid fa-minus"></i></p>
                     <% end %>
-                    <p class="text-gray-400">วิกฤติ</p>
+                    <p class="text-gray-400">พื้นที่</p>
                   </div>
                 </div>
               </div>
