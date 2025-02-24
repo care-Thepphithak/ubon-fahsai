@@ -10,7 +10,6 @@ consumer.subscriptions.create("ReportChannel", {
   },
 
   received(data) {
-    const notificationContainer = document.getElementById("notifications");
 
     let tags = [];
 
@@ -53,6 +52,14 @@ consumer.subscriptions.create("ReportChannel", {
       return `เมื่อสักครู่`;
     }
 
+    const notificationContainer = document.getElementById("notifications");
+    const report_counter = document.getElementById("report_counter")
+    report_counter.innerText = data.total_count;
+
+    const report_harmful_counter = document.getElementById("report_harmful_counter")
+    report_harmful_counter.innerText = data.harmful_count;
+
+
     if (notificationContainer) {
 
       const notification = document.createElement("div");
@@ -61,6 +68,7 @@ consumer.subscriptions.create("ReportChannel", {
       const reportContainer = document.getElementById("report-container");
 
       reportContainer.scrollTop = 0;
+
 
 
       notification.innerHTML = `

@@ -12,7 +12,11 @@ class ReportsController < ApplicationController
 
     respond_to do |format|
       if @report.save
-        ActionCable.server.broadcast("report_channel", { message: @report })
+        ActionCable.server.broadcast("report_channel", {
+          message: @report,
+          total_count: Report.count,
+          harmful_count: Report.where(severity_level: "วิกฤติ").count
+        })
         format.html { redirect_to reports_path, notice: "Report was successfully created." }
         format.json { render :show, status: :created, location: @report }
       else
