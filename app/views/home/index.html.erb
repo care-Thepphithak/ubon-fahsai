@@ -8,46 +8,30 @@
   </div>
 <% end %>
 
-<div class="m-4">
-  <h1 class="font-medium text-4xl mb-6 text-[#FF6159]">อุบลฟ้าใส</h1>
-  <%= link_to "รายงานไฟไหม้", reports_path, class: button_helper("ดูรายงาน", variant: :solid, size: :md, css_class: "inline-block px-4 py-2") %>
-  <div class="grid mt-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <% @reports.each do |report| %>
-      <div class="bg-white p-4 border border-gray-200 rounded-lg shadow-md">
-        <h2 class="font-semibold text-xl text-[#FF6159]"><%= report.location_name %></h2>
-        <p class="text-gray-500">lat: <%= report.lat %>, long: <%= report.long %></p>
-        <p class="text-gray-500">สร้างเมื่อ: <%= report.created_at %></p>
-        <p class="text-gray-500">รายละเอียด <%= report.description %></p>
-        <p class="text-gray-500">ระดับความรุนแรง: <%= report.severity_level %></p>
-        <p class="text-gray-500 mb-3">
-          Tags: <%= JSON.parse(report.tags).join(", ") rescue "ไม่มีข้อมูล" %>
-        </p>
-        <% if report.images.one? %>
-          <%= image_tag report.images.first, class: "w-full h-64 object-cover rounded-lg" %>
-        <% else %>
-          <div class="grid grid-cols-2 gap-2">
-            <% report.images.each do |image| %>
-              <%= image_tag image, class: "w-full h-32 object-cover rounded-lg" %>
-            <% end %>
-<div data-controller="home" class="bg-[#FF6159]">
-  <div class="p-4 py-10 sm:py-16">
-    <h1 class="font-bold text-4xl mb-2 text-gray-50">อุบลฟ้าใส สวัสดี</h1>
-    <p data-home-target="currentLocation" class="text-sm text-gray-50">กำลังหาตำแหน่งของคุณ...</p>
-    <p class="text-sm text-gray-50"><%= l(Time.current, format: :full, locale: :th) %></p>
-  </div>
-  
-  <div class="relative z-0 sm:bg-[#F5F5F5] min-h-svh">
-    <svg class="w-[100%] h-[100%] sm:hidden" viewBox="0 0 393 609" fill="none" xmlns="http://www.w3.org/2000/svg">
+<div data-controller="home" class="bg-[#F5F5F5]">
+
+  <div  class="bg-[#FF6159] overflow-hidden h-75 sm:h-40">
+
+    <div class=" py-10 w-[90%] mx-auto ">
+      <h1 class="font-medium text-4xl mb-2 text-gray-50">อุบลฟ้าใส สวัสดี</h1>
+      <p data-home-target="currentLocation" class="text-sm text-gray-50">กำลังหาตำแหน่งของคุณ...</p>
+      <p class="text-sm text-gray-50"><%= l(Time.current, format: :full, locale: :th) %></p>
+    </div>
+
+    <svg class="w-full sm:hidden" viewBox="0 0 393 609" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="9" cy="64" r="64" fill="#F5F5F5"/>
       <circle cx="141" cy="112" r="61" fill="#F5F5F5"/>
       <circle cx="370.5" cy="83.5" r="77.5" fill="#F5F5F5"/>
       <circle cx="287.5" cy="112.5" r="61.5" fill="#F5F5F5"/>
       <circle cx="84" cy="78" r="27" fill="#F5F5F5"/>
       <circle cx="209" cy="99" r="32" fill="#F5F5F5"/>
-      <rect x="-2" y="89" width="395" height="520" fill="#F5F5F5"/>
+      <rect x="-2" y="89" width="395" height="100" fill="#F5F5F5"/>
     </svg>
+  </div>
 
-    <div class="absolute sm:static mx-auto z-10 top-20 left-0 p-4 text-gray-500 w-full h-[100%] max-h-[932px]">
+  
+  <div class="pb-32 sm:mt-6">
+    <div class=" mx-auto text-gray-500 w-[90%] ">
       <h4>สถิติวันนี้</h4>
       <div class="flex gap-4 w-full mt-2 mb-4"> 
           <div class="flex flex-col w-[100%] bg-white p-4 rounded-lg  text-gray-600">
@@ -80,7 +64,7 @@
                   <svg width="40" height="46" viewBox="0 0 30 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M8.27344 35.0512C1.092 31.0038 -0.798717 27.1728 0.282262 21.9405C1.08029 18.077 3.69339 14.9336 3.94394 11.0775C5.06018 13.1088 5.52659 14.5736 5.65132 16.6963C9.20151 12.3466 11.5475 6.32517 11.6865 0C11.6865 0 20.9334 5.43323 21.5402 13.6402C22.3362 11.9486 22.7369 9.26193 21.9409 7.5207C24.329 9.26202 38.3067 24.7203 20.0476 35.0512C23.4805 28.367 20.9332 19.3479 14.9728 15.1825C15.3709 16.9736 14.673 23.6538 12.036 26.5892C12.7667 21.6845 11.3409 19.6105 11.3409 19.6105C11.3409 19.6105 10.8515 22.3578 8.95276 25.133C7.2189 27.6673 6.01752 30.357 8.27344 35.0512Z" fill="<%=report.severity_color%>"/>
                   </svg>
-                   <p class="text-sm font-bold text-gray-500"><%= report.severity_level %></p>
+                   <p class="text-sm ont-medium text-gray-500"><%= report.severity_level %></p>
                 </div>
 
                 <div class="flex flex-col gap-1 w-full">
