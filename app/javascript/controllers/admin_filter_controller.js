@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import createConsumer from "channels/consumer";
 
 export default class extends Controller {
   static targets = ["reportContainer"];
@@ -6,6 +7,15 @@ export default class extends Controller {
 
   selectedTag = null;
   selectedDateRange = null;
+
+  connect() {
+    this.channel = createConsumer.subscriptions.create("ReportChannel", {
+      received: (data) => {
+        this.reportsValue = [data.message, ...this.reportsValue];
+        this.filter();
+      },
+    });
+  }
 
   filterByTag(event) {
     this.selectedTag = event.target.value;
