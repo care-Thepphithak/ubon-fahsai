@@ -48,6 +48,13 @@ export default class extends Controller {
 
   displayLocations(map) {
     this.reportsValue.forEach(report => {
+      if (!this.markerMap) {
+        this.markerMap = new Map();
+      }
+      if (this.markerMap.has(report.id)) {
+        return;
+      }
+
       const customIcon = L.icon({
         iconUrl: this.createColoredMarker(report.severity_color),
         iconSize: [32, 37],
@@ -56,6 +63,8 @@ export default class extends Controller {
       });
 
       const marker = L.marker([report.lat, report.long], { icon: customIcon }).addTo(map);
+      this.markerMap.set(report.id, marker);
+
       marker.on('click', () => {
         this.openModal(report);
       });
@@ -173,6 +182,7 @@ export default class extends Controller {
   }
 
   handleNewReport(report, map) {
+    this.reportsValue = [...this.reportsValue, report];
     const customIcon = L.icon({
       iconUrl: this.createColoredMarker(report.severity_color),
       iconSize: [32, 37],
@@ -184,6 +194,8 @@ export default class extends Controller {
     marker.on('click', () => {
       this.openModal(report);
     });
+
+    this.displayLocations(map);
   }
 
   setViewByList(event) {
