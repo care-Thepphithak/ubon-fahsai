@@ -33,27 +33,26 @@
   <div class="pb-32 min-h-svh sm:mt-6">
     <div class=" mx-auto text-gray-500 w-[90%] ">
       <h4>สถิติวันนี้</h4>
-      <div class="flex gap-4 w-full mt-2 mb-4"> 
-          <div class="flex flex-col w-[100%] bg-white p-4 rounded-lg  text-gray-600">
-            <h3>พื้นที่ไฟไหม้</h3>
-            <div class="flex items-start gap-5 text-start ">
-                <h4 class="text-5xl w-full max-w-[80px] text-center"><%=@report_count%></h4>
-                <div class="flex flex-col justify-end w-full min-w-[80px] text-start">
-                  <p class="text-sm text-red-400">เพิ่มขึ้น <i class="ml-1 fa-solid fa-angles-up"></i></p>
-                  <p class="text-lg">รายงาน</p>
+        <div class="flex gap-4 w-full mt-2 mb-4"> 
+              <div class="flex flex-col w-full bg-white p-4 rounded-lg  text-gray-600">
+                <h3>พื้นที่ไฟไหม้</h3>
+                <div class="flex items-start gap-5 text-start ">
+                    <h4 class="text-5xl w-full max-w-[80px] text-center"><%=@report_count%></h4>
+                    <div class="flex flex-col justify-end w-full min-w-[80px] text-start">
+                      <p class="text-sm text-red-400">เพิ่มขึ้น <i class="ml-1 fa-solid fa-angles-up"></i></p>
+                      <p class="text-lg">รายงาน</p>
+                    </div>
                 </div>
-            </div>
-          </div>
-            <div class="flex flex-col w-[100%] bg-white p-4 rounded-lg text-gray-600">
-    <h3>จุดที่ใกล้ที่สุด</h3>
-    <div class="flex gap-6">
-      
-      <h4 class="text-5xl  min-w-[90px]" data-home-target="nearestDistance"><i class="fas fa-circle-notch fa-spin text-3xl m-2 text-gray-400"></i></h4>
-      <div class="flex flex-col justify-end text-end">
-        <p class="text-lg">กิโลเมตร</p>
-      </div>
-    </div>
-  </div>
+              </div>
+              <div class="flex flex-col w-full bg-white p-4 rounded-lg text-gray-600">
+                <h3>จุดที่ใกล้ที่สุด</h3>
+                <div class="flex gap-4 sm:gap-2">
+                    <h4 class="text-5xl " data-home-target="nearestDistance"><i class="fas fa-circle-notch fa-spin text-3xl m-2 text-gray-400"></i></h4>
+                    <div class="flex flex-col justify-end text-start">
+                      <span class="text-lg">กิโลเมตร</span>
+                    </div>
+                </div>
+              </div>
         </div>
 
          <h4>การรายงานล่าสุด</h4>
@@ -76,7 +75,7 @@
                           <p class="text-start text-sm text-gray-400"><%= time_ago_in_words(report.created_at, datetime: :distance_in_words, locale: :th) %> ที่แล้ว</p>
                           </div>
 
-                         <h3 data-home-target="distance" class="text-2xl text-end min-w-[100px]"><i class="fas fa-circle-notch fa-spin text-3xl m-2 text-gray-400"></i></h3>
+                         <h3 data-home-target="distance" class="text-2xl text-end min-w-[80px]"><i class="fas fa-circle-notch fa-spin text-3xl m-2 text-gray-400"></i></h3>
                     </div>
 
                   <div data-home-target="tag" class="flex gap-1"></div>
