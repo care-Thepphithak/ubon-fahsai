@@ -38,7 +38,7 @@
             <h3>พื้นที่ไฟไหม้</h3>
             <div class="flex items-start w-full justify-between gap-5">
                 <h4 class="text-4xl text-start"><%=@report_count%></h4>
-                <div class="flex flex-col items-end">
+                <div class="flex flex-col items-end w-max">
                     <% if @report_count_comparisons[:more] %>
                       <p class="text-red-400">เพิ่มขึ้น <i class="ml-1 fa-solid fa-angles-up"></i></p>
                     <% elsif @report_count_comparisons[:less] %>
@@ -55,7 +55,7 @@
             <div class="flex justify-between gap-6">
               <h4 class="text-4xl text-center" data-home-target="nearestDistance"><i class="fas fa-circle-notch fa-spin text-3xl text-gray-400"></i></h4>
               <div class="flex flex-col justify-end text-end">
-                <p>กิโลเมตร</p>
+                <p>ก.ม.</p>
               </div>
             </div>
           </div>
