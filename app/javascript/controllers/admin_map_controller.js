@@ -137,11 +137,12 @@ export default class extends Controller {
   }
 
   openModal(report) {
-    //create images in div (fireImages)
+    // Create images in div (fireImages)
     this.fireImagesTarget.innerHTML = "";
-    report.images_urls.forEach(imageUrl => {
+    report.images_urls.forEach(image => {
       const img = document.createElement('img');
-      img.src = imageUrl;
+      // Use a relative URL to route the request to your proxy controller
+      img.src = image;
       if (report.images_urls.length === 1) {
         img.classList.add('w-full', 'h-64', 'object-cover', 'rounded-lg');
       } else {

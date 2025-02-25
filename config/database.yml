@@ -52,5 +52,5 @@ production:
 
   cable:
     <<: *primary_production
-    database: <%= ENV['POSTGRES_DB'] %>
+    database: cable_<%= ENV['POSTGRES_DB'] %>
     migrations_paths: db/cable_migrate
