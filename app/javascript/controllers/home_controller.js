@@ -139,7 +139,7 @@ export default class extends Controller {
     this.tagTargets.forEach((tagTarget, index) => {
       const report = this.reportsValue[index];
       const tags = JSON.parse(report.tags) || [];
-      tagTarget.innerHTML = tags.slice(0, 3).map(tag => `
+      tagTarget.innerHTML = tags.map(tag => `
         <div class="bg-gray-200 px-2 py-1 rounded-md">
           <span class="text-sm bg-gray-200 rounded-lg">${tag}</span>
         </div>
