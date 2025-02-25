@@ -1,27 +1,106 @@
-<div class="m-4">
-  <h1 class="font-bold text-4xl mb-6 text-[#FF6159]">อุบลฟ้าใส</h1>
-  <%= link_to "รายงานไฟไหม้", reports_path, class: button_helper("ดูรายงาน", variant: :solid, size: :md, css_class: "inline-block px-4 py-2") %>
-  <div class="grid mt-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <% @reports.each do |report| %>
-      <div class="bg-white p-4 border border-gray-200 rounded-lg shadow-md">
-        <h2 class="font-bold text-xl text-[#FF6159]"><%= report.location_name %></h2>
-        <p class="text-gray-500">lat: <%= report.lat %>, long: <%= report.long %></p>
-        <p class="text-gray-500">สร้างเมื่อ: <%= report.created_at %></p>
-        <p class="text-gray-500">รายละเอียด <%= report.description %></p>
-        <p class="text-gray-500">ระดับความรุนแรง: <%= report.severity_level %></p>
-        <p class="text-gray-500 mb-3">
-          Tags: <%= JSON.parse(report.tags).join(", ") rescue "ไม่มีข้อมูล" %>
-        </p>
-        <% if report.images.one? %>
-          <%= image_tag minio_proxy_url(report.images.first.blob.key, protocol: "https", host: "ubon-fahsai-dev.odd.works"), class: "w-full h-64 object-cover rounded-lg" %>
-        <% else %>
-          <div class="grid grid-cols-2 gap-2">
-            <% report.images.each do |image| %>
-              <%= image_tag minio_proxy_url(image.blob.key, protocol: "https", host: "ubon-fahsai-dev.odd.works"), class: "w-full h-32 object-cover rounded-lg" %>
-            <% end %>
-          </div>
-        <% end %>
-      </div>
+<% if notice %>
+  <div data-controller="bottom-sheet" data-bottom-sheet-open="true">
+    <%= render "shared/bottom_sheet" do %>
+      <h2 class="text-2xl text-green-500 pb-[20px]"><i class="fas fa-check-circle"></i> รายงานสำเร็จ</h2>
+      <p class="text-sm text-gray-500 pb-2"><%= l(Time.current, format: :full, locale: :th) %></p>
+      <p id="location-name-bottom-sheet" class="text-center text-lg text-gray-500 pb-[30px]"><%= notice %></p>
     <% end %>
+  </div>
+<% end %>
+
+<div data-controller="home" class="bg-[#F5F5F5] min-h-svh" data-home-reports-value="<%= @reports.to_json %>">
+
+  <div  class="bg-[#FF6159] overflow-hidden h-75 sm:h-70">
+
+    <div class="py-10 sm:py-20 w-[90%] mx-auto ">
+      <h1 class="font-medium text-4xl mb-2 text-gray-50">อุบลฟ้าใส สวัสดี</h1>
+      <p data-home-target="currentLocation" class="text-sm text-gray-50">กำลังหาตำแหน่งของคุณ...</p>
+      <p class="text-sm text-gray-50"><%= l(Time.current, format: :full, locale: :th) %></p>
+    </div>
+
+    <svg class="w-full sm:hidden" viewBox="0 0 393 609" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="9" cy="64" r="64" fill="#F5F5F5"/>
+      <circle cx="141" cy="112" r="61" fill="#F5F5F5"/>
+      <circle cx="370.5" cy="83.5" r="77.5" fill="#F5F5F5"/>
+      <circle cx="287.5" cy="112.5" r="71" fill="#F5F5F5"/>
+      <circle cx="84" cy="78" r="27" fill="#F5F5F5"/>
+      <circle cx="209" cy="99" r="32" fill="#F5F5F5"/>
+      <rect x="-2" y="89" width="395" height="100" fill="#F5F5F5"/>
+    </svg>
+  </div>
+
+  
+  <div class="pb-32 sm:mt-6">
+    <div class=" mx-auto text-gray-500 w-[90%]">
+      <h4>สถิติวันนี้</h4>
+        <div class="flex gap-4 w-full mt-2 mb-4 overflow-x-auto no-scrollbar rounded-lg"> 
+          <div class="flex flex-col w-[100%] bg-white p-4 rounded-lg  text-gray-600">
+            <h3>พื้นที่ไฟไหม้</h3>
+            <div class="flex items-start w-full justify-between gap-5">
+                <h4 class="text-4xl text-start"><%=@report_count%></h4>
+                <div class="flex flex-col items-end w-max">
+                    <% if @report_count_comparisons[:more] %>
+                      <p class="text-red-400">เพิ่มขึ้น <i class="ml-1 fa-solid fa-angles-up"></i></p>
+                    <% elsif @report_count_comparisons[:less] %>
+                      <p class="text-green-500">ลดลง <i class="fa-solid fa-angles-down"></i></p>
+                    <% else %>
+                      <p class="text-gray-500">เท่าเดิม <i class="fa-solid fa-minus"></i></p>
+                    <% end %>
+                    <p class="text-gray-400">การรายงาน</p>
+                </div>
+            </div>
+          </div>
+          <div class="flex flex-col w-[100%] bg-white p-4 rounded-lg text-gray-600">
+            <h3>จุดที่ใกล้ที่สุด</h3>
+            <div class="flex justify-between gap-6">
+              <h4 class="text-4xl text-center" data-home-target="nearestDistance"><i class="fas fa-circle-notch fa-spin text-3xl text-gray-400"></i></h4>
+              <div class="flex flex-col justify-end text-end">
+                <p>ก.ม.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+         <h4>การรายงานล่าสุด</h4>
+         <div class="flex flex-col mt-2 w-full gap-3">
+
+           <% @reports.each do |report| %>
+            <div class="flex bg-white w-full rounded-lg p-3 gap-2">
+                <div class="flex flex-col justify-center items-center gap-2 min-w-[70px]">
+                  <svg width="40" height="46" viewBox="0 0 30 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8.27344 35.0512C1.092 31.0038 -0.798717 27.1728 0.282262 21.9405C1.08029 18.077 3.69339 14.9336 3.94394 11.0775C5.06018 13.1088 5.52659 14.5736 5.65132 16.6963C9.20151 12.3466 11.5475 6.32517 11.6865 0C11.6865 0 20.9334 5.43323 21.5402 13.6402C22.3362 11.9486 22.7369 9.26193 21.9409 7.5207C24.329 9.26202 38.3067 24.7203 20.0476 35.0512C23.4805 28.367 20.9332 19.3479 14.9728 15.1825C15.3709 16.9736 14.673 23.6538 12.036 26.5892C12.7667 21.6845 11.3409 19.6105 11.3409 19.6105C11.3409 19.6105 10.8515 22.3578 8.95276 25.133C7.2189 27.6673 6.01752 30.357 8.27344 35.0512Z" fill="<%=report.severity_color%>"/>
+                  </svg>
+                   <p class="text-sm ont-medium text-gray-500"><%= report.severity_level %></p>
+                </div>
+
+                <div class="flex flex-col gap-1 w-full">
+
+                    <div class="flex items-start gap-2 px-1 w-full justify-between text-end">
+                          <div class="flex flex-col mb-1">
+                          <span class="text-md text-start line-clamp-2"><%= truncate(report.location_name, length: 65, separator: ' ', omission: '...') %></span>
+                          <p class="text-start text-sm text-gray-400"><%= time_ago_in_words(report.created_at, datetime: :distance_in_words, locale: :th) %> ที่แล้ว</p>
+                          </div>
+
+                         <h3 data-home-target="distance" class="text-2xl m-1 text-end min-w-[85px]"><i class="fas fa-circle-notch fa-spin text-3xl text-gray-400"></i></h3>
+                    </div>
+
+                  <div data-home-target="tag" class="flex flex-wrap gap-1"></div>
+                </div>
+
+            </div>
+             <% end %>
+
+          </div>
+     
+          <%= link_to reports_path, class: "w-[90%] flex fixed bottom-4  text-center items-center justify-center block px-5 py-3 bg-[#FF6159] text-white rounded-md cursor-pointer hover:scale-[1.01] transition-all " do %>
+            <svg class="inline-block mr-2" width="20" height="26" viewBox="0 0 30 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8.27344 35.0512C1.092 31.0038 -0.798717 27.1728 0.282262 21.9405C1.08029 18.077 3.69339 14.9336 3.94394 11.0775C5.06018 13.1088 5.52659 14.5736 5.65132 16.6963C9.20151 12.3466 11.5475 6.32517 11.6865 0C11.6865 0 20.9334 5.43323 21.5402 13.6402C22.3362 11.9486 22.7369 9.26193 21.9409 7.5207C24.329 9.26202 38.3067 24.7203 20.0476 35.0512C23.4805 28.367 20.9332 19.3479 14.9728 15.1825C15.3709 16.9736 14.673 23.6538 12.036 26.5892C12.7667 21.6845 11.3409 19.6105 11.3409 19.6105C11.3409 19.6105 10.8515 22.3578 8.95276 25.133C7.2189 27.6673 6.01752 30.357 8.27344 35.0512Z" fill="currentColor"/>
+            </svg>
+            รายงานไฟไหม้
+          <% end %>
+
+
+      </div>
+    </div>
   </div>
 </div>

@@ -12,6 +12,10 @@
  */
  
  
+body {
+  font-family: "Kanit", serif;
+  font-weight: 400;
+}
 
 .no-scrollbar {
   scrollbar-width: none;

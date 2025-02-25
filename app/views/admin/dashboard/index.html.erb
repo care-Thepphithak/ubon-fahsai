@@ -1,20 +1,102 @@
-<div class="w-full flex flex-col relative">
-    <div class="w-full mx-auto h-64 bg-[#FF6159]">
-      <div class="flex flex-col items-start w-[90%] max-w-[1300px] mx-auto text-white justify-center h-full">
-        <h1 class="text-xl ml-1">Admin</h1>
-        <p class="font-semibold text-5xl mb-16">อุบลฟ้าใส</p>
+<div data-controller="admin-map" data-admin-map-reports-value="<%= @reports.to_json %>" class="w-full flex flex-col relative">
+    <div class="w-full flex mx-auto h-64 bg-[#FF6159]">
+      <div class="flex flex-col items-start w-[90%] max-w-[1300px] mx-auto text-white justify-center h-full relative">
+        <div class="w-full flex justify-between items-center">
+          <div>
+            <h1 class="text-xl ml-1">Admin</h1>
+            <p class="font-medium text-5xl mb-28">อุบลฟ้าใส</p>
+          </div>
+          <div class="justify-center h-full pt-4 md:flex hidden">
+            <% if authenticated? %>
+              <span class="mr-4 text-gray-50 pt-2 truncate">
+                <i class="fa-solid fa-circle-user pr-2"></i><%= Current.user.email_address %>
+              </span>
+              <%= button_to session_path, method: :delete, class: "px-4 py-2 rounded-lg flex bg-[#F3F3F3] gap-2 items-center text-gray-500 text-base cursor-pointer hover:bg-gray-200 transition-all" do %>
+                <i class="fa fa-sign-out-alt"></i>
+                <span>ออกจากระบบ</span>
+              <% end %>
+            <% end %>
+          </div>
+          <div class="justify-center h-full pt-4 md:hidden flex">
+            <% if authenticated? %>
+                <div data-controller="bottom-sheet">
+                  <i data-action="click->bottom-sheet#open" class="fa-solid fa-bars p2 rounded-lg flex gap-2 items-center text-white text-3xl cursor-pointer hover:scale-110 transition-all"></i>
+                  <%= render "shared/bottom_sheet" do %>
+                      <i class="fa-solid fa-circle-user text-6xl text-[#FF6159] pb-[20px]"></i>
+                      <h2 class="text-2xl text-[#FF6159] pb-[30px]"><%=Current.user.email_address%></h2>
+                      <%= button_to session_path, method: :delete, class: "w-full", form_class: "w-[90%]" do %>
+                        <div class="flex items-center justify-center gap-2 w-full bg-[#F3F3F3] text-gray-500 hover:bg-gray-200 text-lg py-3 rounded-xl cursor-pointer hover:scale-[1.01] transition-all">
+                          <span>ออกจากระบบ</span>
+                        </div>
+                      <% end %>
+                  <% end %>
+                </div>
+            <% end %>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="absolute pb-12 left-0 right-0 top-36 mx-auto flex flex-col xl:flex-row w-[90%] max-w-[1300px] mt-10 gap-[20px]">
-      <div data-controller="admin-map" class="container mx-auto" data-admin-map-reports-value="<%= @reports.to_json %>">
-        <div data-admin-map-target="map" class="rounded-xl h-[800px] z-0"></div>
+
+    <div class="absolute pb-12 left-0 right-0 top-36 mx-auto flex flex-col xl:flex-row w-[90%] max-w-[1300px] h-svh min-h-[700px] mt-10 gap-[20px]">
+      <div class="flex flex-col w-full mx-auto">
+        <div class="flex flex-col md:flex-row w-[full] md:h-[12rem] mb-[20px] gap-[20px]">
+          <div class="flex flex-col flex-5 bg-[#F3F3F3] rounded-xl p-5 gap-2">
+            <p class="text-lg text-gray-500">สถิติการไฟไหม้วันนี้</p>
+            <div class="flex gap-[20px] w-full h-[80%]">
+              <div class="bg-white flex flex-col flex-1 rounded-xl p-3 px-5 h-full justify-center">
+                <p class="text-gray-500 text-left mb-2">พื้นที่ไฟไหม้วันนี้</p>
+                <div class="flex gap-4 justify-between">
+                  <p class="text-5xl text-gray-600" id="report_counter"><%= @report_count %></p>
+                  <div class="flex flex-col items-end">
+                    <% if @report_count_comparisons[:more] %>
+                      <p class="text-red-400">เพิ่มขึ้น <i class="ml-1 fa-solid fa-angles-up"></i></p>
+                    <% elsif @report_count_comparisons[:less] %>
+                      <p class="text-green-500">ลดลง <i class="fa-solid fa-angles-down"></i></p>
+                    <% else %>
+                      <p class="text-gray-500">เท่าเดิม <i class="fa-solid fa-minus"></i></p>
+                    <% end %>
+                    <p class="text-gray-400">การรายงาน</p>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-white flex flex-col flex-1 rounded-xl p-3 px-5 h-full justify-center">
+                <p class="text-gray-500 text-left mb-2">พื้นที่เฝ้าระวังวันนี้</p>
+                <div class="flex gap-4 justify-between">
+                  <p class="text-5xl text-red-400" id="report_harmful_counter"><%= @report_harmful_count %></p>
+                  <div class="flex flex-col items-end">
+                    <% if @report_harmful_count_comparisons[:more] %>
+                      <p class="text-red-400">เพิ่มขึ้น <i class="ml-1 fa-solid fa-angles-up"></i></p>
+                    <% elsif @report_harmful_count_comparisons[:less] %>
+                      <p class="text-green-500">ลดลง <i class="fa-solid fa-angles-down"></i></p>
+                    <% else %>
+                      <p class="text-gray-500">เท่าเดิม <i class="fa-solid fa-minus"></i></p>
+                    <% end %>
+                    <p class="text-gray-400">พื้นที่</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col flex-4 bg-[#F3F3F3] rounded-xl p-5 gap-2">
+            <p class="text-lg text-gray-500">สถิติไฟไหม้ตามพื้นที่วันนี้</p>
+            <div class="flex flex-col overflow-scroll gap-2 no-scrollbar" id="top-districts">
+            <% @top_districts.each do |location_name, count| %>
+              <div class="flex bg-white rounded-lg px-3 py-1 justify-between">
+                <p class="w-[60%] text-gray-600 text-base"><%= location_name.district %></p>
+                <p class="text-[#FF392F]"><%= location_name.district_count %> จุด</p>
+              </div>
+            <% end %>
+            </div>
+          </div>
+        </div>
+        <div data-admin-map-target="map" class="rounded-xl min-h-[400px] h-full z-0"></div>
 
         <div data-admin-map-target="modal" class="hidden">
           <%= render "shared/modal" do %>
             <div data-admin-map-target="fireImages" class="flex gap-2 no-scrollbar overflow-x-scroll rounded-lg"></div>
 
-            <h1 data-admin-map-target="locationName" class="text-2xl font-bold text-gray-700 mt-4 mb-1"></h1>
+            <h1 data-admin-map-target="locationName" class="text-2xl font-semibold text-gray-700 mt-4 mb-1"></h1>
             <div class="flex items-center">
               <div class="px-4 py-2 rounded-lg bg-red-100 mr-4">
                 <p data-admin-map-target="severityLevel" class="text-red-400 text-md font-semibold"></p>
@@ -30,12 +112,37 @@
         </div>
 
       </div>
-      <div class="w-full xl:w-[600px] h-[800px] bg-[#F3F3F3] flex  flex-col p-5 rounded-xl">
-        <p class="mb-2 text-xl">รายการสถานการณ์ไฟไหม้</p>
-        <div class="flex flex-col gap-4 overflow-y-scroll no-scrollbar scroll-smooth rounded-lg" id="report-container">
+      <div class="w-full xl:w-[600px] bg-[#F3F3F3] flex  flex-col p-5 rounded-xl" data-controller="admin-filter" data-admin-filter-reports-value="<%= @reports.to_json %>">
+        <div class="mb-4">
+          <p class="mb-2 text-lg text-gray-500">กรองข้อมูล</p>
+          <div class="flex gap-2">
+            <div class="relative w-full">
+              <select id="dateFilter" class="bg-white text-gray-500 p-2 rounded-lg w-full appearance-none outline-none" data-action="change->admin-filter#filterByDateRange">
+                <option value="latest">ล่าสุด</option>
+                <option value="oldest">เก่าสุด</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                <i class="fa-solid fa-angle-down"></i>
+              </div>
+            </div>
+            <div class="relative w-full">
+              <select id="tag-sort" class="bg-white text-gray-500 p-2 rounded-lg w-full appearance-none outline-none" data-action="change->admin-filter#filterByTag">
+                <option value="">ทั้งหมด</option>
+                <% Report::TAGS.each do |tag| %>
+                  <option value="<%= tag %>"><%= tag %></option>
+                <% end %>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                <i class="fa-solid fa-angle-down"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="mb-2 text-lg text-gray-500">รายการสถานการณ์ไฟไหม้</p>
+        <div class="flex flex-col gap-4 overflow-y-scroll no-scrollbar scroll-smooth rounded-lg" id="report-container" data-admin-filter-target="reportContainer">
           <div id="notifications" class="rounded flex flex-col gap-4"></div>
           <% @reports.each do |report| %>
-            <div class="flex bg-white py-3 pr-[16px] rounded-lg">
+            <div class="flex bg-white py-3 pr-[16px] rounded-lg hover:scale-[.98] cursor-pointer transition-all" data-action="click->admin-map#setViewByList" data-lat="<%= report.lat %>" data-long="<%= report.long %>" >
               <div class="flex flex-col gap-1 min-w-14 mx-4 items-center justify-center text-nowrap">
                 <svg width="40" height="46" viewBox="0 0 30 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M8.27344 35.0512C1.092 31.0038 -0.798717 27.1728 0.282262 21.9405C1.08029 18.077 3.69339 14.9336 3.94394 11.0775C5.06018 13.1088 5.52659 14.5736 5.65132 16.6963C9.20151 12.3466 11.5475 6.32517 11.6865 0C11.6865 0 20.9334 5.43323 21.5402 13.6402C22.3362 11.9486 22.7369 9.26193 21.9409 7.5207C24.329 9.26202 38.3067 24.7203 20.0476 35.0512C23.4805 28.367 20.9332 19.3479 14.9728 15.1825C15.3709 16.9736 14.673 23.6538 12.036 26.5892C12.7667 21.6845 11.3409 19.6105 11.3409 19.6105C11.3409 19.6105 10.8515 22.3578 8.95276 25.133C7.2189 27.6673 6.01752 30.357 8.27344 35.0512Z" fill="<%= report.severity_color %>"/>
@@ -43,12 +150,12 @@
                 <p class="text-gray-500 text-sm"><%= report.severity_level %></p>
               </div>
               <div class="flex flex-col">
-                <h2 class="font-bold text-black text-base line-clamp-2"><%= report.location_name %></h2>
+                <h2 class="font-normal text-gray-600 text-base line-clamp-2"><%= report.location_name %></h2>
                 <p class="text-gray-500 text-[14px]"><%= time_ago_in_words(report.created_at, datetime: :distance_in_words, locale: :th) %> ที่แล้ว</p>
-                <div class="flex gap-1 mt-3 flex-wrap">
+                <div class="flex gap-2 mt-3 flex-wrap">
                   <% tags = JSON.parse(report.tags) rescue [] %> 
                   <% tags.each do |tag| %>
-                    <p class="px-2 py-0.5 bg-gray-300 rounded-md"><%= tag || "ไม่มีข้อมูล" %></p>
+                    <p class="px-2 py-1 text-gray-500 bg-gray-100 rounded-md font-normal"><%= tag || "ไม่มีข้อมูล" %></p>
                   <% end %>
                 </div>
               </div>

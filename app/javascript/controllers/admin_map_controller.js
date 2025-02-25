@@ -4,7 +4,9 @@ import { createConsumer } from "@rails/actioncable"
 export default class extends Controller {
   static targets = ["map", "modal", "reports", "fireImages", "locationName", "severityLevel", "createdAt", "description"]
   static values = {
-    reports: Array
+    reports: Array,
+    oldLat: String,
+    oldLong: String
   }
 
   connect() {
@@ -13,6 +15,7 @@ export default class extends Controller {
       zoom: 13
     });
     const loadingControl = L.control({ position: 'topright' });
+    this.map = map;
 
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: '&copy; OpenStreetMap'
@@ -29,11 +32,14 @@ export default class extends Controller {
 
     map.on("locationfound", (e) => {
       map.flyTo(e.latlng, 13);
+      this.oldLatValue = e.latlng.lat;
+      this.oldLongValue = e.latlng.lng;
       this.removeLoadingLocationMessage(map, loadingControl);
     });
 
     map.on("locationerror", () => {
-      alert("Geolocation permission denied or unavailable.")
+      this.removeLoadingLocationMessage(map, loadingControl);
+      alert("Geolocation permission denied or unavailable.");
     });
 
     this.displayLocations(map)
@@ -42,6 +48,13 @@ export default class extends Controller {
 
   displayLocations(map) {
     this.reportsValue.forEach(report => {
+      if (!this.markerMap) {
+        this.markerMap = new Map();
+      }
+      if (this.markerMap.has(report.id)) {
+        return;
+      }
+
       const customIcon = L.icon({
         iconUrl: this.createColoredMarker(report.severity_color),
         iconSize: [32, 37],
@@ -50,6 +63,8 @@ export default class extends Controller {
       });
 
       const marker = L.marker([report.lat, report.long], { icon: customIcon }).addTo(map);
+      this.markerMap.set(report.id, marker);
+
       marker.on('click', () => {
         this.openModal(report);
       });
@@ -135,19 +150,18 @@ export default class extends Controller {
       }
       this.fireImagesTarget.appendChild(img);
     });
-    
+
+    // this.fireImagesTarget = report.images_urls[0];
     this.locationNameTarget.innerHTML = report.location_name;
     this.severityLevelTarget.innerHTML = report.severity_level;
     this.createdAtTarget.innerHTML = report.time_ago_message;
-    this.descriptionTarget.innerHTML = report.description;
+    this.descriptionTarget.innerHTML = report.description || "ไม่มีข้อมูล";
     this.modalTarget.classList.remove('hidden');
   }
 
   closeModal() {
     this.modalTarget.classList.add('hidden');
   }
-
-  modifyModalContent(event) { }
 
   createColoredMarker(color) {
     return `data:image/svg+xml;base64,${btoa(`
@@ -169,6 +183,7 @@ export default class extends Controller {
   }
 
   handleNewReport(report, map) {
+    this.reportsValue = [...this.reportsValue, report];
     const customIcon = L.icon({
       iconUrl: this.createColoredMarker(report.severity_color),
       iconSize: [32, 37],
@@ -179,6 +194,41 @@ export default class extends Controller {
     const marker = L.marker([report.lat, report.long], { icon: customIcon }).addTo(map);
     marker.on('click', () => {
       this.openModal(report);
+    });
+
+    this.displayLocations(map);
+  }
+
+  setViewByList(event) {
+    event.preventDefault();
+    const latValue = event.currentTarget.dataset.lat;
+    const longValue = event.currentTarget.dataset.long;
+
+    if (this.oldLatValue === latValue && this.oldLongValue === longValue) {
+      return
+    }
+
+    const oldLat = parseFloat(this.oldLatValue || latValue);
+    const oldLong = parseFloat(this.oldLongValue || longValue);
+    const newLat = parseFloat(latValue);
+    const newLong = parseFloat(longValue);
+
+    const R = 6371;
+    const dLat = (newLat - oldLat) * Math.PI / 180;
+    const dLon = (newLong - oldLong) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) ** 2 +
+      Math.cos(oldLat * Math.PI / 180) * Math.cos(newLat * Math.PI / 180) *
+      Math.sin(dLon / 2) ** 2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    const flyDuration = distance > 100 ? 3 : 1;
+
+    this.oldLatValue = latValue;
+    this.oldLongValue = longValue;
+
+    this.map.flyTo([latValue, longValue], 18, {
+      animate: true,
+      duration: flyDuration
     });
   }
 }

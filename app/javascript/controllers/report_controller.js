@@ -4,8 +4,8 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static values = { step: Number, severityLevels: Object };
   static targets = ["step", "imagesInput", "previewImages", "previewDetailImages", "locationContainer",
-                    "tagContainer", "severitySlider", "severityLabel", "severityInput"
-                   ];
+    "tagContainer", "severitySlider", "severityLabel", "severityInput"
+  ];
   selectedFiles = [];
   selectedTags = [];
   severityLevel = "ปานกลาง";
@@ -76,18 +76,45 @@ export default class extends Controller {
 
     files = files.filter(file => !this.selectedFiles.some(f => f.name === file.name));
 
-    this.selectedFiles.push(...files);
+    let newFiles = files.slice(0, 4 - this.selectedFiles.length);
 
-    if (this.selectedFiles.length > 4) {
-      this.selectedFiles = this.selectedFiles.slice(0, 4);
-    }
+    Promise.all(newFiles.map(this.resizeImage)).then((resizedFiles) => {
+      this.selectedFiles.push(...resizedFiles);
 
-    this.updateInputFiles();
+      this.updateInputFiles();
 
-    this.renderPreview();
-    this.toggleUploadButton();
-    this.toggleNextButton();
+      this.renderPreview();
+
+      this.toggleUploadButton();
+      this.toggleNextButton();
+    });
   }
+
+  resizeImage(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const maxWidth = 800;
+          const scale = maxWidth / img.width;
+          canvas.width = maxWidth;
+          canvas.height = img.height * scale;
+
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          canvas.toBlob((blob) => {
+            resolve(new File([blob], file.name, { type: "image/jpeg" }));
+          }, "image/jpeg", 0.8);
+        };
+      };
+    });
+  }
+
 
   removeImage(event) {
     const index = event.currentTarget.dataset.index;
@@ -177,7 +204,7 @@ export default class extends Controller {
 
   toggleTag(event) {
     const tag = event.target.dataset.tag;
-  
+
     if (this.selectedTags.includes(tag)) {
       this.selectedTags = this.selectedTags.filter(t => t !== tag);
       event.target.classList.remove("bg-[#FF6C64]", "text-white");
@@ -189,7 +216,7 @@ export default class extends Controller {
     }
     document.querySelector("input[name='report[tags]']").value = JSON.stringify(this.selectedTags);
   }
-  
+
 
   updateSeverity(event) {
     const value = event ? event.target.value : this.severitySliderTarget.value;

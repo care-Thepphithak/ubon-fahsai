@@ -3,11 +3,40 @@ class Report < ApplicationRecord
 
   has_many_attached :images
 
+  def self.count_today
+    where(created_at: Date.today.beginning_of_day..Date.today.end_of_day).count
+  end
+
+  def self.count_yesterday
+    where(created_at: Date.yesterday.beginning_of_day..Date.yesterday.end_of_day).count
+  end
+
+  def self.count_harmful_today
+    where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ], created_at: Date.today.beginning_of_day..Date.today.end_of_day).count
+  end
+
+  def self.count_harmful_yesterday
+    where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ], created_at: Date.yesterday.beginning_of_day..Date.yesterday.end_of_day).count
+  end
+
+  def self.count_harmful_reports
+    where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ]).count
+  end
+
+  def self.top_districts
+    select("split_part(reverse(split_part(reverse(location_name), 'จังหวัด', 1)), ' ', -2) AS district, COUNT(*) AS district_count")
+      .where("location_name LIKE ?", "%จังหวัด%")
+      .where("created_at >= ?", Date.today.beginning_of_day)
+      .group("district")
+      .order(Arel.sql("district_count DESC"))
+      .limit(3)
+  end
+
   def as_json(options = {})
     super(options).merge(
       severity_color: severity_color,
       images_urls: images_urls,
-      time_ago_message: time_ago_in_words(created_at, datetime: :distance_in_words, locale: :th) + " ที่แล้ว"
+      time_ago_message: time_ago_in_words(created_at, datetime: :distance_in_words, locale: :th) + " ที่แล้ว",
     )
   end
 

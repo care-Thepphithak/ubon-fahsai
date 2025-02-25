@@ -14,7 +14,7 @@
     <div data-report-target="step" >
       <div class="h-svh overflow-y-scroll w-full flex flex-col items-center py-6 justify-between">
         <div class="w-[90%] mx-auto relative text-center">
-          <h1 class="text-2xl font-bold text-[#FF6159]">รายงานไฟไหม้</h1>
+          <h1 class="text-2xl font-meduim text-[#FF6159]">รายงานไฟไหม้</h1>
           <p class="text-sm text-gray-500"><%= l(Time.current, format: :full, locale: :th) %></p>
         </div>
 
@@ -31,7 +31,7 @@
         <div class="w-full flex flex-col items-center">
           <div class="w-[90%] mx-auto relative text-center">
             <%= button_helper("", icon: "angle-left", size: 'xl', variant: 'plain', css_class: 'absolute px-0 top-0 left-0', data: { "action": "click->report#prev" }) %>
-            <h1 class="text-2xl font-bold text-[#FF6159]">ระบุรายละเอียด</h1>
+            <h1 class="text-2xl font-meduim text-[#FF6159]">ระบุรายละเอียด</h1>
             <p class="text-sm text-gray-500"><%= l(Time.current, format: :full, locale: :th) %></p>
           </div>
 
@@ -46,10 +46,10 @@
 
     <div data-report-target="step" class="hidden">
       <div class="h-svh overflow-y-scroll w-full flex flex-col items-center py-6 justify-between">
-        <div class="w-full flex flex-col items-center">
+        <div class="w-full h-full flex flex-col items-center">
           <div class="w-[90%] relative text-center">
             <%= button_helper("", icon: "angle-left", size: 'xl', variant: 'plain', css_class: 'absolute px-0 top-0 left-0', data: { "action": "click->report#prev" }) %>
-            <h1 class="text-2xl font-bold text-[#FF6159]">ระบุตำแหน่งไฟไหม้</h1>
+            <h1 class="text-2xl font-meduim text-[#FF6159]">ระบุตำแหน่งไฟไหม้</h1>
             <p id="location-name" class="mt-2 text-base w-[80%] line-clamp-1 mx-auto text-gray-500">กำลังหาตำแหน่ง...</p>
             <p class="text-sm text-gray-500"><%= l(Time.current, format: :full, locale: :th) %></p>
           </div>
@@ -57,7 +57,7 @@
           <div data-report-target="locationContainer" 
               data-controller="location"
               data-action="report:initMap->location#initMap" 
-              class="w-[90%] mt-3"> 
+              class="w-[90%] h-full mt-3"> 
             <%= render "location" %>
 
             <div class="my-5">

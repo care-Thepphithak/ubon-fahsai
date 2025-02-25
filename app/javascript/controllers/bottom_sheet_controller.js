@@ -1,15 +1,20 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Connects to data-controller="bottom-sheet"
 export default class extends Controller {
   static targets = ["bottomSheet"]
 
   connect() {
-    console.log("Modal controller connected!");
+    const openFlag = this.data.get("open");
+
+    if (openFlag === "true") {
+      this.open();
+    }
   }
 
   open(event) {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
 
     const locationNameBottomSheet = document.getElementById("location-name-bottom-sheet");
     const locationName = document.getElementById("location-name");
@@ -27,10 +32,16 @@ export default class extends Controller {
     const modalContent = this.bottomSheetTarget.querySelector("div");
     modalContent.classList.remove("slide-down");
     modalContent.classList.add("slide-up");
+
+    if (this.data.get("open") === "true") {
+      setTimeout(() => this.close(), 6000);
+    }
+
+    this.bottomSheetTarget.addEventListener('click', this.handleBackdropClick);
   }
 
   close(event) {
-    event.preventDefault();
+    if (event) event.preventDefault();
 
     this.bottomSheetTarget.classList.remove("opacity-in");
     this.bottomSheetTarget.classList.add("opacity-out");
@@ -40,6 +51,18 @@ export default class extends Controller {
     modalContent.classList.add("slide-down");
 
     setTimeout(() => this.bottomSheetTarget.classList.add("hidden"), 300);
+
+    this.bottomSheetTarget.removeEventListener('click', this.handleBackdropClick);
+
+    if (this.data.get("open") === "true") {
+      setTimeout(() => this.bottomSheetTarget.remove(), 300);
+    }
+  }
+
+  handleBackdropClick = (event) => {
+    if (event.target === this.bottomSheetTarget && !event.target.closest("#content")) {
+      this.close(event);
+    }
   }
 
   submit() {
