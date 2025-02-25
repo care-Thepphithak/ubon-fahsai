@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import { createConsumer } from "@rails/actioncable"
 
 export default class extends Controller {
-  static targets = ["map", "modal", "reports", "fireImages", "locationName", "severityLevel", "createdAt", "description"]
+  static targets = ["map", "modal", "reports", "fireImages", "locationName", "severityLevel", "createdAt", "description", "topDistricts"]
   static values = {
     reports: Array,
     oldLat: String,
@@ -177,12 +177,22 @@ export default class extends Controller {
 
     this.channel = consumer.subscriptions.create("ReportChannel", {
       received: (data) => {
-        this.handleNewReport(data.message, map);
+        this.handleNewReport(data.message, data.top_districts, map);
       }
     });
   }
 
-  handleNewReport(report, map) {
+  handleNewReport(report, topDistricts, map) {
+    this.topDistrictsTarget.innerHTML = "";
+    const newTop = topDistricts.map((location) =>
+      `<div class="flex bg-white rounded-lg px-3 py-1 justify-between">
+                <p class="w-[60%] text-gray-600 text-base">${location.district}</p>
+                <p class="text-[#FF392F]">${location.district_count} จุด</p>
+      </div>`
+    );
+
+    this.topDistrictsTarget.innerHTML = newTop.join("");
+
     this.reportsValue = [...this.reportsValue, report];
     const customIcon = L.icon({
       iconUrl: this.createColoredMarker(report.severity_color),
