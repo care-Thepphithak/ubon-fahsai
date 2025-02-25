@@ -38,7 +38,7 @@ production:
 
   cache:
     <<: *primary_production
-    database: <%= ENV['POSTGRES_DB'] %>
+    database: cache_<%= ENV['POSTGRES_DB'] %>
     username: <%= ENV['POSTGRES_USER'] %>
     password: <%= ENV['POSTGRES_PASSWORD'] %>
     host: <%= ENV['POSTGRES_HOST']%>
