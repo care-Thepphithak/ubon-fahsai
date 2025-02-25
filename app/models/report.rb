@@ -36,7 +36,7 @@ class Report < ApplicationRecord
     super(options).merge(
       severity_color: severity_color,
       images_urls: images_urls,
-      time_ago_message: time_ago_in_words(created_at, datetime: :distance_in_words, locale: :th) + " ที่แล้ว"
+      time_ago_message: time_ago_in_words(created_at, datetime: :distance_in_words, locale: :th) + " ที่แล้ว",
     )
   end
 

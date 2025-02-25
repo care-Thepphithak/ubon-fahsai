@@ -14,8 +14,8 @@ class ReportsController < ApplicationController
       if @report.save
         ActionCable.server.broadcast("report_channel", {
           message: @report,
-          total_count: Report.count,
-          harmful_count: Report.where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ]).count
+          total_count: Report.count_today,
+          harmful_count: Report.where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ]).count_harmful_today,
         })
         format.html { redirect_to root_path, notice: @report.location_name }
         format.json { render :show, status: :created, location: @report }

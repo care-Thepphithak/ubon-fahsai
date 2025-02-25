@@ -71,38 +71,6 @@ export default class extends Controller {
     this.updateReportList(filteredReports);
   }
 
-  timeAgo(dateString) {
-    const now = new Date();
-    const date = new Date(dateString);
-    const diffInSeconds = Math.floor((now - date) / 1000);
-
-    const minutes = Math.floor(diffInSeconds / 60);
-    const hours = Math.floor(diffInSeconds / 3600);
-    const days = Math.floor(diffInSeconds / 86400);
-    const months = Math.floor(diffInSeconds / 2592000);
-    const years = Math.floor(diffInSeconds / 31536000);
-
-    if (years > 0) {
-      return years === 1 ? "1 ปี ที่แล้ว" : `${years} ปี ที่แล้ว`;
-    }
-    if (months > 0) {
-      return months === 1 ? "1 เดือน ที่แล้ว" : `${months} เดือน ที่แล้ว`;
-    }
-    if (days > 0) {
-      return days === 1 ? "1 วัน ที่แล้ว" : `${days} วัน ที่แล้ว`;
-    }
-    if (hours > 0) {
-      return hours === 1 ? "1 ชั่วโมง ที่แล้ว" : `${hours} ชั่วโมง ที่แล้ว`;
-    }
-    if (minutes > 0) {
-      return minutes === 1 ? "1 นาที ที่แล้ว" : `${minutes} นาที ที่แล้ว`;
-    }
-    if (diffInSeconds < 60) {
-      return "น้อยกว่า 1 นาที";
-    }
-    return "เมื่อสักครู่";
-  }
-
   updateReportList(reports) {
     this.reportContainerTarget.innerHTML = reports
       .map((report, index) => {

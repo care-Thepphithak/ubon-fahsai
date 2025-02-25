@@ -33,25 +33,6 @@ consumer.subscriptions.create("ReportChannel", {
         })
         .join("") ?? "";
 
-    function timeAgo(dateString) {
-      const now = new Date();
-      const date = new Date(dateString);
-      const diffInSeconds = Math.floor((now - date) / 1000); 
-
-      const minutes = Math.floor(diffInSeconds / 60);
-      const hours = Math.floor(diffInSeconds / 3600);
-      const days = Math.floor(diffInSeconds / 86400);
-      const months = Math.floor(diffInSeconds / 2592000); 
-      const years = Math.floor(diffInSeconds / 31536000); 
-
-      if (years > 0) return `${years} ปี${years > 1 ? "s" : ""}`;
-      if (months > 0) return `${months} เดือน${months > 1 ? "s" : ""}`;
-      if (days > 0) return `${days} วัน${days > 1 ? "s" : ""}`;
-      if (hours > 0) return `${hours} ชั่วโมง${hours > 1 ? "s" : ""}`;
-      if (minutes > 0) return `${minutes} นาที${minutes > 1 ? "s" : ""}`;
-      return `เมื่อสักครู่`;
-    }
-
     const notificationContainer = document.getElementById("notifications");
     const report_counter = document.getElementById("report_counter")
     report_counter.innerText = data.total_count;
@@ -69,8 +50,8 @@ consumer.subscriptions.create("ReportChannel", {
 
       reportContainer.scrollTop = 0;
 
-
-
+      console.log("data: ",data.message);
+      
       notification.innerHTML = `
         <div class="flex bg-white py-3 pr-[16px] rounded-lg">
           <div class="flex flex-col gap-1 min-w-14 mx-4 items-center justify-center text-nowrap">
@@ -83,9 +64,7 @@ consumer.subscriptions.create("ReportChannel", {
             <h2 class="font-normal text-black text-base line-clamp-2">${
               data.message.location_name
             }</h2>
-            <p class="text-gray-500 text-[14px]">${timeAgo(
-              data.message.created_at
-            )}</p>
+            <p class="text-gray-500 text-[14px]">${data.message.time_ago_message}</p>
             <div class="flex gap-1 mt-3 flex-wrap">
               ${tagsHtml ?? ""}
             </div>
