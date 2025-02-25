@@ -225,7 +225,7 @@ export default class extends Controller {
     this.oldLatValue = latValue;
     this.oldLongValue = longValue;
 
-    this.map.flyTo([latValue, longValue], 13, {
+    this.map.flyTo([latValue, longValue], 18, {
       animate: true,
       duration: flyDuration
     });
