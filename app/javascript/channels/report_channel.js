@@ -22,8 +22,6 @@ consumer.subscriptions.create("ReportChannel", {
       tags = []; 
     }
 
-    console.log(tags);
-
     const tagsHtml =
       tags
         .map((tag) => {
