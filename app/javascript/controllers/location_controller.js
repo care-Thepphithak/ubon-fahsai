@@ -149,7 +149,8 @@ export default class extends Controller {
 
       }, () => {
         map.removeControl(loadingControl);
-        alert("Geolocation permission denied or unavailable.")
+        // TODO: Show error message with more aesthetic way
+        console.log("Geolocation permission denied or unavailable.")
       },
       {
         enableHighAccuracy: true,
