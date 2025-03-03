@@ -3,6 +3,7 @@ import { createConsumer } from "@rails/actioncable"
 
 export default class extends Controller {
     static targets = ["map"]
+    polygonArea = []
 
     connect() {
         const map = L.map(this.mapTarget, {
@@ -21,9 +22,14 @@ export default class extends Controller {
     }
 
     startEditPolygon(map) {
-        console.log('startEditPolygon');
-        var polyline = L.polyline([[15.2313, 104.8567], [15.2315, 104.8569]]).addTo(map);
-        polyline.enableEdit();
+        // start draw new polygon
+        map.editTools.startPolygon();
+        
+        // update polygon area
+        map.editTools.on('editable:drawing:end', (e) => {
+            this.polygonArea = e.layer.getLatLngs();
+            console.log(this.polygonArea);
+        });
     }
 
     addStartEditPolygonButton(map, loadingControl) {
