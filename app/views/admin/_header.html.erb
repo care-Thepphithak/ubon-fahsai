@@ -1,0 +1,42 @@
+<div class="w-full flex mx-auto h-64 bg-[#FF6159]">
+    <div class="flex flex-col items-start w-[90%] max-w-[1300px] mx-auto text-white justify-center h-full relative">
+        <div class="w-full flex justify-between items-center mb-28">
+          <div>
+            <h1 class="text-xl ml-1">Admin</h1>
+            <p class="font-medium text-5xl">อุบลฟ้าใส</p>
+          </div>
+          <div class="flex items-center gap-4" >
+            <%= link_to "Dashboard", admin_dashboard_index_url, class: "text-white" %>
+            <hr class="h-4 w-[1.5px] bg-gray-100"/>
+            <%= link_to "Area Management", new_admin_area_path, class: "text-white" %>
+          </div>
+          <div class="justify-center h-full pt-4 md:flex hidden">
+            <% if authenticated? %>
+              <span class="mr-4 text-gray-50 pt-2 truncate">
+                <i class="fa-solid fa-circle-user pr-2"></i><%= Current.user.email_address %>
+              </span>
+              <%= button_to session_path, method: :delete, class: "px-4 py-2 rounded-lg flex bg-[#F3F3F3] gap-2 items-center text-gray-500 text-base cursor-pointer hover:bg-gray-200 transition-all" do %>
+                <i class="fa fa-sign-out-alt"></i>
+                <span>ออกจากระบบ</span>
+              <% end %>
+            <% end %>
+          </div>
+          <div class="justify-center h-full pt-4 md:hidden flex">
+            <% if authenticated? %>
+                <div data-controller="bottom-sheet">
+                  <i data-action="click->bottom-sheet#open" class="fa-solid fa-bars p2 rounded-lg flex gap-2 items-center text-white text-3xl cursor-pointer hover:scale-110 transition-all"></i>
+                  <%= render "shared/bottom_sheet" do %>
+                      <i class="fa-solid fa-circle-user text-6xl text-[#FF6159] pb-[20px]"></i>
+                      <h2 class="text-2xl text-[#FF6159] pb-[30px]"><%=Current.user.email_address%></h2>
+                      <%= button_to session_path, method: :delete, class: "w-full", form_class: "w-[90%]" do %>
+                        <div class="flex items-center justify-center gap-2 w-full bg-[#F3F3F3] text-gray-500 hover:bg-gray-200 text-lg py-3 rounded-xl cursor-pointer hover:scale-[1.01] transition-all">
+                          <span>ออกจากระบบ</span>
+                        </div>
+                      <% end %>
+                  <% end %>
+                </div>
+            <% end %>
+          </div>
+        </div>
+    </div>
+</div>
