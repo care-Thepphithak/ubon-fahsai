@@ -1,9 +1,11 @@
-<div data-controller="admin-map" data-admin-map-reports-value="<%= @reports.to_json %>" class="w-full flex flex-col relative">
+<div class="w-full flex flex-col relative">
 
     <%= render "header"%>
 
     <div class="absolute pb-12 left-0 right-0 top-36 mx-auto flex flex-col xl:flex-row w-[90%] max-w-[1300px] h-svh min-h-[700px] mt-10 gap-[20px]">
-      <div class="flex flex-col w-full mx-auto">
+      <div data-controller="area-map" class="flex flex-col w-full mx-auto">
+
+      <div data-area-map-target="map" class="h-[600px] rounded-xl"> </div>
       </div>
     </div>
 </div>
