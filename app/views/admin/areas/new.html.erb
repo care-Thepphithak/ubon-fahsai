@@ -5,11 +5,11 @@
 
     <div class="absolute pb-12 left-0 right-0 top-36 mx-auto flex flex-col xl:flex-row w-[90%] max-w-[1300px] h-svh min-h-[700px] mt-10 gap-[20px]">
       <%= form_with(model: [:admin, @area], class: "w-full") do |form| %>
-        <div data-controller="area-map" class="flex flex-col md:flex-row w-full min-h-svh h-full gap-[20px] pb-[20px]">
+        <div data-controller="area-map" class="flex flex-col lg:flex-row w-full min-h-svh h-full gap-[20px] pb-[20px]">
 
             <div data-area-map-target="map" class="h-full w-full rounded-xl"> </div>
 
-            <div class="w-full xl:w-[500px] bg-[#F3F3F3] flex h-full  flex-col p-5 rounded-xl" data-controller="admin-filter" data-admin-filter-reports-value="<%= @reports.to_json %>">
+            <div class="w-full lg:w-[450px] xl:w-[550px] bg-[#F3F3F3] flex h-full  flex-col p-5 rounded-xl">
               <div class="flex gap-3 w-full">
                 <button type="button" class="bg-white w-full text-gray-500 px-3 py-3 rounded-md hover:bg-gray-50 transition-all cursor-pointer" data-action="click->area-map#startEditPolygon">
                   <i class="fa-solid fa-draw-polygon mr-2"></i> กำหนดพื้นที่
@@ -19,16 +19,12 @@
                 </button>
             </div>
 
-            <button data-area-map-target = "saveButton" data-action = "click->area-map#savePolygon" disabled type="button" class="mb-4 disabled:bg-gray-200 disabled:text-gray-400 bg-[#FF6159] w-full text-white mt-3 px-3 py-3 rounded-md hover:bg-[#fb5951] transition-all cursor-pointer" data-action="click->area-map#endEditPolygon">
-              <i class="fa-solid fa-check mr-2"></i> บันทึกพื้นที่
-            </button>
-
-            <%= form.label :name ,"ชื่อพื้นที่", class: "text-gray-500"%>
+            <%= form.label :name ,"ชื่อพื้นที่", class: "mt-4 text-gray-500"%>
             <%= form.text_field :name, class: "w-full rounded-md bg-white outline-hidden px-3 py-2 mt-2 text-base text-gray-600" %>
 
             <%= form.hidden_field :coordinates, data: { area_map_target: "coordinates" } %>
 
-            <%= form.submit "บันทึกพื้นที่", class: "bg-[#FF6159] w-full text-white mt-3 px-3 py-3 rounded-md hover:bg-[#fb5951] transition-all cursor-pointer" %>
+            <%= form.submit "บันทึกพื้นที่", data: { area_map_target: "saveButton", action: "click->area-map#savePolygon" }, disabled: true, class: "disabled:bg-gray-200 disabled:text-gray-400 bg-[#FF6159] w-full text-white mt-3 px-3 py-3 rounded-md hover:bg-[#fb5951] transition-all cursor-pointer" %>
 
           </div>
         </div>
