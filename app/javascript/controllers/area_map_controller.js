@@ -22,6 +22,8 @@ export default class extends Controller {
     startEditPolygon() {
         this.map.editTools.startPolygon();
 
+        this.resetPolygon();
+
         this.map.on("editable:drawing:mouseup", (e) => {
             this.updatePolygonArea(e);
         });
@@ -55,5 +57,6 @@ export default class extends Controller {
             }
         });
         this.polygonArea = [];
+        this.saveButtonTarget.disabled = true;
     }
 }
