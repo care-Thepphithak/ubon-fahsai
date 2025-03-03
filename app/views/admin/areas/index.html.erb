@@ -1,4 +1,25 @@
-<div>
-  <h1 class="font-bold text-4xl">Area#index</h1>
-  <p>Find me in app/views/area/index.html.erb</p>
+
+<div class="w-full flex flex-col relative">
+
+    <%= render "admin/header" %>
+
+    <div class="absolute pb-12 left-0 right-0 top-36 mx-auto flex flex-col xl:flex-row w-[90%] max-w-[1300px] h-svh min-h-[700px] mt-10 gap-[20px]">
+      <div data-controller="area-map" class="flex flex-col lg:flex-row w-full min-h-svh h-full gap-[20px] pb-[20px]">
+        <div data-area-map-target="map" class="h-full w-full rounded-xl"> </div>
+        <div class="w-full lg:w-[450px] xl:w-[550px] bg-[#F3F3F3] flex h-full  flex-col p-5 rounded-xl">
+          <%= link_to new_admin_area_path, class: "bg-white w-full text-center text-gray-500 px-4 py-3 rounded-md hover:bg-gray-50 transition-all cursor-pointer" do %>
+            <i class="fa-solid fa-plus-circle mr-2"></i> เพิ่มพื้นที่
+          <% end %>
+          <p class="text-gray-500 my-4">รายการพื้นที่</p>
+          <%= @areas.each do |area| %>
+            <div class="flex justify-between items-center bg-white p-4 rounded-md shadow-md mb-4">
+              <div>
+                <p class="text-lg font-medium"><%= area.name %></p>
+                <p class="text-gray-500"><%= area.coordinates %></p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
 </div>
