@@ -3,9 +3,22 @@
     <%= render "header"%>
 
     <div class="absolute pb-12 left-0 right-0 top-36 mx-auto flex flex-col xl:flex-row w-[90%] max-w-[1300px] h-svh min-h-[700px] mt-10 gap-[20px]">
-      <div data-controller="area-map" class="flex flex-col w-full mx-auto">
+      <div data-controller="area-map" class="flex flex-col md:flex-row w-full md:h-[12rem] mb-[20px] gap-[20px]">
 
-      <div data-area-map-target="map" class="h-[600px] rounded-xl"> </div>
+        
+        <div data-area-map-target="map" class="h-[600px] w-full rounded-xl"> </div>
+
+        <div class="w-full xl:w-[500px] bg-[#F3F3F3] flex  flex-col p-5 rounded-xl" data-controller="admin-filter" data-admin-filter-reports-value="<%= @reports.to_json %>">
+          <button class="bg-white text-gray-500 px-3 py-3 rounded-md" data-action="click->area-map#startEditPolygon">
+            <i class="fa-solid fa-edit"></i> กำหนดพื้นที่
+          </button>
+          <button data-action="click->area-map#endEditPolygon">
+            <i class="fa-solid fa-check"></i> บันทึกพื้นที่
+          </button>
+          <button data-action="click->area-map#resetPolygon">
+            <i class="fa-solid fa-trash"></i> รีเซ็ตพื้นที่
+          </button>
+        </div>
       </div>
     </div>
 </div>
