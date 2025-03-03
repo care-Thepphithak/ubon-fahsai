@@ -2,8 +2,13 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
   namespace :admin do
-    resources :dashboard, only: [ :index ]
+    resources :dashboard, only: [ :index ] do
+      collection do
+        get "area"
+      end
+    end
   end
+
   resources :reports, only: [ :index, :create ]
   # get "home", to: "home#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
