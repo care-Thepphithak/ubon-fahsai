@@ -2,11 +2,8 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
   namespace :admin do
-    resources :dashboard, only: [ :index ] do
-      collection do
-        get "area"
-      end
-    end
+    resources :dashboard, only: [ :index ]
+    resources :areas, only: [ :index, :new, :create ]
   end
 
   resources :reports, only: [ :index, :create ]
