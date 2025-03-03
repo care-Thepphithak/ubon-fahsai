@@ -37,18 +37,13 @@ export default class extends Controller {
 
         locationButton.onAdd = () => {
             const div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
-            const button = L.DomUtil.create('button', 'bg-white', div);
-            button.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
-            button.title = 'Show my location';
-            button.style.width = '30px';
-            button.style.height = '30px';
-            button.style.fontSize = '20px';
-            button.style.display = 'flex';
-            button.style.alignItems = 'center';
-            button.style.justifyContent = 'center';
-
+            const button = L.DomUtil.create('button', 'bg-white cursor-pointer w-[30px] h-[30px] text-lg ', div);
+            button.innerHTML = '<i class="fa-solid fa-draw-polygon "></i>';
+           
             L.DomEvent.on(button, 'click', (e) => {
                 this.startEditPolygon(map);
+                button.classList.add('text-[#FF6159]');
+               
             });
 
             return div;
