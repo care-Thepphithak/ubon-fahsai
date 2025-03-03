@@ -15,7 +15,4 @@ class Admin::DashboardController < ApplicationController
       less: Report.count_harmful_today < Report.count_harmful_yesterday
     }
   end
-
-  def area
-  end
 end
