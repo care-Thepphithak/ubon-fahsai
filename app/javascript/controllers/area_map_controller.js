@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import { createConsumer } from "@rails/actioncable"
 
 export default class extends Controller {
-    static targets = ["map"]
+    static targets = ["map", "coordinates", "saveButton"]
     polygonArea = []
 
     connect() {
@@ -20,21 +20,22 @@ export default class extends Controller {
     }
 
     startEditPolygon() {
-        console.log("startEditPolygon");
         this.map.editTools.startPolygon();
+
+        this.map.on("editable:drawing:mouseup", (e) => {
+            this.updatePolygonArea(e);
+        });
     }
 
     updatePolygonArea(e) {
         const polygonPointsLength = e.layer.getLatLngs()[0].length;
         if (polygonPointsLength >= 2) {
-            console.log("polygonPointsLength", polygonPointsLength);
-            this.polygonArea = e.layer.getLatLngs()[0];
-            console.log("polygonArea", this.polygonArea);
+            // Enable save button
+            this.saveButtonTarget.disabled = false;
         }
     }
 
-    endEditPolygon() {
-        console.log("onSavePolygon");
+    savePolygon() {
         this.map.editTools.stopDrawing();
         this.polygonArea = [];
         
@@ -44,7 +45,7 @@ export default class extends Controller {
             }
         });
 
-        console.log("polygonArea", this.polygonArea);
+        this.coordinatesTarget.value = JSON.stringify(this.polygonArea.map((point) => [point.lat, point.lng]));
     }
 
     resetPolygon() {
