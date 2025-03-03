@@ -37,7 +37,7 @@ export default class extends Controller {
 
         locationButton.onAdd = () => {
             const div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
-            const button = L.DomUtil.create('button', 'bg-white cursor-pointer w-[30px] h-[30px] text-lg ', div);
+            const button = L.DomUtil.create('button', 'bg-white cursor-pointer w-[30px] h-[30px] text-lg  ', div);
             button.innerHTML = '<i class="fa-solid fa-draw-polygon "></i>';
            
             L.DomEvent.on(button, 'click', (e) => {
