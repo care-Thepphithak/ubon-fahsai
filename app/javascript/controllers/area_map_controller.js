@@ -17,38 +17,42 @@ export default class extends Controller {
         L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             attribution: '&copy; OpenStreetMap'
         }).addTo(map);
-
-        this.addStartEditPolygonButton(map, loadingControl);
     }
 
-    startEditPolygon(map) {
-        // start draw new polygon
-        map.editTools.startPolygon();
+    startEditPolygon() {
+        console.log("startEditPolygon");
+        this.map.editTools.startPolygon();
+    }
+
+    updatePolygonArea(e) {
+        const polygonPointsLength = e.layer.getLatLngs()[0].length;
+        if (polygonPointsLength >= 2) {
+            console.log("polygonPointsLength", polygonPointsLength);
+            this.polygonArea = e.layer.getLatLngs()[0];
+            console.log("polygonArea", this.polygonArea);
+        }
+    }
+
+    endEditPolygon() {
+        console.log("onSavePolygon");
+        this.map.editTools.stopDrawing();
+        this.polygonArea = [];
         
-        // update polygon area
-        map.editTools.on('editable:drawing:end', (e) => {
-            this.polygonArea = e.layer.getLatLngs();
-            console.log(this.polygonArea);
+        this.map.eachLayer((layer) => {
+            if (layer instanceof L.Polygon) {
+                this.polygonArea = layer.getLatLngs()[0];
+            }
         });
+
+        console.log("polygonArea", this.polygonArea);
     }
 
-    addStartEditPolygonButton(map, loadingControl) {
-        const locationButton = L.control({ position: 'topright' });
-
-        locationButton.onAdd = () => {
-            const div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
-            const button = L.DomUtil.create('button', 'bg-white cursor-pointer w-[30px] h-[30px] text-lg  ', div);
-            button.innerHTML = '<i class="fa-solid fa-draw-polygon "></i>';
-           
-            L.DomEvent.on(button, 'click', (e) => {
-                this.startEditPolygon(map);
-                button.classList.add('text-[#FF6159]');
-               
-            });
-
-            return div;
-        };
-
-        locationButton.addTo(map);
+    resetPolygon() {
+        this.map.eachLayer((layer) => {
+            if (layer instanceof L.Polygon) {
+                this.map.removeLayer(layer);
+            }
+        });
+        this.polygonArea = [];
     }
 }
