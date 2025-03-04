@@ -3,7 +3,9 @@
 one:
   lat: MyString
   long: MyString
+  created_at: <%= 3.days.ago %>
 
 two:
   lat: MyString
   long: MyString
+  created_at: <%= 3.days.ago %>
