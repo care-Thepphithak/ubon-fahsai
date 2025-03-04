@@ -5,6 +5,7 @@ class ReportsController < ApplicationController
   # GET /reports or /reports.json
   def index
     @report = Report.new
+    @user_areas = Current.user.areas.first.coordinates.to_json
   end
 
   # POST /reports or /reports.json
