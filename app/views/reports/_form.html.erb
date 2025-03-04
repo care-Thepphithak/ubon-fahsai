@@ -57,7 +57,9 @@
           <div data-report-target="locationContainer" 
               data-controller="location"
               data-action="report:initMap->location#initMap" 
+              data-location-user-areas-value="<%=@user_areas%>"
               class="w-[90%] h-full mt-3"> 
+
             <%= render "location" %>
 
             <div class="my-5">
@@ -74,8 +76,8 @@
           </div>
         </div>
 
-        <div class="w-[90%] inset-0" data-controller="bottom-sheet">
-          <%= button_helper("ส่งรายงาน", size: 'lg', css_class: 'absolute bottom-4 z-50 left-0 right-0 w-[90%] mx-auto bg-gray-200 disabled:hover:bg-gray-200' ,id: 'confirm', disabled: true, data: {action: "click->bottom-sheet#open"}) %>
+        <div class="w-[90%] inset-0"  data-controller="bottom-sheet" >
+          <%= button_helper("ส่งรายงาน", size: 'lg', css_class: 'absolute bottom-4 z-50 left-0 right-0 w-[90%] mx-auto bg-gray-200 disabled:hover:bg-gray-200' ,id: 'submit', disabled: true, data: {action: "click->bottom-sheet#open" }) %>
           <%= render "confirm", form: form %>
         </div>
       </div>
