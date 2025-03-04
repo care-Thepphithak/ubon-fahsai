@@ -7,7 +7,7 @@ module ApplicationHelper
       outline: "border border-[#FF6159] text-[#FF6159] hover:bg-[#FF6C64]",
       ghost: "text-[#FF6159] hover:bg-blue-50",
       plain: "text-[#FF6159] hover:scale-[1.01] hover:text-[#FF6C64]",
-      cancel: "text-[#8D8D8D] hover:text-[#5D5D5D]",
+      cancel: "text-[#8D8D8D] hover:text-[#5D5D5D]"
     }
 
     size_classes = {
@@ -29,5 +29,9 @@ module ApplicationHelper
     button_content << content_tag(:i, "", class: "fa-solid fa-#{iconEnd}") if iconEnd
 
     content_tag(:button, button_content.join.html_safe, options)
+  end
+
+  def active_link_class(path)
+    current_page?(path) ? "bg-[#FF6159] text-white" : "bg-white text-gray-500"
   end
 end
