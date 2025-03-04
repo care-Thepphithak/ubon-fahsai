@@ -93,6 +93,9 @@ class Report < ApplicationRecord
   end
 
   def images_urls
-    images.attached? ? images.map { |image| Rails.application.routes.url_helpers.minio_proxy_url(image.blob.key, protocol: "https", host: "ubon-fahsai-dev.odd.works") } : []
+    host = Rails.env.development? ? "localhost:3000" : "ubon-fahsai-dev.odd.works"
+    protocol = Rails.env.development? ? "http" : "https"
+
+    images.attached? ? images.map { |image| Rails.application.routes.url_helpers.minio_proxy_url(image.blob.key, protocol: protocol, host: host) } : []
   end
 end
