@@ -1,6 +1,9 @@
 class Admin::DashboardController < ApplicationController
   layout "dashboard"
 
+  before_action :require_admin
+  skip_before_action :restrict_by_user_role
+
   def index
     @reports = Report.all.order(created_at: :desc)
     @report_count = Report.count_today
