@@ -29,7 +29,6 @@ class Report < ApplicationRecord
       .where("created_at >= ?", Date.today.beginning_of_day)
       .group("district")
       .order(Arel.sql("district_count DESC"))
-      .limit(3)
   end
 
   def as_json(options = {})
