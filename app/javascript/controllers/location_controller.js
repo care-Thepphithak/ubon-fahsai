@@ -76,7 +76,7 @@ export default class extends Controller {
 
   createUserArea(map) {
     this.userAreaPolygon = L.polygon(this.userAreasValue, { fillOpacity: 0 }).addTo(map);
-   
+
     map.on('moveend', () => {
       this.userAreaPolygon.redraw();
     });
@@ -84,35 +84,39 @@ export default class extends Controller {
     map.on('zoomend', () => {
       this.userAreaPolygon.redraw();
     });
-   
+
     map.on('movestart', () => {
       this.userAreaPolygon.bringToFront();
     });
   }
 
   isInsideArea(lat, lng) {
-    const isInside = this.isMarkerInsidePolygon(lat, lng, this.userAreasValue);
-    return isInside;
+    return this.userAreasValue.some(area => this.isMarkerInsidePolygon(lat, lng, area));
   }
 
   async handleLatLongChange(lat, long) {
     this.latTarget.value = lat;
     this.longTarget.value = long;
     const isInside = this.isInsideArea(lat, long);
+
     if (!isInside) {
       this.disableSubmitButton();
       document.getElementById("location-name").innerHTML = "ตำแหน่งนี้ไม่ได้อยู่ในพื้นที่ที่รับผิดชอบ";
       return;
     }
+
     this.disableSubmitButton();
+
     const locationName = await this.getLocationName(lat, long);
     document.getElementById("location-name").innerHTML = locationName;
     this.locationNameTarget.value = locationName;
+
     this.enableSubmitButton();
   }
 
   enableSubmitButton() {
     const confirmButton = document.getElementById("submit");
+
     if (confirmButton) {
       confirmButton.removeAttribute("disabled");
       confirmButton.classList.remove("bg-gray-200", "cursor-not-allowed");
@@ -157,6 +161,7 @@ export default class extends Controller {
       alert("Geolocation is not supported by this browser.");
       return;
     }
+
     const loadingControl = L.control({ position: "topright" });
 
     loadingControl.onAdd = () => {
@@ -164,12 +169,14 @@ export default class extends Controller {
         "div",
         "leaflet-bar leaflet-control bg-white px-3 py-2 rounded-lg shadow-md"
       );
+
       div.innerHTML = `
           <div class="flex items-center gap-2">
             <span class="text-sm text-gray-700">กำลังหาตำแหน่ง...</span>
             <i class="fa-solid fa-circle-notch fa-spin"></i>
           </div>
         `;
+
       return div;
     };
 
