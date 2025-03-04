@@ -1,16 +1,29 @@
-<div class="w-[350px] h-svh bg-gray-100">
-    <div class="flex items-center justify-center text-3xl text-[#FF6159] mb-5 mt-4">
-        <i class="fa-solid fa-chart-pie mr-3"></i> <span class="font-medium">Admin</span>
+<div data-sidebar-target="sidebar" class="fixed lg:relative top-0 left-0 z-[9999] min-w-[300px] w-[300px] flex flex-col py-6 justify-between h-svh bg-gray-100 transition-transform transform -translate-x-full lg:translate-x-0">
+    <div class="flex w-full flex-col items-center gap-3">
+        <div class="w-full flex items-center justify-center px-6 mb-6">
+            <div class="flex items-center justify-center text-3xl text-[#FF6159]">
+                <i class="fa-solid fa-chart-pie mr-3"></i> <span class="font-medium">Admin</span>
+            </div>
+            <button data-action="click->sidebar#toggle" class="ml-auto p-2 lg:hidden rounded-lg flex items-center text-gray-400 text-3xl cursor-pointer hover:scale-110 transition-all">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+        <div class="flex w-full flex-col items-center gap-3 px-6">
+            <%= render "admin/sidebar_links" %>
+        </div>
     </div>
-    <div class="flex flex-col items-center gap-3 px-6">
-        <%= link_to admin_dashboard_index_url, 
-            class: "px-4 py-3 w-full rounded-lg #{active_link_class(admin_dashboard_index_url)}" do %>
-        <i class="fa-solid fa-house mr-2 h-7 w-7"></i> Dashboard
-        <% end %>
-        
-        <%= link_to admin_areas_path, 
-            class: "px-4 py-3 w-full rounded-lg #{active_link_class(admin_areas_path)}" do %>
-        <i class="fa-solid fa-map mr-2 h-7 w-7"></i> Area Management
+
+    <div class="flex flex-col w-full items-center gap-3 px-6 mt-4 lg:hidden">
+        <h2 class="text-lg text-[#FF6159] flex items-center gap-2 mt-4">
+            <i class="fa-solid fa-circle-user"></i>
+            <%=Current.user.email_address%>
+        </h2>
+
+        <%= button_to session_path, method: :delete, class: "w-full bg-white text-gray-500 flex items-center p-3 rounded-lg hover:bg-gray-50 transition-all cursor-pointer" do %>
+            <i class="fa-solid fa-sign-out-alt"></i>
+            <span class="ml-2">ออกจากระบบ</span>
         <% end %>
     </div>
 </div>
+
+<div data-sidebar-target="backdrop" data-action="click->sidebar#toggle" class="fixed inset-0 bg-gray-800 opacity-0 invisible transition-opacity duration-300 ease-in-out z-[9998] lg:hidden"></div>
