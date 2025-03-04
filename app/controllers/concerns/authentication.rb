@@ -53,4 +53,26 @@ module Authentication
       Current.session.destroy
       cookies.delete(:session_id)
     end
+
+    def require_admin
+      if !authenticated? || !Current.session&.user&.admin?
+        redirect_to root_url
+      end
+    end
+
+    def require_client
+      if !authenticated? || Current.session&.user&.admin?
+        redirect_to admin_dashboard_index_url
+      end
+    end
+
+    def restrict_by_user_role
+      return unless authenticated?
+
+      if Current.session&.user&.admin? && !request.path.start_with?("/admin/")
+        redirect_to admin_dashboard_index_url
+      elsif !Current.session&.user&.admin? && request.path.start_with?("/admin/")
+        redirect_to root_url
+      end
+    end
 end
