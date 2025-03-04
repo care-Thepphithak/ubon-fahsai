@@ -24,9 +24,9 @@
     <%= javascript_importmap_tags %>
   </head>
 <body>
-  <div class="w-full flex">
+  <div data-controller="sidebar" class="w-full flex">
     <%= render "admin/sidebar" %>
-    <div class="w-full flex flex-col relative overflow-y-scroll">
+    <div class="w-full flex flex-col relative lg:overflow-y-scroll">
       <%= render "admin/header"%>
       <%= yield %>
     </div>
