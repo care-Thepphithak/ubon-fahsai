@@ -1,0 +1,9 @@
+<%= link_to admin_dashboard_index_url, class: "flex items-center p-3 w-full rounded-lg #{active_link_class(admin_dashboard_index_path)}" do %>
+  <i class="fa-solid fa-house h-7 w-7"></i>
+  <span class="ml-2">Dashboard</span>
+<% end %>
+
+<%= link_to admin_areas_path, class: "flex items-center p-3 w-full rounded-lg #{active_link_class(admin_areas_path)}" do %>
+  <i class="fa-solid fa-map h-7 w-7"></i>
+  <span class="ml-2">Area Management</span>
+<% end %>
