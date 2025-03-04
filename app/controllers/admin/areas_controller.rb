@@ -1,4 +1,6 @@
 class Admin::AreasController < ApplicationController
+  layout "dashboard"
+
   before_action :set_all_user, only: [ :new, :edit, :create, :update ]
   def index
     @areas = Area.all
