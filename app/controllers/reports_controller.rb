@@ -1,5 +1,6 @@
 class ReportsController < ApplicationController
-  allow_unauthenticated_access
+  before_action :require_client
+  skip_before_action :restrict_by_user_role
 
   # GET /reports or /reports.json
   def index
