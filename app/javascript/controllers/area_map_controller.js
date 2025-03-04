@@ -1,8 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
-import { createConsumer } from "@rails/actioncable"
 
 export default class extends Controller {
-    static targets = ["map", "coordinates", "saveButton"]
+    static targets = ["map", "coordinates", "saveButton", "plsDrawArea"]
+    static values = { currentCoordinates: Array }
     polygonArea = []
 
     connect() {
@@ -11,19 +11,36 @@ export default class extends Controller {
             zoom: 13,
             editable: true
         });
-        const loadingControl = L.control({ position: 'topright' });
+        
         this.map = map;
 
         L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             attribution: '&copy; OpenStreetMap'
         }).addTo(map);
+
+        if (this.currentCoordinatesValue.length > 0) {
+            this.showCurrentArea();
+            this.saveButtonTarget.disabled = false;
+        }
+    }
+
+    showCurrentArea() {
+        const polygon = L.polygon(this.currentCoordinatesValue).addTo(this.map);
+        this.map.fitBounds(polygon.getBounds());
+    }
+
+    showArea(event) {
+        this.clearLayer();
+
+        const coordinates = event.currentTarget.dataset.coordinates;
+        const polygon = L.polygon(JSON.parse(coordinates)).addTo(this.map);
+
+        this.map.fitBounds(polygon.getBounds());
     }
 
     startEditPolygon() {
         this.map.editTools.startPolygon();
-
         this.resetPolygon();
-
         this.map.on("editable:drawing:mouseup", (e) => {
             this.updatePolygonArea(e);
         });
@@ -32,15 +49,15 @@ export default class extends Controller {
     updatePolygonArea(e) {
         const polygonPointsLength = e.layer.getLatLngs()[0].length;
         if (polygonPointsLength >= 2) {
-            // Enable save button
             this.saveButtonTarget.disabled = false;
+            this.plsDrawAreaTarget.classList.add("hidden");
         }
     }
 
     savePolygon() {
         this.map.editTools.stopDrawing();
         this.polygonArea = [];
-        
+
         this.map.eachLayer((layer) => {
             if (layer instanceof L.Polygon) {
                 this.polygonArea = layer.getLatLngs()[0];
@@ -51,12 +68,17 @@ export default class extends Controller {
     }
 
     resetPolygon() {
+        this.clearLayer();
+        this.polygonArea = [];
+        this.saveButtonTarget.disabled = true;
+        this.plsDrawAreaTarget.classList.remove("hidden");
+    }
+
+    clearLayer() {
         this.map.eachLayer((layer) => {
             if (layer instanceof L.Polygon) {
                 this.map.removeLayer(layer);
             }
         });
-        this.polygonArea = [];
-        this.saveButtonTarget.disabled = true;
     }
 }
