@@ -15,7 +15,7 @@ class ReportsController < ApplicationController
         ActionCable.server.broadcast("report_channel", {
           message: @report,
           total_count: Report.count_today,
-          harmful_count: Report.where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ]).count_harmful_today,
+          harmful_count: Report.count_harmful_today,
           top_districts: Report.top_districts.map { |report| { district: report.district, district_count: report.district_count } }
         })
         format.html { redirect_to root_path, notice: @report.location_name }
