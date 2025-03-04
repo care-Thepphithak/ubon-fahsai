@@ -34,4 +34,29 @@ module ApplicationHelper
   def active_link_class(path)
     request.path.start_with?(path) ? "bg-[#FF6159] text-white" : "bg-white text-gray-500 hover:bg-gray-50 transition-all"
   end
+
+  def breadcrumb_links
+    labels = {
+      "dashboard" => "หน้าหลัก",
+      "areas" => "จัดการพื้นที่",
+      "new" => "เพิ่มพื้นที่",
+      "edit" => "แก้ไขพื้นที่",
+      "show" => "รายละเอียด"
+    }
+
+    links = []
+    controller_path = url_for(controller: controller_name, action: :index)
+    links << link_to(labels[controller_name] || controller_name.titleize,
+      controller_path,
+      class: "hover:scale-[1.02] transition-all")
+
+    unless action_name == "index"
+      current_path = url_for(controller: controller_name, action: action_name)
+      links << link_to(labels[action_name] || action_name.titleize,
+        current_path,
+        class: "hover:scale-[1.02] transition-all")
+    end
+
+    links.join('<span class="text-gray-100 font-thin"> / </span>').html_safe
+  end
 end
