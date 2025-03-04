@@ -32,6 +32,6 @@ module ApplicationHelper
   end
 
   def active_link_class(path)
-    current_page?(path) ? "bg-[#FF6159] text-white" : "bg-white text-gray-500"
+    request.path.start_with?(path) ? "bg-[#FF6159] text-white" : "bg-white text-gray-500 hover:bg-gray-50 transition-all"
   end
 end
