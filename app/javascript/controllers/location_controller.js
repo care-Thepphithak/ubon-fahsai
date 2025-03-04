@@ -1,21 +1,18 @@
 import { Controller } from "@hotwired/stimulus";
 
-// Connects to data-controller="location"
 export default class extends Controller {
-  static targets = ["map", "lat", "long", "locationName" ,"submitReport"];
-  static values = {userAreas: Array,
+  static targets = ["map", "lat", "long", "locationName", "submitReport"];
+  static values = {
+    userAreas: Array,
   };
 
   connect() {
-    console.log("is user areas", this.userAreasValue);
-   
-
-    console.log("Location controller is connected");
     if (!this.mapTarget) {
       console.error("Map element not found.");
       return;
     }
   }
+
   isMarkerInsidePolygon(lat, lng, poly) {
     var x = lat, y = lng;
     var inside = false;
@@ -29,31 +26,18 @@ export default class extends Controller {
     return inside;
   }
 
-  createUserArea() {
-    L.polygon(this.userAreasValue, 
-      {fillOpacity: 0}
-    ).addTo(this.map);
-  }
-
-  isInsideArea(lat,lng) {
-    const isInside = this.isMarkerInsidePolygon(lat,lng,this.userAreasValue);
-     console.log("is inside",isInside);
-    return isInside;
-  }
-
   initMap = async () => {
-    // Check if map is already initialized
     if (this.mapTarget._leaflet_id) {
-      console.log("Map already initialized.");
       return;
     }
-    console.log("Initializing map...");
+
     const map = L.map("map", {
       center: [15.2313, 104.8567],
       zoom: 13,
     });
 
     this.map = map;
+    this.createUserArea(map);
 
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "&copy; OpenStreetMap",
@@ -88,8 +72,28 @@ export default class extends Controller {
     });
 
     locationButton.addTo(map);
-    console.log("Map initialized.");
   };
+
+  createUserArea(map) {
+    this.userAreaPolygon = L.polygon(this.userAreasValue, { fillOpacity: 0 }).addTo(map);
+   
+    map.on('moveend', () => {
+      this.userAreaPolygon.redraw();
+    });
+
+    map.on('zoomend', () => {
+      this.userAreaPolygon.redraw();
+    });
+   
+    map.on('movestart', () => {
+      this.userAreaPolygon.bringToFront();
+    });
+  }
+
+  isInsideArea(lat, lng) {
+    const isInside = this.isMarkerInsidePolygon(lat, lng, this.userAreasValue);
+    return isInside;
+  }
 
   async handleLatLongChange(lat, long) {
     this.latTarget.value = lat;
@@ -179,13 +183,12 @@ export default class extends Controller {
         this.handleLatLongChange(lat, lng);
         map.flyTo([lat, lng], 16);
         map.removeControl(loadingControl);
-        this.createUserArea();
-
       },
       () => {
         map.removeControl(loadingControl);
-        // TODO: Show error message with more aesthetic way
-        console.log("Geolocation permission denied or unavailable.");
+        const locationName = document.getElementById("location-name")
+        locationName.classList.remove("line-clamp-1");
+        locationName.innerHTML = "ไม่สามารถหาตำแหน่งได้ กรุณาให้สิทธิ์เข้าถึงตำแหน่ง และลองใหม่อีกครั้ง";
       },
       {
         enableHighAccuracy: true,
