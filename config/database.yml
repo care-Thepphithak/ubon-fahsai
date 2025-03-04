@@ -25,7 +25,7 @@ test:
   username: ubon-fahsai-local
   password: postgres
   host: localhost
-  database: ubon-fahsai-local
+  database: ubon-fahsai-local-test
 
 
 # Store production database in the storage/ directory, which by default
