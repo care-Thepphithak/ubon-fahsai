@@ -7,7 +7,7 @@ class User < ApplicationRecord
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 
-  def admin?
+  def is_admin?
     admin == true
   end
 end
