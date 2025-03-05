@@ -70,18 +70,9 @@ export default class extends Controller {
 
   createUserArea(map) {
     this.userAreaPolygon = L.polygon(this.userAreasValue, { fillOpacity: 0 }).addTo(map);
-
-    map.on('moveend', () => {
-      this.userAreaPolygon.redraw();
-    });
-
-    map.on('zoomend', () => {
-      this.userAreaPolygon.redraw();
-    });
-
-    map.on('movestart', () => {
-      this.userAreaPolygon.bringToFront();
-    });
+    map.on('moveend', () => {this.userAreaPolygon.redraw();});
+    map.on('zoomend', () => {this.userAreaPolygon.redraw();});
+    map.on('movestart', () => {this.userAreaPolygon.bringToFront();});
   }
 
   isInsideArea(lat, lng) {
@@ -100,11 +91,9 @@ export default class extends Controller {
     }
 
     this.disableSubmitButton();
-
     const locationName = await this.getLocationName(lat, long);
     document.getElementById("location-name").innerHTML = locationName;
     this.locationNameTarget.value = locationName;
-
     this.enableSubmitButton();
   }
 
@@ -134,15 +123,8 @@ export default class extends Controller {
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=th`
       );
       const data = await response.json();
-
       let locationString = data.display_name || "";
-
-      locationString = locationString
-        .replace(/, /g, " ")
-        .replace(/ประเทศไทย/g, "")
-        .replace(/\d{5}/g, "")
-        .trim();
-
+      locationString = locationString.replace(/, /g, " ").replace(/ประเทศไทย/g, "").replace(/\d{5}/g, "").trim();
       return locationString || "ไม่พบข้อมูลตำแหน่ง";
     } catch (error) {
       console.error("Error fetching location name:", error);
@@ -157,7 +139,6 @@ export default class extends Controller {
     }
 
     const loadingControl = L.control({ position: "topright" });
-
     loadingControl.onAdd = () => {
       const div = L.DomUtil.create(
         "div",
@@ -180,7 +161,6 @@ export default class extends Controller {
       async (position) => {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
-
         this.handleLatLongChange(lat, lng);
         map.flyTo([lat, lng], 16);
         map.removeControl(loadingControl);
