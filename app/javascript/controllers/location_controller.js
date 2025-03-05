@@ -14,18 +14,16 @@ export default class extends Controller {
   }
 
   isMarkerInsidePolygon(lat, lng, poly) {
-    var x = lat, y = lng;
-    var inside = false;
-    for (var i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-      var xi = poly[i][0], yi = poly[i][1];
-      var xj = poly[j][0], yj = poly[j][1];
-      var intersect = ((yi > y) != (yj > y))
-        && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+    let inside = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const [xi, yi] = poly[i];
+      const [xj, yj] = poly[j];
+      const intersect = (yi > lng) !== (yj > lng) && (lat < (xj - xi) * (lng - yi) / (yj - yi) + xi);
       if (intersect) inside = !inside;
     }
     return inside;
   }
-
+  
   initMap = async () => {
     if (this.mapTarget._leaflet_id) {
       return;
