@@ -23,7 +23,7 @@ export default class extends Controller {
     }
     return inside;
   }
-  
+
   initMap = async () => {
     if (this.mapTarget._leaflet_id) {
       return;
@@ -47,20 +47,16 @@ export default class extends Controller {
 
     locationButton.onAdd = () => {
       const div = L.DomUtil.create("div", "leaflet-bar leaflet-control");
-      const button = L.DomUtil.create("a", "", div);
+      const button = L.DomUtil.create("a", "flex items-center justify-center w-7 h-7 text-2xl", div);
+
       button.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
       button.title = "Show my location";
-      button.style.width = "30px";
-      button.style.height = "30px";
-      button.style.fontSize = "20px";
-      button.style.display = "flex";
-      button.style.alignItems = "center";
-      button.style.justifyContent = "center";
+    
       L.DomEvent.on(button, "click", (e) => {
         L.DomEvent.preventDefault(e);
         this.locateUser(map);
       });
-
+    
       return div;
     };
 
