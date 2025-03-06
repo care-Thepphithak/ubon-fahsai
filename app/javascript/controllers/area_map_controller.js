@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static targets = ["map", "coordinates", "saveButton", "plsDrawArea"]
+    static targets = ["map", "coordinates", "saveButton", "plsDrawArea", "setAreaButton", "finishEditButton"]
     static values = { currentCoordinates: Array }
     polygonArea = []
 
@@ -22,6 +22,10 @@ export default class extends Controller {
             this.showCurrentArea();
             this.saveButtonTarget.disabled = false;
         }
+
+        if (this.coordinatesTarget.value) {
+            this.plsDrawAreaTarget.classList.add("hidden");
+        }
     }
 
     showCurrentArea() {
@@ -39,16 +43,34 @@ export default class extends Controller {
     }
 
     startEditPolygon() {
-        this.map.editTools.startPolygon();
-        this.resetPolygon();
-        this.map.on("editable:drawing:mouseup", (e) => {
-            this.updatePolygonArea(e);
+        let existingPolygon = null;
+        
+        this.map.eachLayer((layer) => {
+            if (layer instanceof L.Polygon) {
+                existingPolygon = layer;
+            }
         });
+    
+        if (existingPolygon) {
+            existingPolygon.enableEdit();
+            this.map.on("editable:editing", (e) => {
+                this.updatePolygonArea(e);
+            });
+        } else {
+            this.map.editTools.startPolygon();
+            this.resetPolygon();
+            this.map.on("editable:drawing:clicked", (e) => {
+                this.updatePolygonArea(e);
+            });
+        }
+        
+        this.setAreaButtonTarget.classList.add("hidden");
+        this.finishEditButtonTarget.classList.remove("hidden");
     }
 
     updatePolygonArea(e) {
         const polygonPointsLength = e.layer.getLatLngs()[0].length;
-        if (polygonPointsLength >= 2) {
+        if (polygonPointsLength >= 3) {
             this.saveButtonTarget.disabled = false;
             this.plsDrawAreaTarget.classList.add("hidden");
         }
@@ -57,14 +79,26 @@ export default class extends Controller {
     savePolygon() {
         this.map.editTools.stopDrawing();
         this.polygonArea = [];
-
+    
         this.map.eachLayer((layer) => {
             if (layer instanceof L.Polygon) {
-                this.polygonArea = layer.getLatLngs()[0];
+                const points = layer.getLatLngs()[0];
+                
+                if (points.length < 3) {
+                    this.resetPolygon();
+                    return;
+                }
+    
+                this.polygonArea = points;
+                layer.disableEdit();
             }
         });
-
-        this.coordinatesTarget.value = JSON.stringify(this.polygonArea.map((point) => [point.lat, point.lng]));
+    
+        if (this.polygonArea.length >= 3) {
+            this.coordinatesTarget.value = JSON.stringify(
+                this.polygonArea.map((point) => [point.lat, point.lng])
+            );
+        }
     }
 
     resetPolygon() {
@@ -72,6 +106,14 @@ export default class extends Controller {
         this.polygonArea = [];
         this.saveButtonTarget.disabled = true;
         this.plsDrawAreaTarget.classList.remove("hidden");
+        this.setAreaButtonTarget.classList.remove("hidden");
+        this.finishEditButtonTarget.classList.add("hidden");
+    }
+
+    finishEditArea() {
+        this.finishEditButtonTarget.classList.add("hidden");
+        this.setAreaButtonTarget.classList.remove("hidden");
+        this.savePolygon();
     }
 
     clearLayer() {
