@@ -6,6 +6,7 @@ class Area < ApplicationRecord
 
   validates :name, presence: { message: "โปรดระบุชื่อพื้นที่" }
   validates :name, uniqueness: { message: "ชื่อพื้นที่นี้มีอยู่แล้ว", case_sensitive: false }
+  validates :coordinates, presence: { message: "โปรดระบุพิกัดของพื้นที่" }
 
   private
 
