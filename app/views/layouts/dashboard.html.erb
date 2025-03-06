@@ -26,9 +26,13 @@
 <body>
   <div data-controller="sidebar" class="w-full flex">
     <%= render "admin/sidebar" %>
-    <div class="w-full flex flex-col relative lg:overflow-y-scroll">
+    <div class="w-full flex flex-col h-screen relative lg:overflow-y-scroll">
+      <div class="w-full absolute z-[-1] flex mx-auto h-64 bg-[#FF6159]"></div>
       <%= render "admin/header"%>
       <%= yield %>
+      <div class="w-full p-4 mt-4 text-center text-gray-400">
+        Ubon Fahsai &copy; <%= Time.current.year %>, Made with <i class="fa-solid fa-heart text-[#FF6159]"></i> by ODDS TEAM
+      </div>
     </div>
   </div>
 </body>
