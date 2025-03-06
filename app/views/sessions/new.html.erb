@@ -9,7 +9,7 @@
     <div>
       <%= form_with url: session_url, class: "contents" do |form| %>
         <div class="my-5">
-          <%= form.label :email_address, "อีเมลล์", class: "text-gray-500" %>
+          <%= form.label :email_address, "อีเมล", class: "text-gray-500" %>
           <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "กรอกอีเมล", value: params[:email_address], class: "block rounded-lg focus:outline-none px-3 py-3 mt-2 w-full bg-[#F0F0F0]" %>
         </div>
         <div class="mt-5">
