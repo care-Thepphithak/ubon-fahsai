@@ -1,51 +1,60 @@
 <%= form_with(model: [:admin, @area], class: "w-full") do |form| %>
-    <div data-controller="area-map" data-area-map-current-coordinates-value="<%= @area.coordinates%>"  class="flex flex-col lg:flex-row w-full min-h-svh h-full gap-[20px] pb-[20px]">
+    <div data-controller="area-map" data-area-map-current-coordinates-value="<%= @area.coordinates%>"  class="flex flex-col xl:flex-row w-full h-full gap-[20px] pb-[20px]">
 
-            <div data-area-map-target="map" class="h-full w-full rounded-xl"> </div>
+            <div data-area-map-target="map" class="h-full min-h-[500px] w-full rounded-xl"> </div>
 
-            <div class="w-full lg:w-[450px] xl:w-[550px] bg-[#F3F3F3] flex h-full  flex-col p-5 rounded-xl">
+            <div class="w-full xl:w-[550px] bg-[#F3F3F3] flex h-full  flex-col p-5 rounded-xl">
                 <div class="flex gap-3 w-full mb-4">
-                    <button type="button" class="bg-white w-full text-gray-500 px-3 py-3 rounded-md hover:bg-gray-50 transition-all cursor-pointer" data-action="click->area-map#startEditPolygon">
-                    <i class="fa-solid fa-draw-polygon mr-2"></i> กำหนดพื้นที่
+                    <button type="button" data-area-map-target="setAreaButton" class="bg-white w-full text-gray-500 px-3 py-2 rounded-md hover:bg-gray-50 transition-all cursor-pointer" data-action="click->area-map#startEditPolygon">
+                        <i class="fa-solid fa-draw-polygon mr-2"></i> กำหนดพื้นที่
                     </button>
-                    <button type="button" class="bg-white w-full text-gray-500 px-3 py-3 rounded-md hover:bg-gray-50 transition-all cursor-pointer" data-action="click->area-map#resetPolygon">
-                    <i class="fa-solid fa-trash mr-2"></i> รีเซ็ตพื้นที่
+                    <button type="button" data-area-map-target="finishEditButton" class="bg-white hidden w-full text-gray-500 px-3 py-2 rounded-md hover:bg-gray-50 transition-all cursor-pointer" data-action="click->area-map#finishEditArea">
+                        <i class="fa-solid fa-check mr-2"></i> เสร็จสิ้น
+                    </button>
+                    <button type="button" class="bg-white w-full text-gray-500 px-3 py-2 rounded-md hover:bg-gray-50 transition-all cursor-pointer" data-action="click->area-map#resetPolygon">
+                        <i class="fa-solid fa-trash mr-2"></i> รีเซ็ตพื้นที่
                     </button>
                 </div>
 
                 <%= form.label :name ,"ชื่อพื้นที่", class: "text-gray-500"%>
-                <%= form.text_field :name, class: "w-full rounded-md bg-white outline-hidden px-3 py-2 mt-2 text-base text-gray-600" %>
+                <%= form.text_field :name, class: "w-full rounded-md bg-white outline-hidden px-3 py-2 mt-2 text-base text-gray-600", placeholder: "ระบุชื่อพื้นที่..." %>
 
                 <%= form.hidden_field :coordinates, data: { area_map_target: "coordinates" } %>
 
                 <p class="mt-4 mb-2 text-gray-500">กำหนดผู้รับผิดชอบ</p>
-                <% @users.each do |user| %>
-                    <div class="bg-white w-full mb-3 rounded-md p-3 flex items-center gap-3">
-                        <div class="relative">
-                            <%= check_box_tag "area[user_ids][]", user.id, @area.users.include?(user), id: "user_#{user.id}", class: "peer absolute opacity-0 h-0 w-0" %>
-                            <div class="w-5 h-5 border border-gray-300 rounded flex items-center justify-center peer-checked:bg-[#FF6159] peer-checked:border-[#FF6159] transition-colors cursor-pointer">
+                <div class="flex flex-col gap-3 w-full overflow-scroll no-scrollbar rounded-md mb-3">
+                    <% @users.each do |user| %>
+                        <% checkbox_id = "user_#{user.id}" %>
+                        <label for="<%= checkbox_id %>" class="cursor-pointer">
+                        <div class="bg-white w-full rounded-md p-3 flex items-center gap-3 hover:bg-gray-50 transition-all">
+                            <div class="relative">
+                            <%= check_box_tag "area[user_ids][]", user.id, 
+                                @area.users.include?(user), 
+                                id: checkbox_id, 
+                                class: "peer absolute opacity-0 h-0 w-0" %>
+                            <div class="w-5 h-5 border border-gray-300 rounded flex items-center justify-center peer-checked:bg-[#FF6159] peer-checked:border-[#FF6159] transition-colors">
                                 <i class="fa-solid fa-check text-white text-sm"></i>
                             </div>
-                        </div>
-                        <div class="flex-1">
-                            <label for="user_<%= user.id %>" class="text-gray-600 cursor-pointer block w-full">
+                            </div>
+                            <div class="flex-1 text-gray-600 select-none">
                                 <%= user.email_address %>
-                            </label>
+                            </div>
                         </div>
-                    </div>
-                <% end %>
+                        </label>
+                    <% end %>
+                </div>
 
                 <%= hidden_field_tag "area[user_ids][]", nil %>
 
                 <% if @area.errors.any? %>
-                    <div id="error_explanation" class="text-red-400 py-1 rounded-md mt-3">
+                    <div id="error_explanation" class="text-red-400 rounded-md font-light">
                         <% @area.errors.each do |error| %>
                             <p><%= error.message %></p>
                         <% end %>
                     </div>
                 <% end %>
 
-                <p data-area-map-target="plsDrawArea" class="text-gray-400 py-1 mt-3">โปรดระบุพื้นที่ก่อนบันทึก</p>
+                <p data-area-map-target="plsDrawArea" class="text-gray-400 font-light">โปรดระบุพื้นที่ก่อนบันทึก</p>
                 <%= form.submit "บันทึกพื้นที่", data: { area_map_target: "saveButton", action: "click->area-map#savePolygon" }, disabled: true, class: "disabled:bg-gray-200 disabled:text-gray-400 bg-[#FF6159] w-full text-white mt-3 px-3 py-3 rounded-md hover:bg-[#fb5951] transition-all cursor-pointer" %>
 
           </div>
