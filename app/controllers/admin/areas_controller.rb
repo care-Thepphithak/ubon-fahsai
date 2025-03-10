@@ -6,7 +6,7 @@ class Admin::AreasController < ApplicationController
   before_action :set_all_user, only: [ :new, :edit, :create, :update ]
 
   def index
-    @areas = Area.all
+    @areas = Area.sorted_by_created_at
   end
 
   def new
