@@ -50,6 +50,14 @@ body {
   animation: opacityOut 0.3s forwards;
 }
 
+.opacity-in-50 {
+  animation: opacityIn50 0.3s forwards;
+}
+
+.opacity-out-50 {
+  animation: opacityOut50 0.3s forwards;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -115,6 +123,26 @@ body {
 @keyframes opacityOut {
   from {
     opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes opacityIn50 {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.5;
+  }
+}
+
+@keyframes opacityOut50 {
+  from {
+    opacity: 0.5;
   }
 
   to {
