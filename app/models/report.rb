@@ -2,7 +2,8 @@ class Report < ApplicationRecord
   include ActionView::Helpers::DateHelper
 
   has_many_attached :images
-  belongs_to :area
+  has_many :area_reports, dependent: :destroy
+  has_many :areas, through: :area_reports
 
   TAGS = %w[ไฟป่า เผาไร่อ้อย เผานาข้าว เผาไร่อื่นๆ ไฟไหม้บ้าน ไฟไหม้รถ ไฟไหม้โรงงาน เผาขยะ].freeze
 
