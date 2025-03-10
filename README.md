@@ -78,6 +78,8 @@ Ubon Fahsai is a Progressive Web Application built with Ruby on Rails that enabl
 
 ### Running Tests
 ```bash
+rails db:prepare
+rails db:migrate
 rails test
 ```
 Make sure that you already create database or prepare database
@@ -128,7 +130,7 @@ The application is designed to be deployed on:
 - Azure
 
 Deployment instructions: <br>
-**🚧 Comming Soon..**
+**🚧 Coming Soon..**
 
 ## 👥 Contributing
 
