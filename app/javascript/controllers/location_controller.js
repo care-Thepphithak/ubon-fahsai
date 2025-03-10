@@ -11,6 +11,24 @@ export default class extends Controller {
       console.error("Map element not found.");
       return;
     }
+
+    this.addCustomEventListeners();
+  }
+
+  disconnect() {
+    document.removeEventListener("turbo:before-stream-render", this.handleTurboStream.bind(this));
+  }
+
+  addCustomEventListeners() {
+    document.addEventListener("turbo:before-stream-render", this.handleTurboStream.bind(this));
+  }
+
+  handleTurboStream(event) {
+    const turboStream = event.detail.newStream;
+
+    if (turboStream.target === "location-name") {
+      document.getElementById("location-name").classList.remove("line-clamp-1");
+    }
   }
 
   isMarkerInsidePolygon(lat, lng, poly) {
