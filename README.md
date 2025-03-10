@@ -19,8 +19,6 @@ Ubon Fahsai is a Progressive Web Application built with Ruby on Rails that enabl
 * **Frontend**: HTML, CSS, JavaScript
 * **Maps**: Leaflet
 * **Image Storage**: Active Storage with MinIO
-* **Authentication**: Devise
-* **Authorization**: Pundit
 * **Containerization**: Docker
 * **CI/CD**: GitLab CI
 
@@ -48,7 +46,6 @@ Ubon Fahsai is a Progressive Web Application built with Ruby on Rails that enabl
 2. **Install dependencies**
    ```bash
    bundle install
-   yarn install
    ```
 
 3. **Database setup**
@@ -81,8 +78,9 @@ Ubon Fahsai is a Progressive Web Application built with Ruby on Rails that enabl
 
 ### Running Tests
 ```bash
-rspec
+rails test
 ```
+Make sure that you already create database or prepare database
 
 ### Development Workflow
 Before running development scripts, please complete the database setup step first.
@@ -109,15 +107,15 @@ docker-compose up -d
 
 ### User Flow
 1. Navigate to the application
-2. Click on "Report Fire"
-3. Allow location access when prompted
-4. Adjust the pin to the exact fire location if needed
-5. Take a photo or upload one from your device
-6. Add details about the incident
+2. Allow location access when prompted
+3. Click on "Report Fire"
+4. Take a photo or upload one from your device
+5. Add details about the incident
+6. Adjust the pin to the exact fire location if needed
 7. Submit the report
 
 ### Admin Dashboard
-Access the admin dashboard at `/admin` with appropriate credentials to:
+Access the admin dashboard at `/admin/dashboard` with appropriate credentials to:
 - View all reported incidents
 - Filter reports by date, location, or status
 - Manage incident response
@@ -126,21 +124,16 @@ Access the admin dashboard at `/admin` with appropriate credentials to:
 ## 🌐 Deployment Options
 
 The application is designed to be deployed on:
-- Heroku
 - AWS
-- Digital Ocean
+- Azure
 
-Deployment instructions:
-1. Set up environment variables
-2. Configure database
-3. Set up storage service for images
-4. Configure PWA settings
-5. Deploy using your preferred platform's guidelines
+Deployment instructions: <br>
+**🚧 Comming Soon..**
 
 ## 👥 Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+2. Create a feature branch (`git switch feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
