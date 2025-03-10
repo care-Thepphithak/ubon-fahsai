@@ -66,7 +66,7 @@ export default class extends Controller {
     if (!isSelected) {
       const coordinates = JSON.parse(button.dataset.coordinates);
       const polygon = L.polygon(coordinates, { 
-        fillOpacity: 0.02,
+        fillOpacity: 0.08,
         color: '#FF6159',
         weight: 2
       }).addTo(this.map);
