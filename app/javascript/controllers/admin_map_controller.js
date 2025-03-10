@@ -161,7 +161,11 @@ export default class extends Controller {
   }
 
   closeModal() {
-    this.modalTarget.classList.add('hidden');
+    this.modalTarget.classList.add('opacity-out-50');
+    setTimeout(() => {
+      this.modalTarget.classList.remove('opacity-out-50');
+      this.modalTarget.classList.add('hidden');
+    }, 300);
   }
 
   createColoredMarker(color) {
