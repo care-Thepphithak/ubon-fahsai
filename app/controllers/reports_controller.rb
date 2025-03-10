@@ -23,8 +23,11 @@ class ReportsController < ApplicationController
         format.html { redirect_to root_path, notice: @report.location_name }
         format.json { render :show, status: :created, location: @report }
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @report.errors, status: :unprocessable_entity }
+        format.turbo_stream do
+          location_error = @report.errors.map { |error| error.message }.join("<br/>")
+          error_html = "<p class='mt-2 text-base w-[80%] mx-auto text-gray-500'>#{location_error}</p>"
+          render turbo_stream: turbo_stream.update("location-name", error_html.html_safe)
+        end
       end
     end
   end
