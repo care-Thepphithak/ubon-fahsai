@@ -1,6 +1,7 @@
 class Area < ApplicationRecord
   has_many :user_areas, dependent: :destroy
   has_many :users, through: :user_areas
+  has_many :reports
 
   scope :sorted_by_created_at, -> { order(created_at: :desc) }
 
