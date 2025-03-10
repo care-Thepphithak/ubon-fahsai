@@ -57,25 +57,11 @@
             <p class="text-sm text-gray-500"><%= l(Time.current, format: :full, locale: :th) %></p>
           </div>
 
-          <div data-report-target="locationContainer" 
-              data-controller="location"
-              data-action="report:initMap->location#initMap" 
-              data-location-user-areas-value="<%=@user_areas%>"
-              class="w-[90%] h-full mt-3"> 
-
+          <div data-report-target="locationContainer" data-controller="location" data-action="report:initMap->location#initMap" data-location-user-areas-value="<%=@user_areas%>" class="w-[90%] h-full mt-3">
             <%= render "location" %>
-
-            <div class="my-5">
-              <%= form.hidden_field :lat, data: { location_target: "lat" }, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": report.errors[:lat].none?, "border-red-400 focus:outline-red-600": report.errors[:lat].any?}] %>
-            </div>
-
-            <div class="my-5">
-              <%= form.hidden_field :long, data: { location_target: "long" }, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": report.errors[:long].none?, "border-red-400 focus:outline-red-600": report.errors[:long].any?}] %>
-            </div>
-
-            <div class="my-5">
-              <%= form.hidden_field :location_name, data: { location_target: "locationName" }, class: ["block shadow-sm rounded-md border outline-hidden px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": report.errors[:long].none?, "border-red-400 focus:outline-red-600": report.errors[:long].any?}] %>
-            </div>
+            <%= form.hidden_field :lat, data: { location_target: "lat" } %>
+            <%= form.hidden_field :long, data: { location_target: "long" } %>
+            <%= form.hidden_field :location_name, data: { location_target: "locationName" } %>
           </div>
         </div>
 
