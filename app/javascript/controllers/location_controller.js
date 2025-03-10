@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["map", "lat", "long", "locationName", "submitReport"];
+  static targets = ["map", "lat", "long", "locationName", "submitReport", "areaId"];
   static values = {
     userAreas: Array,
   };
@@ -31,17 +31,6 @@ export default class extends Controller {
     }
   }
 
-  isMarkerInsidePolygon(lat, lng, poly) {
-    let inside = false;
-    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-      const [xi, yi] = poly[i];
-      const [xj, yj] = poly[j];
-      const intersect = (yi > lng) !== (yj > lng) && (lat < (xj - xi) * (lng - yi) / (yj - yi) + xi);
-      if (intersect) inside = !inside;
-    }
-    return inside;
-  }
-
   initMap = async () => {
     if (this.mapTarget._leaflet_id) {
       return;
@@ -67,12 +56,12 @@ export default class extends Controller {
       const button = L.DomUtil.create("a", "flex items-center justify-center w-7 h-7 text-2xl", div);
       button.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
       button.title = "Show my location";
-    
+
       L.DomEvent.on(button, "click", (e) => {
         L.DomEvent.preventDefault(e);
         this.locateUser(map);
       });
-    
+
       return div;
     };
 
@@ -85,14 +74,42 @@ export default class extends Controller {
   };
 
   createUserArea(map) {
-    this.userAreaPolygon = L.polygon(this.userAreasValue, { fillOpacity: 0 }).addTo(map);
-    map.on('moveend', () => {this.userAreaPolygon.redraw();});
-    map.on('zoomend', () => {this.userAreaPolygon.redraw();});
-    map.on('movestart', () => {this.userAreaPolygon.bringToFront();});
+    this.userAreasCoordinates = this.userAreasValue.map((area) => {
+      const areaId = Object.keys(area);
+      return area[areaId];
+    });
+
+    this.userAreasValue.forEach((area) => {
+      const areaId = Object.keys(area);
+      console.log(areaId);
+      console.log("area", area);
+      const polygon = L.polygon(area[areaId], { fillOpacity: 0 }).addTo(map);
+
+      map.on('moveend', () => polygon.redraw());
+      map.on('zoomend', () => polygon.redraw());
+      map.on('movestart', () => polygon.bringToFront());
+    });
+
+    // this.userAreaPolygon = L.polygon(this.userAreasValue, {
+    //   fillOpacity: 0
+    // }).addTo(map);
+
+
   }
 
   isInsideArea(lat, lng) {
-    return this.userAreasValue.some(area => this.isMarkerInsidePolygon(lat, lng, area));
+    return this.userAreasCoordinates.some(area => this.isMarkerInsidePolygon(lat, lng, area));
+  }
+
+  isMarkerInsidePolygon(lat, lng, poly) {
+    let inside = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const [xi, yi] = poly[i];
+      const [xj, yj] = poly[j];
+      const intersect = (yi > lng) !== (yj > lng) && (lat < (xj - xi) * (lng - yi) / (yj - yi) + xi);
+      if (intersect) inside = !inside;
+    }
+    return inside;
   }
 
   async handleLatLongChange(lat, long) {
@@ -105,6 +122,10 @@ export default class extends Controller {
       document.getElementById("location-name").innerHTML = "ตำแหน่งนี้ไม่ได้อยู่ในพื้นที่ที่รับผิดชอบ";
       return;
     }
+
+    const selectedArea = this.userAreasValue.find(area => this.isMarkerInsidePolygon(lat, long, area[Object.keys(area)]));
+    this.areaIdTarget.value = Object.keys(selectedArea);
+    console.log("areaId", this.areaIdTarget.value);
 
     this.disableSubmitButton();
     const locationName = await this.getLocationName(lat, long);
