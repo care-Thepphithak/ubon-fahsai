@@ -81,8 +81,6 @@ export default class extends Controller {
 
     this.userAreasValue.forEach((area) => {
       const areaId = Object.keys(area);
-      console.log(areaId);
-      console.log("area", area);
       const polygon = L.polygon(area[areaId], { fillOpacity: 0 }).addTo(map);
 
       map.on('moveend', () => polygon.redraw());
@@ -123,9 +121,8 @@ export default class extends Controller {
       return;
     }
 
-    const selectedArea = this.userAreasValue.find(area => this.isMarkerInsidePolygon(lat, long, area[Object.keys(area)]));
-    this.areaIdTarget.value = Object.keys(selectedArea);
-    console.log("areaId", this.areaIdTarget.value);
+    const selectedArea = this.userAreasValue.filter(area => this.isMarkerInsidePolygon(lat, long, area[Object.keys(area)]));
+    this.areaIdTarget.value = selectedArea.flatMap(area => Object.keys(area));
 
     this.disableSubmitButton();
     const locationName = await this.getLocationName(lat, long);
