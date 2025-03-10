@@ -42,7 +42,6 @@ export default class extends Controller {
     }).addTo(map);
 
     this.locateUser(map);
-
     const locationButton = L.control({ position: "bottomright" });
 
     locationButton.onAdd = () => {

@@ -106,7 +106,6 @@ export default class extends Controller {
     });
   }
 
-
   removeImage(event) {
     const index = event.currentTarget.dataset.index;
     this.selectedFiles.splice(index, 1);
@@ -173,7 +172,6 @@ export default class extends Controller {
     document.querySelector("p.text-gray-400").textContent = `เลือกแล้ว ${this.selectedFiles.length} รูปภาพ`;
   }
 
-
   toggleUploadButton() {
     const uploadButton = document.querySelector("label[for='report_images']");
     if (this.selectedFiles.length >= 4) {
@@ -198,7 +196,6 @@ export default class extends Controller {
     }
     document.querySelector("input[name='report[tags]']").value = JSON.stringify(this.selectedTags);
   }
-
 
   updateSeverity(event) {
     const value = event ? event.target.value : this.severitySliderTarget.value;
