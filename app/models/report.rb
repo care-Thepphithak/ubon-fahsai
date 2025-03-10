@@ -2,6 +2,7 @@ class Report < ApplicationRecord
   include ActionView::Helpers::DateHelper
 
   has_many_attached :images
+  belongs_to :area
 
   TAGS = %w[ไฟป่า เผาไร่อ้อย เผานาข้าว เผาไร่อื่นๆ ไฟไหม้บ้าน ไฟไหม้รถ ไฟไหม้โรงงาน เผาขยะ].freeze
 
@@ -124,9 +125,9 @@ class Report < ApplicationRecord
   end
 
   def latlong_must_be_within_user_areas
-    return unless user.areas.present?
+    return unless Current.user.areas.present?
 
-    user_areas = user.areas.map(&:coordinates)
+    user_areas = Current.user.areas.map(&:coordinates)
     user_areas = user_areas.map { |area| area.map { |coordinate| coordinate.to_fs } }
 
     if user_areas.none? { |area| point_in_polygon?([ lat.to_f, long.to_f ], area) }
