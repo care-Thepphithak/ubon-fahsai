@@ -1,10 +1,8 @@
 <div class="fixed inset-0 flex items-center justify-center z-[9999]">
-  <!-- Modal backdrop -->
-  <div class="absolute inset-0 bg-gray-900 opacity-50"></div>
-  <!-- Modal container -->
-  <div class="bg-white rounded-lg shadow-lg z-30 p-6 relative max-w-[640px] w-[90%]">
+  <div class="absolute inset-0 bg-gray-900 opacity-in-50"></div>
 
-  <%= yield %>
+  <div class="bg-white rounded-xl shadow-lg p-6 relative max-w-[640px] w-[90%] fade-in">
+    <%= yield %>
   </div>
 </div>
 
