@@ -1,0 +1,18 @@
+<div data-admin-map-target="modal" class="hidden">
+    <%= render "shared/modal" do %>
+    <div data-admin-map-target="fireImages" class="flex gap-2 no-scrollbar overflow-x-scroll rounded-lg"></div>
+
+    <h1 data-admin-map-target="locationName" class="text-2xl font-semibold text-gray-700 mt-4 mb-1"></h1>
+    <div class="flex items-center">
+        <div class="px-4 py-2 rounded-lg bg-red-100 mr-4">
+        <p data-admin-map-target="severityLevel" class="text-red-400 text-md font-semibold"></p>
+        </div>
+        <p data-admin-map-target="createdAt" class="text-gray-500 text-md"></p>
+    </div>
+        <p class="text-gray-500 text-lg mt-3 ">รายละเอียด</p>
+        <div class="flex px-4 py-3 flex-col items-start w-ful bg-gray-100 rounded-lg my-2">
+            <span data-admin-map-target="description" class="text-gray-500 text-lg"></span>
+        </div>
+    <button data-action="click->admin-map#closeModal" class="bg-red-400 p-3 mt-4 rounded-lg text-xl w-full hover:bg-red-500 text-white "> ปิด</button>
+    <% end %>
+</div>
