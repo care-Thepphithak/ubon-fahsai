@@ -48,7 +48,6 @@ export default class extends Controller {
     locationButton.onAdd = () => {
       const div = L.DomUtil.create("div", "leaflet-bar leaflet-control");
       const button = L.DomUtil.create("a", "flex items-center justify-center w-7 h-7 text-2xl", div);
-
       button.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
       button.title = "Show my location";
     
