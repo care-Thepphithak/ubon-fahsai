@@ -1,11 +1,6 @@
 require "test_helper"
 
 class ReportTest < ActiveSupport::TestCase
-  def setup
-    @valid_tags = [ "ไฟป่า", "ไฟไหม้บ้าน" ]
-    @invalid_tags = [ "แท็กผิด", "ไม่มีในรายการ" ]
-  end
-
   test "validates presence of severity_level in predefined levels" do
     report = Report.new(severity_level: Report::SEVERITIES.sample, description: "ข้อความทดสอบ")
     assert report.valid?
@@ -93,5 +88,17 @@ class ReportTest < ActiveSupport::TestCase
     result = Report.top_districts.map { |r| [ r.district, r.district_count.to_i ] }
 
     assert_equal [ [ "อำเภอเมือง", 2 ], [ "อำเภอวารินชำราบ", 1 ] ], result
+  end
+
+  test "tags_must_be_valid adds error for invalid tags" do
+    report = Report.new(tags: ["invalid_tag"])
+    report.valid?
+    assert_includes report.errors[:tags], "มีค่าไม่ถูกต้อง"
+  end
+
+  test "tags_must_be_valid allows valid tags" do
+    report = Report.new(tags: ["ไฟป่า"])
+    report.valid?
+    assert_empty report.errors[:tags]
   end
 end
