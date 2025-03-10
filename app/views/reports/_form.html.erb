@@ -14,6 +14,9 @@
     <div data-report-target="step" >
       <div class="h-svh overflow-y-scroll w-full flex flex-col items-center py-6 justify-between">
         <div class="w-[90%] mx-auto relative text-center">
+          <%= link_to root_path, class: "absolute text-[#FF6159] px-1 py-2 top-0 left-0 text-2xl" do %>
+            <i class="fa-solid fa-angle-left"></i>
+          <% end %>
           <h1 class="text-2xl font-meduim text-[#FF6159]">รายงานไฟไหม้</h1>
           <p class="text-sm text-gray-500"><%= l(Time.current, format: :full, locale: :th) %></p>
         </div>
