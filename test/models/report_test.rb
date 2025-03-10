@@ -83,53 +83,15 @@ class ReportTest < ActiveSupport::TestCase
     assert_equal harmful_report.count, Report.count_harmful_reports
   end
 
-  # test "top_districts should return unique districts with correct count" do
-  #   Report.delete_all
-  #   # Create test data directly in the test
-  #   report1 = Report.create!(
-  #     location_name: "จังหวัดสมุทรปราการ",
-  #     severity_level: "วิกฤติ",
-  #     created_at: Time.zone.today.beginning_of_day
-  #   )
-  #   report2 = Report.create!(
-  #     location_name: "จังหวัดสมุทรปราการ",
-  #     severity_level: "วิกฤติ",
-  #     created_at: Time.zone.today.beginning_of_day
-  #   )
-  #   report3 = Report.create!(
-  #     location_name: "จังหวัดสมุทรปราการ",
-  #     severity_level: "วิกฤติ",
-  #     created_at: Time.zone.today.beginning_of_day
-  #   )
-  #   report4 = Report.create!(
-  #     location_name: "จังหวัดสมุทรปราการ",
-  #     severity_level: "วิกฤติ",
-  #     created_at: Time.zone.today.beginning_of_day
-  #   )
-  #   report5 = Report.create!(
-  #     location_name: "จังหวัดกรุงเทพมหานคร",
-  #     severity_level: "ปกติ",
-  #     created_at: Time.zone.today.beginning_of_day
-  #   )
+  test "top_districts returns sorted districts by report count" do
+    Report.delete_all
 
-  #   puts Report.inspect
-  #   puts "************************"
+    Report.create!(location_name: "อำเภอเมือง จังหวัดอุบลราชธานี", severity_level: "วิกฤติ", created_at: Time.zone.today.noon)
+    Report.create!(location_name: "อำเภอเมือง จังหวัดอุบลราชธานี", severity_level: "วิกฤติ", created_at: Time.zone.today.noon)
+    Report.create!(location_name: "อำเภอวารินชำราบ จังหวัดอุบลราชธานี", severity_level: "วิกฤติ", created_at: Time.zone.today.noon)
 
-  #   # Now test the top_districts method
-  #   top_districts = Report.top_districts.map { |report| { district: report.district, district_count: report.district_count } }
+    result = Report.top_districts.map { |r| [ r.district, r.district_count.to_i ] }
 
-
-  #   puts top_districts.inspect
-  #   puts "============================*********"
-
-  #   # There should be two districts in the result, as we only count today’s reports
-  #   assert_equal 2, top_districts.length
-
-  #   # Assert the correct district names and counts
-  #   assert_equal "สมุทรปราการ", top_districts.first.district
-  #   assert_equal 4, top_districts.first.district_count.to_i  # 4 reports for "สมุทรปราการ"
-
-  #   assert_equal "กรุงเทพมหานคร", top_districts.second.district
-  #   assert_equal 1, top_districts.second.district_count.to_i  # 1 report for "กรุงเทพมหานคร"
-  # end
+    assert_equal [ [ "อำเภอเมือง", 2 ], [ "อำเภอวารินชำราบ", 1 ] ], result
+  end
 end
