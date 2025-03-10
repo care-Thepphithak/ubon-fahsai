@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_10_083040) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_10_093326) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -67,8 +67,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_10_083040) do
     t.text "description"
     t.jsonb "tags", default: []
     t.string "severity_level"
-    t.bigint "area_id", null: false
-    t.index ["area_id"], name: "index_reports_on_area_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -102,7 +100,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_10_083040) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "area_reports", "areas"
   add_foreign_key "area_reports", "reports"
-  add_foreign_key "reports", "areas"
   add_foreign_key "sessions", "users"
   add_foreign_key "user_areas", "areas"
   add_foreign_key "user_areas", "users"
