@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import { createConsumer } from "@rails/actioncable"
 
 export default class extends Controller {
-  static targets = ["map", "modal", "reports", "fireImages", "locationName", "severityLevel", "createdAt", "description", "topDistricts"]
+  static targets = ["map", "modal", "reports", "fireImages", "locationName", "severityLevel", "createdAt", "description", "topDistricts", "areaButton"]
   static values = {
     reports: Array,
     oldLat: String,
@@ -45,6 +45,38 @@ export default class extends Controller {
 
     this.displayLocations(map)
     this.subscribeToReportChannel(map);
+  }
+
+  toggleAreaPolygon(event) {
+    const button = event.currentTarget;
+    const isSelected = button.classList.contains('bg-[#FF6159]');
+    
+    this.areaButtonTargets.forEach(btn => {
+      btn.classList.remove('bg-[#FF6159]', 'text-white');
+      btn.classList.add('bg-white', 'hover:bg-gray-50');
+      btn.querySelectorAll('p').forEach(p => p.classList.remove('text-white'));
+    });
+
+    this.map.eachLayer((layer) => {
+      if (layer instanceof L.Polygon) {
+        this.map.removeLayer(layer);
+      }
+    });
+
+    if (!isSelected) {
+      const coordinates = JSON.parse(button.dataset.coordinates);
+      const polygon = L.polygon(coordinates, { 
+        fillOpacity: 0.02,
+        color: '#FF6159',
+        weight: 2
+      }).addTo(this.map);
+      
+      this.map.fitBounds(polygon.getBounds());
+      
+      button.classList.remove('bg-white', 'hover:bg-gray-50');
+      button.classList.add('bg-[#FF6159]');
+      button.querySelectorAll('p').forEach(p => p.classList.add('text-white'));
+    }
   }
 
   displayLocations(map) {
