@@ -40,14 +40,14 @@
         <p class="text-lg text-gray-500">สถิติไฟไหม้ตามพื้นที่วันนี้</p>
         <div class="flex flex-col overflow-scroll rounded-lg gap-2 no-scrollbar" id="top-districts" data-admin-map-target="topDistricts">
         <% @top_districts.each do |district| %>
-            <button 
-                class="flex bg-white rounded-lg px-3 py-1 justify-between text-start hover:bg-gray-50 transition-all cursor-pointer" 
-                data-action="click->admin-map#toggleAreaPolygon"
-                data-admin-map-target="areaButton"
-                data-coordinates="<%= district.coordinates.to_json %>" >
-                <p class="w-[60%] text-gray-600 text-base"><%= district.district %></p>
-                <p class="text-[#FF392F]"><%= district.district_count %> จุด</p>
-            </button>
+        <button 
+            class="flex bg-white rounded-lg px-3 py-1 justify-between text-start hover:bg-gray-50 transition-all cursor-pointer" 
+            data-action="click->admin-map#toggleAreaPolygon"
+            data-admin-map-target="areaButton"
+            data-district="<%= district.district %>">
+            <p class="w-[60%] text-gray-600 text-base line-clamp-1"><%= district.district %></p>
+            <p class="text-[#FF392F]"><%= district.district_count %> จุด</p>
+        </button>
         <% end %>
         </div>
     </div>
