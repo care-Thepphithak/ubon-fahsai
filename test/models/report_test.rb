@@ -117,12 +117,17 @@ class ReportTest < ActiveSupport::TestCase
   end
 
   test "tags_must_be_valid adds error for invalid tags" do
+    AreaReport.where(report_id: Report.pluck(:id)).delete_all
+    Report.delete_all
+
     report = Report.new(tags: [ "invalid_tag" ])
     report.valid?
     assert_includes report.errors[:tags], "มีค่าไม่ถูกต้อง"
   end
 
   test "tags_must_be_valid allows valid tags" do
+    AreaReport.where(report_id: Report.pluck(:id)).delete_all
+    Report.delete_all
     report = Report.new(tags: [ "ไฟป่า" ])
     report.valid?
     assert_empty report.errors[:tags]
