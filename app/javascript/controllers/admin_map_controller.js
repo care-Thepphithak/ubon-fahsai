@@ -68,7 +68,6 @@ export default class extends Controller {
       const polygon = L.polygon(coordinates, { 
         fillOpacity: 0.08,
         color: '#FF6159',
-        weight: 2
       }).addTo(this.map);
       
       this.map.fitBounds(polygon.getBounds());
@@ -222,10 +221,14 @@ export default class extends Controller {
   handleNewReport(report, topDistricts, map) {
     this.topDistrictsTarget.innerHTML = "";
     const newTop = topDistricts.map((location) =>
-      `<div class="flex bg-white rounded-lg px-3 py-1 justify-between">
-                <p class="w-[60%] text-gray-600 text-base">${location.district}</p>
-                <p class="text-[#FF392F]">${location.district_count} จุด</p>
-      </div>`
+      `<button 
+          class="flex bg-white rounded-lg px-3 py-1 justify-between text-start hover:bg-gray-50 transition-all cursor-pointer" 
+          data-action="click->admin-map#toggleAreaPolygon"
+          data-admin-map-target="areaButton"
+          data-coordinates='${JSON.stringify(location.coordinates)}'>
+          <p class="w-[60%] text-gray-600 text-base">${location.district}</p>
+          <p class="text-[#FF392F]">${location.district_count} จุด</p>
+      </button>`
     );
 
     this.topDistrictsTarget.innerHTML = newTop.join("");
