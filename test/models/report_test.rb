@@ -55,14 +55,17 @@ class ReportTest < ActiveSupport::TestCase
 
 
   test "count_harmful_today should return correct count" do
+    AreaReport.where(report_id: Report.pluck(:id)).delete_all
     Report.delete_all
 
     # Create a harmful report for today
     harmful_today = [ Report.create!(
       location_name: "จังหวัดสมุทรปราการ",
       severity_level: "วิกฤติ",
-      created_at: Time.zone.today.beginning_of_day
-    )
+      created_at: Time.zone.today.beginning_of_day,
+      lat: "15.2314",
+      long: "104.8567"
+      )
     ]
 
     assert_equal harmful_today.count, Report.count_harmful_today
