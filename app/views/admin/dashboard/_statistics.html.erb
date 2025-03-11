@@ -1,0 +1,54 @@
+<div class="flex flex-col md:flex-row w-full md:h-[12rem] mb-[20px] gap-[20px]">
+    <div class="flex flex-col flex-5 bg-[#F3F3F3] rounded-xl p-5 gap-2">
+        <p class="text-lg text-gray-500">สถิติการไฟไหม้วันนี้</p>
+        <div class="flex gap-[20px] w-full h-[80%]">
+            <div class="bg-white flex flex-col flex-1 rounded-xl p-3 px-5 h-full justify-center">
+            <p class="text-gray-500 text-left mb-2">พื้นที่ไฟไหม้</p>
+            <div class="flex gap-4 justify-between">
+                <p class="text-4xl 2xl:text-5xl text-gray-600" id="report_counter"><%= @report_count %></p>
+                <div class="flex flex-col items-end text-sm">
+                <% if @report_count_comparisons[:more] %>
+                    <p class="text-red-400">เพิ่มขึ้น <i class="ml-1 fa-solid fa-angles-up"></i></p>
+                <% elsif @report_count_comparisons[:less] %>
+                    <p class="text-green-500">ลดลง <i class="fa-solid fa-angles-down"></i></p>
+                <% else %>
+                    <p class="text-gray-500">เท่าเดิม <i class="fa-solid fa-minus"></i></p>
+                <% end %>
+                <p class="text-gray-400">การรายงาน</p>
+                </div>
+            </div>
+            </div>
+            <div class="bg-white flex flex-col flex-1 rounded-xl p-3 px-5 h-full justify-center">
+            <p class="text-gray-500 text-left mb-2">พื้นที่เฝ้าระวัง</p>
+            <div class="flex gap-4 justify-between">
+                <p class="text-4xl 2xl:text-5xl text-red-400" id="report_harmful_counter"><%= @report_harmful_count %></p>
+                <div class="flex flex-col items-end text-sm">
+                <% if @report_harmful_count_comparisons[:more] %>
+                    <p class="text-red-400">เพิ่มขึ้น <i class="ml-1 fa-solid fa-angles-up"></i></p>
+                <% elsif @report_harmful_count_comparisons[:less] %>
+                    <p class="text-green-500">ลดลง <i class="fa-solid fa-angles-down"></i></p>
+                <% else %>
+                    <p class="text-gray-500">เท่าเดิม <i class="fa-solid fa-minus"></i></p>
+                <% end %>
+                <p class="text-gray-400">พื้นที่</p>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-col flex-3 bg-[#F3F3F3] rounded-xl p-5 gap-2">
+        <p class="text-lg text-gray-500">สถิติไฟไหม้ตามพื้นที่วันนี้</p>
+        <div class="flex flex-col overflow-scroll rounded-lg gap-2 no-scrollbar" id="top-districts" data-admin-map-target="topDistricts">
+        <% @top_districts.each do |district| %>
+        <button 
+            class="flex bg-white rounded-lg px-3 py-1 justify-between text-start hover:bg-gray-50 transition-all cursor-pointer" 
+            data-action="click->admin-map#toggleAreaPolygon"
+            data-admin-map-target="areaButton"
+            data-district="<%= district.district %>">
+            <p class="w-[60%] text-gray-600 text-base line-clamp-1"><%= district.district %></p>
+            <p class="text-[#FF392F]"><%= district.district_count %> จุด</p>
+        </button>
+        <% end %>
+        </div>
+    </div>
+</div>

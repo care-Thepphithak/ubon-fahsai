@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: "Test Area"
+  coordinates: <%= [[15.2313, 104.8567], [15.2314, 104.8568], [15.2315, 104.8568], [15.2315, 104.8567], [15.2313, 104.8567]].to_json %>
+
+two:
+  name: "Test Area 2"
+  created_at: 2021-06-02 00:00:00
+  updated_at: 2021-06-02 00:00:00
+  coordinates: [[15.216737857245673, 104.86441710314403], [15.219926459031183, 104.86705846834863], [15.217855943886963, 104.86662897807143]]

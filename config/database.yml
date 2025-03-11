@@ -22,7 +22,10 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: storage/test.sqlite3
+  username: ubon-fahsai-local
+  password: postgres
+  host: localhost
+  database: ubon-fahsai-local-test
 
 
 # Store production database in the storage/ directory, which by default

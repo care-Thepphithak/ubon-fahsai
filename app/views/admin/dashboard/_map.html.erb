@@ -1,0 +1,19 @@
+<div class="w-full h-full relative">
+    <div data-admin-map-target="map" class="rounded-xl min-h-[400px] h-full z-0"></div>
+    <div class="w-full max-w-48 absolute top-3 right-3 z-10">
+        <select name="areaFilter"
+                class="bg-white shadow-sm text-gray-500 p-2 py-[5px] rounded-lg w-full appearance-none outline-none hover:bg-gray-50 transition-all cursor-pointer"
+                data-action="change->admin-map#drawAreaPolygon"
+                data-admin-map-target="areaSelect">
+            <option value="">เลือกพื้นที่</option>
+            <% @areas.each do |area| %>
+            <option value="<%= area.id %>" data-coordinates="<%= area.coordinates.to_json %>" <%= 'selected' if params[:areaFilter] == area.id.to_s %> class="line-clamp-1">
+                <%= area.name %>
+            </option>
+            <% end %>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+            <i class="fa-solid fa-angle-down"></i>
+        </div>
+    </div>
+</div>

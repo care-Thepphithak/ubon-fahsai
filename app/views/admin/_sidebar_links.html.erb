@@ -1,0 +1,9 @@
+<%= link_to admin_dashboard_index_url, class: "flex items-center p-2 px-3 w-full rounded-lg #{active_link_class(admin_dashboard_index_path)}" do %>
+  <i class="fa-solid fa-house h-6 w-6"></i>
+  <span class="ml-2">หน้าหลัก</span>
+<% end %>
+
+<%= link_to admin_areas_path, class: "flex items-center p-2 px-3 w-full rounded-lg #{active_link_class(admin_areas_path)}" do %>
+  <i class="fa-solid fa-map h-6 w-6"></i>
+  <span class="ml-2">จัดการพื้นที่</span>
+<% end %>

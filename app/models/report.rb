@@ -2,21 +2,36 @@ class Report < ApplicationRecord
   include ActionView::Helpers::DateHelper
 
   has_many_attached :images
+  has_many :area_reports, dependent: :destroy
+  has_many :areas, through: :area_reports
+
+  TAGS = %w[ไฟป่า เผาไร่อ้อย เผานาข้าว เผาไร่อื่นๆ ไฟไหม้บ้าน ไฟไหม้รถ ไฟไหม้โรงงาน เผาขยะ].freeze
+
+  MAX_SEVERITY = 100
+  SEVERITIES = %w[เล็กน้อย ลุกลาม เฝ้าระวัง ปานกลาง รุนแรง รุนแรงมาก วิกฤติ].freeze
+  SEVERITY_LEVELS = begin
+    step = MAX_SEVERITY / SEVERITIES.size
+    SEVERITIES.each_with_index.map { |label, i| [ label, (i * step + 1)..((i + 1) * step) ] }.to_h.freeze
+  end
+
+  validate :tags_must_be_valid
+  validates :description, length: { maximum: 300 }
+  validates :severity_level, inclusion: { in: SEVERITY_LEVELS.keys }
 
   def self.count_today
-    where(created_at: Date.today.beginning_of_day..Date.today.end_of_day).count
+    where(created_at: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day).count
   end
 
   def self.count_yesterday
-    where(created_at: Date.yesterday.beginning_of_day..Date.yesterday.end_of_day).count
+    where(created_at: Time.zone.yesterday.beginning_of_day..Time.zone.yesterday.end_of_day).count
   end
 
   def self.count_harmful_today
-    where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ], created_at: Date.today.beginning_of_day..Date.today.end_of_day).count
+    where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ], created_at: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day).count
   end
 
   def self.count_harmful_yesterday
-    where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ], created_at: Date.yesterday.beginning_of_day..Date.yesterday.end_of_day).count
+    where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ], created_at: Time.zone.yesterday.beginning_of_day..Time.zone.yesterday.end_of_day).count
   end
 
   def self.count_harmful_reports
@@ -24,12 +39,19 @@ class Report < ApplicationRecord
   end
 
   def self.top_districts
-    select("split_part(reverse(split_part(reverse(location_name), 'จังหวัด', 1)), ' ', -2) AS district, COUNT(*) AS district_count")
-      .where("location_name LIKE ?", "%จังหวัด%")
-      .where("created_at >= ?", Date.today.beginning_of_day)
-      .group("district")
+    joins(:areas)
+      .select("areas.name as district, areas.coordinates as coordinates, COUNT(*) AS district_count")
+      .where("reports.created_at >= ?", Time.zone.today.beginning_of_day)
+      .group("areas.name, areas.coordinates")
       .order(Arel.sql("district_count DESC"))
-      .limit(3)
+  end
+
+  def self.severity_label(value)
+    SEVERITY_LEVELS.find { |_label, range| range.cover?(value.to_i) }&.first || SEVERITIES.last
+  end
+
+  def self.severity_levels_json
+    SEVERITY_LEVELS.transform_values(&:max).to_json
   end
 
   def as_json(options = {})
@@ -52,6 +74,10 @@ class Report < ApplicationRecord
   validate :tags_must_be_valid
   validates :description, length: { maximum: 300 }
   validates :severity_level, inclusion: { in: SEVERITY_LEVELS.keys }
+  validate :latlong_must_be_within_user_areas
+  validates :lat, presence: { message: "ไม่พบข้อมูลละติจูด" }
+  validates :long, presence: { message: "ไม่พบข้อมูลลองจิจูด" }
+  validates :location_name, presence: { message: "ไม่พบข้อมูลชื่อสถานที่" }
 
   class << self
     def severity_label(value)
@@ -93,6 +119,43 @@ class Report < ApplicationRecord
   end
 
   def images_urls
-    images.attached? ? images.map { |image| Rails.application.routes.url_helpers.minio_proxy_url(image.blob.key, protocol: "https", host: "ubon-fahsai-dev.odd.works") } : []
+    host = Rails.env.development? ? "localhost:3000" : "ubon-fahsai-dev.odd.works"
+    protocol = Rails.env.development? ? "http" : "https"
+
+    images.attached? ? images.map { |image| Rails.application.routes.url_helpers.minio_proxy_url(image.blob.key, protocol: protocol, host: host) } : []
+  end
+
+  def latlong_must_be_within_user_areas
+    return unless Current.user.areas.present?
+
+    user_areas = Current.user.areas.map(&:coordinates)
+    user_areas = user_areas.map { |area| area.map { |coordinate| coordinate.to_fs } }
+
+    if user_areas.none? { |area| point_in_polygon?([ lat.to_f, long.to_f ], area) }
+      errors.add(:base, "ตำแหน่งนี้ไม่ได้อยู่ในพื้นที่ที่รับผิดชอบ")
+    end
+  end
+
+  def point_in_polygon?(point, polygon)
+    x, y = point
+    inside = false
+
+    parsed_polygon = polygon.map do |coord_string|
+      coords = coord_string.gsub(/[\[\]]/, "").split(",").map(&:to_f)
+      coords
+    end
+
+    j = parsed_polygon.size - 1
+    (0...parsed_polygon.size).each do |i|
+      xi, yi = parsed_polygon[i]
+      xj, yj = parsed_polygon[j]
+
+      intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)
+      inside = !inside if intersect
+
+      j = i
+    end
+
+    inside
   end
 end

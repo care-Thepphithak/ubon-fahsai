@@ -3,6 +3,10 @@ require "test_helper"
 class ReportsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @report = reports(:one)
+    @user = users(:one)
+    @area = areas(:one)
+
+    post session_url, params: { email_address: @user.email_address, password: "password" }
   end
 
   test "should get index" do
@@ -10,39 +14,39 @@ class ReportsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should get new" do
-    get new_report_url
-    assert_response :success
-  end
-
   test "should create report" do
     assert_difference("Report.count") do
-      post reports_url, params: { report: { lat: @report.lat, long: @report.long } }
+      post reports_url, params: {
+        report: {
+          lat: @report.lat,
+          long: @report.long,
+          location_name: "Test Location",
+          description: "Test Description",
+          severity_level: "ลุกลาม",
+          area_ids: @area.id.to_s,
+          tags: [ "ไฟป่า", "เผาไร่อ้อย" ].to_json,
+          images: { "0" => fixture_file_upload("fire.jpg", "image/jpg") }
+        }
+      }
     end
 
-    assert_redirected_to report_url(Report.last)
+    assert_redirected_to root_path
+    assert_equal "Test Location", Report.last.location_name
   end
 
-  test "should show report" do
-    get report_url(@report)
-    assert_response :success
-  end
+  test "should fail to create report with invalid params" do
+    post reports_url, params: {
+      report: {
+        lat: nil,
+        long: nil,
+        area_ids: "",
+        location_name: "",
+        description: "",
+        severity_level: "",
+        tags: [].to_json
+      }
+    }
 
-  test "should get edit" do
-    get edit_report_url(@report)
-    assert_response :success
-  end
-
-  test "should update report" do
-    patch report_url(@report), params: { report: { lat: @report.lat, long: @report.long } }
-    assert_redirected_to report_url(@report)
-  end
-
-  test "should destroy report" do
-    assert_difference("Report.count", -1) do
-      delete report_url(@report)
-    end
-
-    assert_redirected_to reports_url
+    assert_response :not_acceptable
   end
 end

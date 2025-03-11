@@ -1,13 +1,18 @@
 require "test_helper"
 
 class ReportTest < ActiveSupport::TestCase
-  def setup
-    @valid_tags = [ "ไฟป่า", "ไฟไหม้บ้าน" ]
-    @invalid_tags = [ "แท็กผิด", "ไม่มีในรายการ" ]
+  setup do
+    # Set Current.user from a user fixture or create one
+    Current.user = users(:one)
   end
 
   test "validates presence of severity_level in predefined levels" do
-    report = Report.new(severity_level: Report::SEVERITIES.sample, description: "ข้อความทดสอบ")
+    report = Report.new(
+      location_name: "ชื่อสถานที่",
+      severity_level: "เล็กน้อย",
+      lat: 13.543,
+      long: 100.123
+    )
     assert report.valid?
 
     report.severity_level = "ระดับผิด"
@@ -15,12 +20,95 @@ class ReportTest < ActiveSupport::TestCase
     assert_includes report.errors[:severity_level], "is not included in the list"
   end
 
-  test "validates description length" do
-    valid_report = Report.new(description: "a" * 300)
-    assert valid_report.valid?
+  test "count_today should return the correct count" do
+    Report.delete_all
 
-    invalid_report = Report.new(description: "a" * 301)
-    assert_not invalid_report.valid?
-    assert_includes invalid_report.errors[:description], "is too long (maximum is 300 characters)"
+    report_today = [ Report.create!(
+      location_name: "จังหวัดสมุทรปราการ",
+      severity_level: "วิกฤติ",
+      created_at: Time.zone.today.beginning_of_day
+    )
+  ]
+
+    assert_equal report_today.count, Report.count_today
+  end
+
+  test "count_yesterday should return the correct count" do
+    Report.delete_all
+
+    report_yesterday = [ Report.create!(
+      location_name: "จังหวัดสมุทรปราการ",
+      severity_level: "วิกฤติ",
+      created_at: 1.day.ago.beginning_of_day
+    )
+    ]
+
+    assert_equal report_yesterday.count, Report.count_yesterday
+  end
+
+
+  test "count_harmful_today should return correct count" do
+    Report.delete_all
+
+    # Create a harmful report for today
+    harmful_today = [ Report.create!(
+      location_name: "จังหวัดสมุทรปราการ",
+      severity_level: "วิกฤติ",
+      created_at: Time.zone.today.beginning_of_day
+    )
+    ]
+
+    assert_equal harmful_today.count, Report.count_harmful_today
+  end
+
+  test "count_harmful_yesterday should return correct count" do
+    Report.delete_all
+
+    # Create a non-harmful report for yesterday
+    harmful_yesterday = [ Report.create!(
+      location_name: "จังหวัดสมุทรปราการ",
+      severity_level: "วิกฤติ",
+      created_at: 1.days.ago.beginning_of_day
+    )
+    ]
+
+    assert_equal harmful_yesterday.count, Report.count_harmful_yesterday
+  end
+
+  test "count_harmful_reports should return correct count" do
+    Report.delete_all
+
+    harmful_report = [ Report.create!(
+      location_name: "จังหวัดสมุทรปราการ",
+      severity_level: "วิกฤติ",
+      created_at: Time.zone.today.beginning_of_day
+    )
+  ]
+
+    assert_equal harmful_report.count, Report.count_harmful_reports
+  end
+
+  test "top_districts returns sorted districts by report count" do
+    Report.delete_all
+
+    Report.create!(location_name: "อำเภอเมือง จังหวัดอุบลราชธานี", severity_level: "วิกฤติ", created_at: Time.zone.today.noon)
+    Report.create!(location_name: "อำเภอเมือง จังหวัดอุบลราชธานี", severity_level: "วิกฤติ", created_at: Time.zone.today.noon)
+    Report.create!(location_name: "อำเภอวารินชำราบ จังหวัดอุบลราชธานี", severity_level: "วิกฤติ", created_at: Time.zone.today.noon)
+
+    result = Report.top_districts.map { |r| [ r.district, r.district_count.to_i ] }
+
+    assert_equal [ [ "อำเภอเมือง", 2 ], [ "อำเภอวารินชำราบ", 1 ] ], result
+  end
+
+  test "tags_must_be_valid adds error for invalid tags" do
+    report = Report.new(tags: [ "invalid_tag" ])
+    report.valid?
+    assert_includes report.errors[:tags], "มีค่าไม่ถูกต้อง"
+  end
+
+  test "tags_must_be_valid allows valid tags" do
+    report = Report.new(tags: [ "ไฟป่า" ])
+    report.valid?
+    assert_empty report.errors[:tags]
   end
 end

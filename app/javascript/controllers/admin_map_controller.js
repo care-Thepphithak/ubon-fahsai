@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import { createConsumer } from "@rails/actioncable"
 
 export default class extends Controller {
-  static targets = ["map", "modal", "reports", "fireImages", "locationName", "severityLevel", "createdAt", "description", "topDistricts"]
+  static targets = ["map", "modal", "reports", "fireImages", "locationName", "severityLevel", "createdAt", "description", "topDistricts", "areaButton", "areaSelect"];
   static values = {
     reports: Array,
     oldLat: String,
@@ -39,11 +39,72 @@ export default class extends Controller {
 
     map.on("locationerror", () => {
       this.removeLoadingLocationMessage(map, loadingControl);
-      alert("Geolocation permission denied or unavailable.");
+      // TODO: Show error message with more aesthetic way
+      console.log("Geolocation permission denied or unavailable.");
     });
 
     this.displayLocations(map)
     this.subscribeToReportChannel(map);
+  }
+
+  toggleAreaPolygon(event) {
+    const button = event.currentTarget;
+    const isSelected = button.classList.contains('bg-[#FF6159]');
+    
+    this.areaButtonTargets.forEach(btn => {
+      btn.classList.remove('bg-[#FF6159]', 'text-white');
+      btn.classList.add('bg-white', 'hover:bg-gray-50');
+      btn.querySelectorAll('p').forEach(p => p.classList.remove('text-white'));
+    });
+
+    if (!isSelected) {
+      const districtName = button.dataset.district;
+      const matchingOption = Array.from(this.areaSelectTarget.options)
+      .find(option => option.text.trim() === districtName);
+
+      if (matchingOption) {
+        this.areaSelectTarget.value = matchingOption.value;
+        this.areaSelectTarget.dispatchEvent(new Event('change'));
+      }
+      button.classList.remove('bg-white', 'hover:bg-gray-50');
+      button.classList.add('bg-[#FF6159]');
+      button.querySelectorAll('p').forEach(p => p.classList.add('text-white'));
+    } else {
+      this.areaSelectTarget.value = '';
+      this.areaSelectTarget.dispatchEvent(new Event('change'));
+    }
+  }
+
+  resetToggleAreaMenu() {
+    this.areaButtonTargets.forEach(btn => {
+      btn.classList.remove('bg-[#FF6159]', 'text-white');
+      btn.classList.add('bg-white', 'hover:bg-gray-50');
+      btn.querySelectorAll('p').forEach(p => p.classList.remove('text-white'));
+    });
+  }
+
+  drawAreaPolygon(event) {
+    this.resetToggleAreaMenu();
+
+    this.map.eachLayer((layer) => {
+      if (layer instanceof L.Polygon) {
+        this.map.removeLayer(layer);
+      }
+    });
+
+    const selectedOption = event.target.selectedOptions[0];
+    if (!selectedOption.value) return;
+
+    const coordinates = JSON.parse(selectedOption.dataset.coordinates);
+    if (!coordinates) return;
+
+    const polygon = L.polygon(coordinates, { 
+      fillOpacity: 0.08,
+      color: '#FF6159',
+      weight: 2
+    }).addTo(this.map);
+    
+    this.map.fitBounds(polygon.getBounds());
   }
 
   displayLocations(map) {
@@ -160,7 +221,11 @@ export default class extends Controller {
   }
 
   closeModal() {
-    this.modalTarget.classList.add('hidden');
+    this.modalTarget.classList.add('opacity-out-50');
+    setTimeout(() => {
+      this.modalTarget.classList.remove('opacity-out-50');
+      this.modalTarget.classList.add('hidden');
+    }, 300);
   }
 
   createColoredMarker(color) {
@@ -185,10 +250,14 @@ export default class extends Controller {
   handleNewReport(report, topDistricts, map) {
     this.topDistrictsTarget.innerHTML = "";
     const newTop = topDistricts.map((location) =>
-      `<div class="flex bg-white rounded-lg px-3 py-1 justify-between">
-                <p class="w-[60%] text-gray-600 text-base">${location.district}</p>
-                <p class="text-[#FF392F]">${location.district_count} จุด</p>
-      </div>`
+      `<button 
+          class="flex bg-white rounded-lg px-3 py-1 justify-between text-start hover:bg-gray-50 transition-all cursor-pointer" 
+          data-action="click->admin-map#toggleAreaPolygon"
+          data-admin-map-target="areaButton"
+          data-district="${location.district}">
+          <p class="w-[60%] text-gray-600 text-base line-clamp-1">${location.district}</p>
+          <p class="text-[#FF392F]">${location.district_count} จุด</p>
+      </button>`
     );
 
     this.topDistrictsTarget.innerHTML = newTop.join("");

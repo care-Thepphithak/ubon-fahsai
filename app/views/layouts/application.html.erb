@@ -11,7 +11,7 @@
     <%= yield :head %>
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+    <%= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
@@ -22,6 +22,7 @@
     <%= stylesheet_link_tag 'leaflet' %>
 
     <%= javascript_include_tag 'leaflet/leaflet', defer: true %>
+    <%= javascript_include_tag 'leaflet/Leaflet.Editable', defer: true %>
     <script>
       var customIconUrl = "<%= asset_path("fire-icon.svg") %>";
     </script>

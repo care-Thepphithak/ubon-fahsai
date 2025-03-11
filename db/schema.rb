@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_24_110000) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_10_093326) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,6 +42,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_24_110000) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "area_reports", force: :cascade do |t|
+    t.bigint "area_id", null: false
+    t.bigint "report_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["area_id"], name: "index_area_reports_on_area_id"
+    t.index ["report_id"], name: "index_area_reports_on_report_id"
+  end
+
+  create_table "areas", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.jsonb "coordinates", default: []
+  end
+
   create_table "reports", force: :cascade do |t|
     t.string "lat"
     t.string "long"
@@ -62,6 +78,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_24_110000) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "user_areas", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "area_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["area_id"], name: "index_user_areas_on_area_id"
+    t.index ["user_id"], name: "index_user_areas_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email_address", null: false
     t.string "password_digest", null: false
@@ -73,5 +98,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_24_110000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "area_reports", "areas"
+  add_foreign_key "area_reports", "reports"
   add_foreign_key "sessions", "users"
+  add_foreign_key "user_areas", "areas"
+  add_foreign_key "user_areas", "users"
 end
