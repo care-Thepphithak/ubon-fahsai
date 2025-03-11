@@ -2,8 +2,8 @@
 
 one:
   area: one
-  report: one
+  report: report_with_valid_severity_level
 
 two:
   area: two
-  report: two
+  report: report_with_valid_severity_level
