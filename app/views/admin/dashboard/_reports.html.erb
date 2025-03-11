@@ -1,7 +1,20 @@
 <div class="w-full xl:w-[500px] 2xl:w-[600px] bg-[#F3F3F3] flex flex-col p-5 rounded-xl" data-controller="admin-filter" data-admin-filter-reports-value="<%= @reports.to_json %>">
     <div class="mb-4">
         <p class="mb-2 text-lg text-gray-500">กรองข้อมูล</p>
-        <div class="flex gap-2">
+        <div class="relative w-full mt-2">
+            <%= form_tag admin_dashboard_index_path, method: :get do %>
+                <select name="filter" 
+                        onchange="this.form.requestSubmit()"
+                        class="bg-white text-gray-500 p-2 rounded-lg w-full appearance-none outline-none hover:bg-gray-50 transition-all cursor-pointer">
+                    <option value="today" <%= 'selected' if params[:filter] == 'today' %>>การรายงานวันนี้</option>
+                    <option value="all" <%= 'selected' if params[:filter] == 'all' %>>การรายงานทั้งหมด</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                <i class="fa-solid fa-angle-down"></i>
+                </div>
+            <% end %>
+        </div>
+        <div class="flex gap-2 mt-2">
             <div class="relative w-full">
                 <select id="dateFilter" class="bg-white text-gray-500 p-2 rounded-lg w-full appearance-none outline-none hover:bg-gray-50 transition-all cursor-pointer" data-action="change->admin-filter#filterByDateRange">
                 <option value="latest">ล่าสุด</option>
