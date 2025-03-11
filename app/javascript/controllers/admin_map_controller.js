@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import { createConsumer } from "@rails/actioncable"
 
 export default class extends Controller {
-  static targets = ["map", "modal", "reports", "fireImages", "locationName", "severityLevel", "createdAt", "description", "topDistricts", "areaButton"]
+  static targets = ["map", "modal", "reports", "fireImages", "locationName", "severityLevel", "createdAt", "description", "topDistricts", "areaButton", "areaSelect"];
   static values = {
     reports: Array,
     oldLat: String,
@@ -57,25 +57,54 @@ export default class extends Controller {
       btn.querySelectorAll('p').forEach(p => p.classList.remove('text-white'));
     });
 
+    if (!isSelected) {
+      const districtName = button.dataset.district;
+      const matchingOption = Array.from(this.areaSelectTarget.options)
+      .find(option => option.text.trim() === districtName);
+
+      if (matchingOption) {
+        this.areaSelectTarget.value = matchingOption.value;
+        this.areaSelectTarget.dispatchEvent(new Event('change'));
+      }
+      button.classList.remove('bg-white', 'hover:bg-gray-50');
+      button.classList.add('bg-[#FF6159]');
+      button.querySelectorAll('p').forEach(p => p.classList.add('text-white'));
+    } else {
+      this.areaSelectTarget.value = '';
+      this.areaSelectTarget.dispatchEvent(new Event('change'));
+    }
+  }
+
+  resetToggleAreaMenu() {
+    this.areaButtonTargets.forEach(btn => {
+      btn.classList.remove('bg-[#FF6159]', 'text-white');
+      btn.classList.add('bg-white', 'hover:bg-gray-50');
+      btn.querySelectorAll('p').forEach(p => p.classList.remove('text-white'));
+    });
+  }
+
+  drawAreaPolygon(event) {
+    this.resetToggleAreaMenu();
+
     this.map.eachLayer((layer) => {
       if (layer instanceof L.Polygon) {
         this.map.removeLayer(layer);
       }
     });
 
-    if (!isSelected) {
-      const coordinates = JSON.parse(button.dataset.coordinates);
-      const polygon = L.polygon(coordinates, { 
-        fillOpacity: 0.08,
-        color: '#FF6159',
-      }).addTo(this.map);
-      
-      this.map.fitBounds(polygon.getBounds());
-      
-      button.classList.remove('bg-white', 'hover:bg-gray-50');
-      button.classList.add('bg-[#FF6159]');
-      button.querySelectorAll('p').forEach(p => p.classList.add('text-white'));
-    }
+    const selectedOption = event.target.selectedOptions[0];
+    if (!selectedOption.value) return;
+
+    const coordinates = JSON.parse(selectedOption.dataset.coordinates);
+    if (!coordinates) return;
+
+    const polygon = L.polygon(coordinates, { 
+      fillOpacity: 0.08,
+      color: '#FF6159',
+      weight: 2
+    }).addTo(this.map);
+    
+    this.map.fitBounds(polygon.getBounds());
   }
 
   displayLocations(map) {
@@ -225,8 +254,8 @@ export default class extends Controller {
           class="flex bg-white rounded-lg px-3 py-1 justify-between text-start hover:bg-gray-50 transition-all cursor-pointer" 
           data-action="click->admin-map#toggleAreaPolygon"
           data-admin-map-target="areaButton"
-          data-coordinates='${JSON.stringify(location.coordinates)}'>
-          <p class="w-[60%] text-gray-600 text-base">${location.district}</p>
+          data-district="${location.district}">
+          <p class="w-[60%] text-gray-600 text-base line-clamp-1">${location.district}</p>
           <p class="text-[#FF392F]">${location.district_count} จุด</p>
       </button>`
     );
