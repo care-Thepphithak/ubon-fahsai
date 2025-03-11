@@ -105,15 +105,46 @@ class ReportTest < ActiveSupport::TestCase
   end
 
   test "top_districts returns sorted districts by report count" do
-    Report.delete_all
+    AreaReport.where(report_id: Report.pluck(:id)).delete_all
+    Report.destroy_all
 
-    Report.create!(location_name: "อำเภอเมือง จังหวัดอุบลราชธานี", severity_level: "วิกฤติ", created_at: Time.zone.today.noon)
-    Report.create!(location_name: "อำเภอเมือง จังหวัดอุบลราชธานี", severity_level: "วิกฤติ", created_at: Time.zone.today.noon)
-    Report.create!(location_name: "อำเภอวารินชำราบ จังหวัดอุบลราชธานี", severity_level: "วิกฤติ", created_at: Time.zone.today.noon)
+    area1 = Area.create!(name: "อำเภอเมือง", coordinates: [ [ 15.2313, 104.8567 ], [ 15.2314, 104.8568 ], [ 15.2315, 104.8568 ], [ 15.2315, 104.8567 ], [ 15.2313, 104.8567 ] ])
+    area2 = Area.create!(name: "อำเภอวารินชำราบ", coordinates: [ [ 15.2313, 104.8567 ], [ 15.2314, 104.8568 ], [ 15.2315, 104.8568 ], [ 15.2315, 104.8567 ], [ 15.2313, 104.8567 ] ])
 
-    result = Report.top_districts.map { |r| [ r.district, r.district_count.to_i ] }
+    report1 = Report.create!(
+      location_name: "สถานที่ในอำเภอเมือง",
+      severity_level: "วิกฤติ",
+      lat: "15.2314",
+      long: "104.8567",
+      created_at: Time.zone.today.noon
+    )
 
-    assert_equal [ [ "อำเภอเมือง", 2 ], [ "อำเภอวารินชำราบ", 1 ] ], result
+    report2 = Report.create!(
+      location_name: "สถานที่ในอำเภอเมืองอีกแห่ง",
+      severity_level: "รุนแรง",
+      lat: "15.2314",
+      long: "104.8567",
+      created_at: Time.zone.today.noon
+    )
+
+    report3 = Report.create!(
+      location_name: "สถานที่ในอำเภอวาริน",
+      severity_level: "วิกฤติ",
+      lat: "15.2314",
+      long: "104.8567",
+      created_at: Time.zone.today.noon
+    )
+
+    AreaReport.create!(area: area1, report: report1)
+    AreaReport.create!(area: area1, report: report2)
+    AreaReport.create!(area: area2, report: report3)
+
+    results = Report.top_districts
+
+    mapped_results = results.map { |r| [ r.district, r.district_count.to_i ] }
+
+    assert_equal 2, results.size
+    assert_equal [ [ "อำเภอเมือง", 2 ], [ "อำเภอวารินชำราบ", 1 ] ], mapped_results
   end
 
   test "tags_must_be_valid adds error for invalid tags" do
