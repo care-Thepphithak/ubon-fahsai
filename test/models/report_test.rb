@@ -38,12 +38,15 @@ class ReportTest < ActiveSupport::TestCase
   end
 
   test "count_yesterday should return the correct count" do
+    AreaReport.where(report_id: Report.pluck(:id)).delete_all
     Report.delete_all
 
     report_yesterday = [ Report.create!(
       location_name: "จังหวัดสมุทรปราการ",
       severity_level: "วิกฤติ",
-      created_at: 1.day.ago.beginning_of_day
+      created_at: 1.day.ago.beginning_of_day,
+      lat: "15.2314",
+      long: "104.8567"
     )
     ]
 
