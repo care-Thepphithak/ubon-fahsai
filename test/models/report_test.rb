@@ -72,13 +72,16 @@ class ReportTest < ActiveSupport::TestCase
   end
 
   test "count_harmful_yesterday should return correct count" do
+    AreaReport.where(report_id: Report.pluck(:id)).delete_all
     Report.delete_all
 
     # Create a non-harmful report for yesterday
     harmful_yesterday = [ Report.create!(
       location_name: "จังหวัดสมุทรปราการ",
       severity_level: "วิกฤติ",
-      created_at: 1.days.ago.beginning_of_day
+      created_at: 1.days.ago.beginning_of_day,
+      lat: "15.2314",
+      long: "104.8567"
     )
     ]
 
