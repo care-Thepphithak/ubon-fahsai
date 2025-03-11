@@ -1,8 +1,18 @@
 require "test_helper"
 
 class ReportTest < ActiveSupport::TestCase
+  setup do
+    # Set Current.user from a user fixture or create one
+    Current.user = users(:one)
+  end
+
   test "validates presence of severity_level in predefined levels" do
-    report = Report.new(severity_level: Report::SEVERITIES.sample, description: "ข้อความทดสอบ")
+    report = Report.new(
+      location_name: "ชื่อสถานที่",
+      severity_level: "เล็กน้อย",
+      lat: 13.543,
+      long: 100.123
+    )
     assert report.valid?
 
     report.severity_level = "ระดับผิด"
@@ -91,13 +101,13 @@ class ReportTest < ActiveSupport::TestCase
   end
 
   test "tags_must_be_valid adds error for invalid tags" do
-    report = Report.new(tags: ["invalid_tag"])
+    report = Report.new(tags: [ "invalid_tag" ])
     report.valid?
     assert_includes report.errors[:tags], "มีค่าไม่ถูกต้อง"
   end
 
   test "tags_must_be_valid allows valid tags" do
-    report = Report.new(tags: ["ไฟป่า"])
+    report = Report.new(tags: [ "ไฟป่า" ])
     report.valid?
     assert_empty report.errors[:tags]
   end
