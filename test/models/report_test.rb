@@ -2,16 +2,17 @@ require "test_helper"
 
 class ReportTest < ActiveSupport::TestCase
   setup do
-    # Set Current.user from a user fixture or create one
-    Current.user = users(:one)
+    @user = users(:one)
+
+    Current.session = Session.new(user: @user)
   end
 
   test "validates presence of severity_level in predefined levels" do
     report = Report.new(
       location_name: "ชื่อสถานที่",
       severity_level: "เล็กน้อย",
-      lat: 13.543,
-      long: 100.123
+      lat: "15.2314",
+      long: "104.8567"
     )
     assert report.valid?
 
