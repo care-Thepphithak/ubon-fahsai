@@ -47,8 +47,6 @@ consumer.subscriptions.create("ReportChannel", {
       const reportContainer = document.getElementById("report-container");
 
       reportContainer.scrollTop = 0;
-
-      console.log("data: ",data.message);
       
       notification.innerHTML = `
         <div class="flex bg-white py-3 pr-[16px] rounded-lg">
