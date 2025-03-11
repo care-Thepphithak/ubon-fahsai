@@ -1,6 +1,6 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-report_one:
+one:
   lat: "15.2314"
   long: "104.8567"
   location_name: "Test Location"
@@ -9,7 +9,7 @@ report_one:
   tags: <%= ["ไฟป่า", "เผาไร่อ้อย"].to_json %>
   created_at: <%= 3.days.ago %>
 
-report_two:
+two:
   lat: MyString
   long: MyString
   created_at: <%= 3.days.ago %>
