@@ -2,16 +2,17 @@ require "test_helper"
 
 class ReportTest < ActiveSupport::TestCase
   setup do
-    # Set Current.user from a user fixture or create one
-    Current.user = users(:one)
+    @user = users(:one)
+
+    Current.session = Session.new(user: @user)
   end
 
   test "validates presence of severity_level in predefined levels" do
     report = Report.new(
       location_name: "ชื่อสถานที่",
       severity_level: "เล็กน้อย",
-      lat: 13.543,
-      long: 100.123
+      lat: "15.2314",
+      long: "104.8567"
     )
     assert report.valid?
 
@@ -21,12 +22,15 @@ class ReportTest < ActiveSupport::TestCase
   end
 
   test "count_today should return the correct count" do
+    AreaReport.where(report_id: Report.pluck(:id)).delete_all
     Report.delete_all
 
     report_today = [ Report.create!(
       location_name: "จังหวัดสมุทรปราการ",
       severity_level: "วิกฤติ",
-      created_at: Time.zone.today.beginning_of_day
+      created_at: Time.zone.today.beginning_of_day,
+      lat: "15.2314",
+      long: "104.8567"
     )
   ]
 
@@ -34,12 +38,15 @@ class ReportTest < ActiveSupport::TestCase
   end
 
   test "count_yesterday should return the correct count" do
+    AreaReport.where(report_id: Report.pluck(:id)).delete_all
     Report.delete_all
 
     report_yesterday = [ Report.create!(
       location_name: "จังหวัดสมุทรปราการ",
       severity_level: "วิกฤติ",
-      created_at: 1.day.ago.beginning_of_day
+      created_at: 1.day.ago.beginning_of_day,
+      lat: "15.2314",
+      long: "104.8567"
     )
     ]
 
@@ -48,27 +55,33 @@ class ReportTest < ActiveSupport::TestCase
 
 
   test "count_harmful_today should return correct count" do
+    AreaReport.where(report_id: Report.pluck(:id)).delete_all
     Report.delete_all
 
     # Create a harmful report for today
     harmful_today = [ Report.create!(
       location_name: "จังหวัดสมุทรปราการ",
       severity_level: "วิกฤติ",
-      created_at: Time.zone.today.beginning_of_day
-    )
+      created_at: Time.zone.today.beginning_of_day,
+      lat: "15.2314",
+      long: "104.8567"
+      )
     ]
 
     assert_equal harmful_today.count, Report.count_harmful_today
   end
 
   test "count_harmful_yesterday should return correct count" do
+    AreaReport.where(report_id: Report.pluck(:id)).delete_all
     Report.delete_all
 
     # Create a non-harmful report for yesterday
     harmful_yesterday = [ Report.create!(
       location_name: "จังหวัดสมุทรปราการ",
       severity_level: "วิกฤติ",
-      created_at: 1.days.ago.beginning_of_day
+      created_at: 1.days.ago.beginning_of_day,
+      lat: "15.2314",
+      long: "104.8567"
     )
     ]
 
@@ -76,12 +89,15 @@ class ReportTest < ActiveSupport::TestCase
   end
 
   test "count_harmful_reports should return correct count" do
+    AreaReport.where(report_id: Report.pluck(:id)).delete_all
     Report.delete_all
 
     harmful_report = [ Report.create!(
       location_name: "จังหวัดสมุทรปราการ",
       severity_level: "วิกฤติ",
-      created_at: Time.zone.today.beginning_of_day
+      created_at: Time.zone.today.beginning_of_day,
+      lat: "15.2314",
+      long: "104.8567"
     )
   ]
 
@@ -101,12 +117,17 @@ class ReportTest < ActiveSupport::TestCase
   end
 
   test "tags_must_be_valid adds error for invalid tags" do
+    AreaReport.where(report_id: Report.pluck(:id)).delete_all
+    Report.delete_all
+
     report = Report.new(tags: [ "invalid_tag" ])
     report.valid?
     assert_includes report.errors[:tags], "มีค่าไม่ถูกต้อง"
   end
 
   test "tags_must_be_valid allows valid tags" do
+    AreaReport.where(report_id: Report.pluck(:id)).delete_all
+    Report.delete_all
     report = Report.new(tags: [ "ไฟป่า" ])
     report.valid?
     assert_empty report.errors[:tags]
