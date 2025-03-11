@@ -19,7 +19,7 @@ class ReportsController < ApplicationController
           message: @report,
           total_count: Report.count_today,
           harmful_count: Report.count_harmful_today,
-          top_districts: Report.top_districts.map { |report| { district: report.district, district_count: report.district_count } }
+          top_districts: Report.top_districts.map { |report| { district: report.district, district_count: report.district_count, coordinates: report.coordinates } }
         })
         format.html { redirect_to root_path, notice: @report.location_name }
         format.json { render :show, status: :created, location: @report }
