@@ -1,8 +1,12 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  lat: MyString
-  long: MyString
+  lat: "15.2314"
+  long: "104.8567"
+  location_name: "Test Location"
+  description: "Test Description"
+  severity_level: "ลุกลาม"
+  tags: <%= ["ไฟป่า", "เผาไร่อ้อย"].to_json %>
   created_at: <%= 3.days.ago %>
 
 two:
