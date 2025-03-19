@@ -8,7 +8,7 @@ module Admin
       total_yesterday_report = @reports.yesterday.count
       @total_today_harmful_report = @reports.today.harmful.count
 
-      @top_districts = Report.top_districts
+      @top_districts = Report.top_districts_today
       @areas = Area.all
 
       @report_trend = compare_counts(@total_today_report, total_yesterday_report)

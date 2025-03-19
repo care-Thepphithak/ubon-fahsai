@@ -29,7 +29,7 @@ class Report < ApplicationRecord
   validates :long, presence: { message: "ไม่พบข้อมูลลองจิจูด" }
   validates :location_name, presence: { message: "ไม่พบข้อมูลชื่อสถานที่" }
 
-  def self.top_districts
+  def self.top_districts_today
     joins(:areas)
       .select("areas.name as district, areas.coordinates as coordinates, COUNT(*) AS district_count")
       .where("reports.created_at >= ?", Time.zone.today.beginning_of_day)
@@ -124,7 +124,7 @@ class Report < ApplicationRecord
       message: self,
       total_count: Report.today.count,
       harmful_count: Report.today.harmful.count,
-      top_districts: Report.top_districts.map { |report| { district: report.district, district_count: report.district_count } }
+      top_districts: Report.top_districts_today.map { |report| { district: report.district, district_count: report.district_count } }
     })
   end
 end

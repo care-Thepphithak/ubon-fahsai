@@ -56,7 +56,7 @@ class ReportTest < ActiveSupport::TestCase
     AreaReport.create!(area: area1, report: report2)
     AreaReport.create!(area: area2, report: report3)
 
-    results = Report.top_districts
+    results = Report.top_districts_today
 
     mapped_results = results.map { |r| [ r.district, r.district_count.to_i ] }
 
