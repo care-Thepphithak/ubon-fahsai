@@ -10,23 +10,20 @@ class ReportsController < BaseController
   # POST /reports or /reports.json
   def create
     @report = Report.new(report_params)
+    @reports = Report.all
 
     respond_to do |format|
       if @report.save
         ActionCable.server.broadcast("report_channel", {
           message: @report,
-          total_count: Report.count_today,
-          harmful_count: Report.count_harmful_today,
-          top_districts: Report.top_districts.map { |report| { district: report.district, district_count: report.district_count } }
+          total_count: @reports.today.count,
+          harmful_count: @reports.today.harmful.count,
+          top_districts: @reports.top_districts.map { |report| { district: report.district, district_count: report.district_count } }
         })
         format.html { redirect_to root_path, notice: @report.location_name }
         format.json { render :show, status: :created, location: @report }
       else
-        format.turbo_stream do
-          location_error = @report.errors.map { |error| error.message }.join("<br/>")
-          error_html = "<p class='mt-2 text-base w-[80%] mx-auto text-gray-500'>#{location_error}</p>"
-          render turbo_stream: turbo_stream.update("location-name", error_html.html_safe)
-        end
+        format.turbo_stream { render_turbo_stream_error }
       end
     end
   end
@@ -37,6 +34,12 @@ class ReportsController < BaseController
       expected_params = params.expect(report: [ :lat, :long, :location_name, :description, :tags, :severity_level, :area_ids, images: [] ])
       area_id_array = expected_params[:area_ids].split(",").map(&:to_i)
       expected_params.merge(area_ids: area_id_array)
+    end
+
+    def render_turbo_stream_error
+      location_error = @report.errors.full_messages.join("<br/>")
+      error_html = "<p class='mt-2 text-base w-[80%] mx-auto text-gray-500'>#{location_error}</p>"
+      render turbo_stream: turbo_stream.update("location-name", error_html.html_safe)
     end
 
     def current_user_areas
