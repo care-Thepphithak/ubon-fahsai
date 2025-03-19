@@ -31,7 +31,7 @@ class Report < ApplicationRecord
   scope :harmful, -> { where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ]) }
 
   validate :tags_must_be_valid
-  validate :latlong_must_be_within_user_areas
+  validate :location_within_responsible_areas?
   validates :description, length: { maximum: 300 }
   validates :severity_level, inclusion: { in: SEVERITY_LEVEL_RANGES.keys }
   validates :lat, presence: { message: "ไม่พบข้อมูลละติจูด" }
@@ -93,7 +93,7 @@ class Report < ApplicationRecord
     end
   end
 
-  def latlong_must_be_within_user_areas
+  def location_within_responsible_areas?
     return unless Current.user.areas.present?
 
     user_areas = Current.user.areas.map(&:coordinates)
