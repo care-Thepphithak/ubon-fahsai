@@ -1,7 +1,5 @@
 module Admin
   class AreasController < BaseController
-    before_action :set_all_user, only: [ :new, :edit, :create, :update ]
-
     def index
       @areas = Area.sorted_by_created_at
     end
@@ -48,10 +46,6 @@ module Admin
       expected_params = params.expect(area: [ :name, :coordinates, user_ids: [] ])
       parsed_coordinates = JSON.parse(expected_params[:coordinates])
       expected_params.merge coordinates: parsed_coordinates
-    end
-
-    def set_all_user
-      @users = User.where(admin: false)
     end
   end
 end
