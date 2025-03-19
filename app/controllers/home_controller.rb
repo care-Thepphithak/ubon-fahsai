@@ -1,6 +1,4 @@
 class HomeController < BaseController
-
-
   def index
     @reports = Report.all.order(created_at: :desc)
     @total_today_report = @reports.today.count
