@@ -38,10 +38,6 @@ class Report < ApplicationRecord
     where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ], created_at: Time.zone.yesterday.beginning_of_day..Time.zone.yesterday.end_of_day).count
   end
 
-  def self.count_harmful_reports
-    where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ]).count
-  end
-
   def self.top_districts
     joins(:areas)
       .select("areas.name as district, areas.coordinates as coordinates, COUNT(*) AS district_count")
