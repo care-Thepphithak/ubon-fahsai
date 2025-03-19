@@ -46,7 +46,7 @@ module Authentication
     end
 
     def determine_redirect_url_for(user)
-      user.is_admin? ? admin_dashboard_index_url : root_url
+      user.admin? ? admin_dashboard_index_url : root_url
     end
 
     def terminate_session
@@ -54,26 +54,15 @@ module Authentication
       cookies.delete(:session_id)
     end
 
-    def require_admin
-      if !authenticated? || !Current.session&.user&.is_admin?
+    def protect_client_access
+      if !authenticated? || !Current.session&.user&.admin?
         redirect_to root_url
       end
     end
 
-    def require_client
-      if !authenticated? || Current.session&.user&.is_admin?
+    def protect_admin_access
+      if !authenticated? || Current.session&.user&.admin?
         redirect_to admin_dashboard_index_url
-      end
-    end
-
-    def restrict_by_user_role
-      return unless authenticated?
-      return if request.path.start_with?("/minio/")
-
-      if Current.session&.user&.is_admin? && !request.path.start_with?("/admin/")
-        redirect_to admin_dashboard_index_url
-      elsif !Current.session&.user&.is_admin? && request.path.start_with?("/admin/")
-        redirect_to root_url
       end
     end
 end
