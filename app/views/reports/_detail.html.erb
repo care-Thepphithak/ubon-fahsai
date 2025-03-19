@@ -42,8 +42,8 @@
                     data-action="input->report#updateSeverity"
                     data-report-target="severitySlider"
                 >
-                <span class="text-sm text-gray-500 absolute start-0 -bottom-6"><%= Report::SEVERITY_LEVELS.keys.first %></span>
-                <span class="text-sm text-gray-500 absolute end-0 -bottom-6"><%= Report::SEVERITY_LEVELS.keys.last %></span>
+                <span class="text-sm text-gray-500 absolute start-0 -bottom-6"><%= Report::SEVERITY_LEVEL_RANGES.keys.first %></span>
+                <span class="text-sm text-gray-500 absolute end-0 -bottom-6"><%= Report::SEVERITY_LEVEL_RANGES.keys.last %></span>
             </div>
             <%= form.hidden_field :severity_level, data: { report_target: "severityInput" }, value: "ปานกลาง" %>        
         </div>

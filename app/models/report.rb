@@ -4,7 +4,12 @@ class Report < ApplicationRecord
   TAGS = %w[ไฟป่า เผาไร่อ้อย เผานาข้าว เผาไร่อื่นๆ ไฟไหม้บ้าน ไฟไหม้รถ ไฟไหม้โรงงาน เผาขยะ].freeze
   SEVERITIES = %w[เล็กน้อย ลุกลาม เฝ้าระวัง ปานกลาง รุนแรง รุนแรงมาก วิกฤติ].freeze
   MAX_SEVERITY = 100
-  SEVERITY_LEVELS = generate_severity_level_ranges
+  SEVERITY_LEVEL_RANGES = -> {
+    step = MAX_SEVERITY / SEVERITIES.size
+    SEVERITIES.each_with_index.map do |label, i|
+      [ label, ((i * step) + 1)..((i + 1) * step) ]
+    end.to_h.freeze
+  }.call.freeze
 
   after_create :broadcast_report
 
@@ -19,7 +24,7 @@ class Report < ApplicationRecord
   validate :tags_must_be_valid
   validate :latlong_must_be_within_user_areas
   validates :description, length: { maximum: 300 }
-  validates :severity_level, inclusion: { in: SEVERITY_LEVELS.keys }
+  validates :severity_level, inclusion: { in: SEVERITY_LEVEL_RANGES.keys }
   validates :lat, presence: { message: "ไม่พบข้อมูลละติจูด" }
   validates :long, presence: { message: "ไม่พบข้อมูลลองจิจูด" }
   validates :location_name, presence: { message: "ไม่พบข้อมูลชื่อสถานที่" }
@@ -33,14 +38,7 @@ class Report < ApplicationRecord
   end
 
   def self.severity_levels_json
-    SEVERITY_LEVELS.transform_values(&:max).to_json
-  end
-
-  def self.generate_severity_level_ranges
-    step = MAX_SEVERITY / SEVERITIES.size
-    SEVERITIES.each_with_index.map do |label, i|
-      [ label, ((i * step) + 1)..((i + 1) * step) ]
-    end.to_h.freeze
+    SEVERITY_LEVEL_RANGES.transform_values(&:max).to_json
   end
 
   def as_json(options = {})
