@@ -83,10 +83,10 @@ class Report < ApplicationRecord
   end
 
   def generated_image_urls
+    return [] unless images.attached?
+
     host = Rails.env.development? ? "localhost:3000" : "ubon-fahsai-dev.odd.works"
     protocol = Rails.env.development? ? "http" : "https"
-
-    return [] unless images.attached?
 
     images.map do |image|
       Rails.application.routes.url_helpers.minio_proxy_url(image.blob.key, protocol: protocol, host: host)
