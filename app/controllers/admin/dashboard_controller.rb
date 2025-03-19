@@ -1,9 +1,11 @@
 module Admin
   class DashboardController < BaseController
     def index
-      @reports = filtered_reports
-      @report_count = Report.count_today
-      @report_harmful_count = Report.count_harmful_today
+      @reports = Report.all.order(created_at: :desc)
+      @reports = @reports.today if params[:filter] != "all"
+      @report_count = @reports.today.count
+      @report_harmful_count = @reports.today.harmful.count
+
       @top_districts = Report.top_districts
       @areas = Area.all
 
@@ -16,14 +18,6 @@ module Admin
         more: Report.count_harmful_today > Report.count_harmful_yesterday,
         less: Report.count_harmful_today < Report.count_harmful_yesterday
       }
-    end
-
-    private
-
-    def filtered_reports
-      reports = Report.all.order(created_at: :desc)
-      return reports if params[:filter] == "all"
-      reports.where("created_at >= ?", Time.zone.today.beginning_of_day)
     end
   end
 end

@@ -5,6 +5,10 @@ class Report < ApplicationRecord
   has_many :area_reports, dependent: :destroy
   has_many :areas, through: :area_reports
 
+  scope :today, -> { where(created_at: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day) }
+  scope :yesterday, -> { where(created_at: Time.zone.yesterday.beginning_of_day..Time.zone.yesterday.end_of_day) }
+  scope :harmful, -> { where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ]) }
+
   TAGS = %w[ไฟป่า เผาไร่อ้อย เผานาข้าว เผาไร่อื่นๆ ไฟไหม้บ้าน ไฟไหม้รถ ไฟไหม้โรงงาน เผาขยะ].freeze
 
   MAX_SEVERITY = 100
