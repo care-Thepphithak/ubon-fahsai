@@ -100,10 +100,9 @@ class Report < ApplicationRecord
     errors.add(:base, "ตำแหน่งนี้ไม่ได้อยู่ในพื้นที่ที่รับผิดชอบ")
   end
 
-  def in_polygon?
+  def within_user_areas?
     report_location = [ lat.to_f, long.to_f ]
     parsed_user_areas = parse_user_areas
-
     parsed_user_areas.any? { |area| point_in_polygon?(report_location, area) }
   end
 
