@@ -1,13 +1,10 @@
 class ReportsController < BaseController
-
   # GET /reports or /reports.json
   def index
     @report = Report.new
-    @user_areas = Current.user.areas.sorted_by_created_at.map { |area| { "#{area.id}" => area.coordinates } }.to_json
+    @user_areas = current_user_areas
 
-    if @user_areas == "[]"
-      redirect_to root_path
-    end
+    redirect_to root_path if @user_areas == "[]"
   end
 
   # POST /reports or /reports.json
@@ -39,5 +36,9 @@ class ReportsController < BaseController
     # Only allow a list of trusted parameters through.
     def report_params
       params.expect(report: [ :lat, :long, :location_name, :description, :tags, :severity_level, :area_ids, images: [] ])
+    end
+
+    def current_user_areas
+      Current.user.areas.sorted_by_created_at.map { |area| { "#{area.id}" => area.coordinates } }.to_json
     end
 end
