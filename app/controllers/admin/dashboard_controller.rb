@@ -3,21 +3,31 @@ module Admin
     def index
       @reports = Report.all.order(created_at: :desc)
       @reports = @reports.today if params[:filter] != "all"
-      @report_count = @reports.today.count
-      @report_harmful_count = @reports.today.harmful.count
+
+      @total_today_report = @reports.today.count
+      total_yesterday_report = @reports.yesterday.count
+      @total_today_harmful_report = @reports.today.harmful.count
 
       @top_districts = Report.top_districts
       @areas = Area.all
 
-      @report_count_comparisons = {
-        more: Report.count_today > Report.count_yesterday,
-        less: Report.count_today < Report.count_yesterday
-      }
+      @report_trend = compare_counts(@total_today_report, total_yesterday_report)
 
-      @report_harmful_count_comparisons = {
-        more: Report.count_harmful_today > Report.count_harmful_yesterday,
-        less: Report.count_harmful_today < Report.count_harmful_yesterday
-      }
+      @harmful_report_trend = compare_counts(
+        @reports.today.harmful.count,
+        @reports.yesterday.harmful.count)
+    end
+
+    private
+
+    def compare_counts(today, yesterday)
+      if today > yesterday
+        :increased
+      elsif today < yesterday
+        :decreased
+      else
+        :unchanged
+      end
     end
   end
 end
