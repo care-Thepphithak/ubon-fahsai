@@ -43,15 +43,15 @@ module Admin
     end
 
     private
-      # Only allow a list of trusted parameters through.
-      def area_params
-        expected_params = params.expect(area: [ :name, :coordinates, user_ids: [] ])
-        parsed_coordinates = JSON.parse(expected_params[:coordinates])
-        expected_params.merge coordinates: parsed_coordinates
-      end
+    # Only allow a list of trusted parameters through.
+    def area_params
+      expected_params = params.expect(area: [ :name, :coordinates, user_ids: [] ])
+      parsed_coordinates = JSON.parse(expected_params[:coordinates])
+      expected_params.merge coordinates: parsed_coordinates
+    end
 
-      def set_all_user
-        @users = User.where(admin: false)
-      end
+    def set_all_user
+      @users = User.where(admin: false)
+    end
   end
 end
