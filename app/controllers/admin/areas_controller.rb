@@ -1,8 +1,4 @@
-class Admin::AreasController < ApplicationController
-  layout "dashboard"
-
-  before_action :require_admin
-  skip_before_action :restrict_by_user_role
+class Admin::AreasController < Admin::BaseController
   before_action :set_all_user, only: [ :new, :edit, :create, :update ]
 
   def index
