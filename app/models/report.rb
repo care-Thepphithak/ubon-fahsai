@@ -2,12 +2,9 @@ class Report < ApplicationRecord
   include ActionView::Helpers::DateHelper
 
   TAGS = %w[ไฟป่า เผาไร่อ้อย เผานาข้าว เผาไร่อื่นๆ ไฟไหม้บ้าน ไฟไหม้รถ ไฟไหม้โรงงาน เผาขยะ].freeze
-  MAX_SEVERITY = 100
   SEVERITIES = %w[เล็กน้อย ลุกลาม เฝ้าระวัง ปานกลาง รุนแรง รุนแรงมาก วิกฤติ].freeze
-  SEVERITY_LEVELS = begin
-    step = MAX_SEVERITY / SEVERITIES.size
-    SEVERITIES.each_with_index.map { |label, i| [ label, (i * step + 1)..((i + 1) * step) ] }.to_h.freeze
-  end
+  MAX_SEVERITY = 100
+  SEVERITY_LEVELS = generate_severity_level_ranges
 
   after_create :broadcast_report
 
@@ -35,12 +32,15 @@ class Report < ApplicationRecord
       .order(Arel.sql("district_count DESC"))
   end
 
-  def self.severity_label(value)
-    SEVERITY_LEVELS.find { |_label, range| range.cover?(value.to_i) }&.first || SEVERITIES.last
-  end
-
   def self.severity_levels_json
     SEVERITY_LEVELS.transform_values(&:max).to_json
+  end
+
+  def self.generate_severity_level_ranges
+    step = MAX_SEVERITY / SEVERITIES.size
+    SEVERITIES.each_with_index.map do |label, i|
+      [ label, ((i * step) + 1)..((i + 1) * step) ]
+    end.to_h.freeze
   end
 
   def as_json(options = {})
