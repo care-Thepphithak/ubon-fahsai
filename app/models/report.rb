@@ -95,12 +95,21 @@ class Report < ApplicationRecord
 
   def location_within_responsible_areas?
     return unless Current.user.areas.present?
+    return if in_polygon?
 
-    user_areas = Current.user.areas.map(&:coordinates)
-    user_areas = user_areas.map { |area| area.map { |coordinate| coordinate.to_fs } }
+    errors.add(:base, "ตำแหน่งนี้ไม่ได้อยู่ในพื้นที่ที่รับผิดชอบ")
+  end
 
-    if user_areas.none? { |area| point_in_polygon?([ lat.to_f, long.to_f ], area) }
-      errors.add(:base, "ตำแหน่งนี้ไม่ได้อยู่ในพื้นที่ที่รับผิดชอบ")
+  def in_polygon?
+    report_location = [ lat.to_f, long.to_f ]
+    parsed_user_areas = parse_user_areas
+
+    parsed_user_areas.any? { |area| point_in_polygon?(report_location, area) }
+  end
+
+  def parse_user_areas
+    Current.user.areas.map(&:coordinates).map do |area|
+      area.map { |coordinate| coordinate.to_fs }
     end
   end
 
