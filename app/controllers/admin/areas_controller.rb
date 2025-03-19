@@ -45,8 +45,9 @@ module Admin
     private
       # Only allow a list of trusted parameters through.
       def area_params
-        expected_area_params = params.expect(area: [ :name, :coordinates, user_ids: [] ])
-        expected_area_params.merge coordinates: JSON.parse(area_params[:coordinates])
+        expected_params = params.expect(area: [ :name, :coordinates, user_ids: [] ])
+        parsed_coordinates = JSON.parse(expected_params[:coordinates])
+        expected_params.merge coordinates: parsed_coordinates
       end
 
       def set_all_user
