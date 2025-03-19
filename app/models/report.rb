@@ -2,7 +2,16 @@ class Report < ApplicationRecord
   include ActionView::Helpers::DateHelper
 
   TAGS = %w[ไฟป่า เผาไร่อ้อย เผานาข้าว เผาไร่อื่นๆ ไฟไหม้บ้าน ไฟไหม้รถ ไฟไหม้โรงงาน เผาขยะ].freeze
-  SEVERITIES = %w[เล็กน้อย ลุกลาม เฝ้าระวัง ปานกลาง รุนแรง รุนแรงมาก วิกฤติ].freeze
+  SEVERITY_MAPPING = {
+    "เล็กน้อย" => "#FE965F",
+    "ลุกลาม" => "#FF7744",
+    "เฝ้าระวัง" => "#FFA500",
+    "ปานกลาง" => "#FF6E37",
+    "รุนแรง" => "#FF6159",
+    "รุนแรงมาก" => "#FF443A",
+    "วิกฤติ" => "#FF392F"
+  }.freeze
+  SEVERITIES = SEVERITY_MAPPING.keys.freeze
   MAX_SEVERITY = 100
   SEVERITY_LEVEL_RANGES = -> {
     step = MAX_SEVERITY / SEVERITIES.size
@@ -50,16 +59,7 @@ class Report < ApplicationRecord
   end
 
   def severity_color
-    case severity_level
-    when "เล็กน้อย" then "#FE965F"
-    when "ลุกลาม" then "#FF7744"
-    when "เฝ้าระวัง" then "#FFA500"
-    when "ปานกลาง" then "#FF6E37"
-    when "รุนแรง" then "#FF6159"
-    when "รุนแรงมาก" then "#FF443A"
-    when "วิกฤติ" then "#FF392F"
-    else "#808080"
-    end
+    SEVERITY_MAPPING[severity_level] || "#808080"
   end
 
   private
