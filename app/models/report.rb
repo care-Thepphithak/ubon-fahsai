@@ -104,7 +104,7 @@ class Report < ApplicationRecord
     report_location = [ lat.to_f, long.to_f ]
     parsed_user_areas = parse_user_areas
 
-    parsed_user_areas.any? { |area| point_in_polygon?(report_location, area) }
+    parsed_user_areas.any? { |area| point_within_polygon?(report_location, area) }
   end
 
   def parse_user_areas
@@ -113,18 +113,16 @@ class Report < ApplicationRecord
     end
   end
 
-  def point_in_polygon?(point, polygon)
+  def point_within_polygon?(point, polygon)
     x, y = point
     inside = false
 
     parsed_polygon = polygon.map do |coord_string|
-      coords = coord_string.gsub(/[\[\]]/, "").split(",").map(&:to_f)
-      coords
+      coord_string.gsub(/[\[\]]/, "").split(",").map(&:to_f)
     end
 
     j = parsed_polygon.size - 1
-    (0...parsed_polygon.size).each do |i|
-      xi, yi = parsed_polygon[i]
+    parsed_polygon.each_with_index do |(xi, yi), i|
       xj, yj = parsed_polygon[j]
 
       intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)
