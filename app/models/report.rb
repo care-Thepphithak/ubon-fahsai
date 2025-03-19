@@ -1,6 +1,16 @@
 class Report < ApplicationRecord
   include ActionView::Helpers::DateHelper
 
+  TAGS = %w[ไฟป่า เผาไร่อ้อย เผานาข้าว เผาไร่อื่นๆ ไฟไหม้บ้าน ไฟไหม้รถ ไฟไหม้โรงงาน เผาขยะ].freeze
+  MAX_SEVERITY = 100
+  SEVERITIES = %w[เล็กน้อย ลุกลาม เฝ้าระวัง ปานกลาง รุนแรง รุนแรงมาก วิกฤติ].freeze
+  SEVERITY_LEVELS = begin
+    step = MAX_SEVERITY / SEVERITIES.size
+    SEVERITIES.each_with_index.map { |label, i| [ label, (i * step + 1)..((i + 1) * step) ] }.to_h.freeze
+  end
+
+  after_create :broadcast_report
+
   has_many_attached :images
   has_many :area_reports, dependent: :destroy
   has_many :areas, through: :area_reports
@@ -9,34 +19,13 @@ class Report < ApplicationRecord
   scope :yesterday, -> { where(created_at: Time.zone.yesterday.beginning_of_day..Time.zone.yesterday.end_of_day) }
   scope :harmful, -> { where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ]) }
 
-  TAGS = %w[ไฟป่า เผาไร่อ้อย เผานาข้าว เผาไร่อื่นๆ ไฟไหม้บ้าน ไฟไหม้รถ ไฟไหม้โรงงาน เผาขยะ].freeze
-
-  MAX_SEVERITY = 100
-  SEVERITIES = %w[เล็กน้อย ลุกลาม เฝ้าระวัง ปานกลาง รุนแรง รุนแรงมาก วิกฤติ].freeze
-  SEVERITY_LEVELS = begin
-    step = MAX_SEVERITY / SEVERITIES.size
-    SEVERITIES.each_with_index.map { |label, i| [ label, (i * step + 1)..((i + 1) * step) ] }.to_h.freeze
-  end
-
   validate :tags_must_be_valid
+  validate :latlong_must_be_within_user_areas
   validates :description, length: { maximum: 300 }
   validates :severity_level, inclusion: { in: SEVERITY_LEVELS.keys }
-
-  def self.count_today
-    where(created_at: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day).count
-  end
-
-  def self.count_yesterday
-    where(created_at: Time.zone.yesterday.beginning_of_day..Time.zone.yesterday.end_of_day).count
-  end
-
-  def self.count_harmful_today
-    where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ], created_at: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day).count
-  end
-
-  def self.count_harmful_yesterday
-    where(severity_level: [ "วิกฤติ", "รุนแรงมาก" ], created_at: Time.zone.yesterday.beginning_of_day..Time.zone.yesterday.end_of_day).count
-  end
+  validates :lat, presence: { message: "ไม่พบข้อมูลละติจูด" }
+  validates :long, presence: { message: "ไม่พบข้อมูลลองจิจูด" }
+  validates :location_name, presence: { message: "ไม่พบข้อมูลชื่อสถานที่" }
 
   def self.top_districts
     joins(:areas)
@@ -60,33 +49,6 @@ class Report < ApplicationRecord
       images_urls: images_urls,
       time_ago_message: time_ago_in_words(created_at, datetime: :distance_in_words, locale: :th) + " ที่แล้ว",
     )
-  end
-
-  TAGS = %w[ไฟป่า เผาไร่อ้อย เผานาข้าว เผาไร่อื่นๆ ไฟไหม้บ้าน ไฟไหม้รถ ไฟไหม้โรงงาน เผาขยะ].freeze
-
-  MAX_SEVERITY = 100
-  SEVERITIES = %w[เล็กน้อย ลุกลาม เฝ้าระวัง ปานกลาง รุนแรง รุนแรงมาก วิกฤติ].freeze
-  SEVERITY_LEVELS = begin
-    step = MAX_SEVERITY / SEVERITIES.size
-    SEVERITIES.each_with_index.map { |label, i| [ label, (i * step + 1)..((i + 1) * step) ] }.to_h.freeze
-  end
-
-  validate :tags_must_be_valid
-  validates :description, length: { maximum: 300 }
-  validates :severity_level, inclusion: { in: SEVERITY_LEVELS.keys }
-  validate :latlong_must_be_within_user_areas
-  validates :lat, presence: { message: "ไม่พบข้อมูลละติจูด" }
-  validates :long, presence: { message: "ไม่พบข้อมูลลองจิจูด" }
-  validates :location_name, presence: { message: "ไม่พบข้อมูลชื่อสถานที่" }
-
-  class << self
-    def severity_label(value)
-      SEVERITY_LEVELS.find { |_label, range| range.cover?(value.to_i) }&.first || SEVERITIES.last
-    end
-
-    def severity_levels_json
-      SEVERITY_LEVELS.transform_values(&:max).to_json
-    end
   end
 
   def severity_color
