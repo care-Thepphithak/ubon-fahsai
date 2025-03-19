@@ -4,5 +4,5 @@
     <p id="location-name-bottom-sheet" class="text-center text-lg text-gray-500 pb-[30px]"></p>
 
     <%= form.submit "ยืนยัน", data: { action: "click->bottom-sheet#submit" }, class:["cursor-pointer bg-[#FF6159] w-full text-white hover:bg-[#FF6C64] text-lg px-1 py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] transition-all"] %>
-    <%= button_helper("ยกเลิก", size: 'lg', variant: 'cancel', data: { "action": "click->bottom-sheet#close" }, css_class: 'w-full mt-2') %>
+    <button data-action="click->bottom-sheet#close" class="w-full mt-2 text-lg px-1 py-3 rounded-xl text-center text-[#8D8D8D] hover:text-[#5D5D5D] cursor-pointer hover:scale-[1.01] transition-all">ยกเลิก</button>
 <% end %>
