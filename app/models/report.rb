@@ -65,17 +65,21 @@ class Report < ApplicationRecord
   private
 
   def tags_must_be_valid
-    tags_array = if tags.is_a?(Array)
-      tags
-    elsif tags.present?
-      JSON.parse(tags) rescue []
-    else
-      []
-    end
+    tags_array = parse_tags(tags)
 
-    if tags_array.any? { |tag| !TAGS.include?(tag) }
+    if invalid_tags?(tags_array)
       errors.add(:tags, "มีค่าไม่ถูกต้อง")
     end
+  end
+
+  def parse_tags(tags)
+    return tags if tags.is_a?(Array)
+    return JSON.parse(tags) rescue [] if tags.present?
+    []
+  end
+
+  def invalid_tags?(tags_array)
+    tags_array.any? { |tag| !TAGS.include?(tag) }
   end
 
   def images_urls
