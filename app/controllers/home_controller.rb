@@ -4,12 +4,9 @@ class HomeController < ApplicationController
 
   def index
     @reports = Report.all.order(created_at: :desc)
-    @report_count = Report.count_today
+    @total_today_report = @reports.today.count
+    total_yesterday_report = @reports.yesterday.count
     @user_areas_exist = Current.user.areas.any?
-
-    @report_count_comparisons = {
-      more: Report.count_today > Report.count_yesterday,
-      less: Report.count_today < Report.count_yesterday
-    }
+    @report_trend = compare_counts(@total_today_report, total_yesterday_report)
   end
 end
