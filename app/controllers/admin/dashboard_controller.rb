@@ -17,17 +17,5 @@ module Admin
         @reports.today.harmful.count,
         @reports.yesterday.harmful.count)
     end
-
-    private
-
-    def compare_counts(today, yesterday)
-      if today > yesterday
-        :increased
-      elsif today < yesterday
-        :decreased
-      else
-        :unchanged
-      end
-    end
   end
 end
