@@ -1,6 +1,4 @@
-class ReportsController < ApplicationController
-  before_action :require_client
-  skip_before_action :restrict_by_user_role
+class ReportsController < BaseController
 
   # GET /reports or /reports.json
   def index

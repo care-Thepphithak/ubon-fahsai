@@ -1,6 +1,5 @@
-class HomeController < ApplicationController
-  before_action :require_client
-  skip_before_action :restrict_by_user_role
+class HomeController < BaseController
+
 
   def index
     @reports = Report.all.order(created_at: :desc)
