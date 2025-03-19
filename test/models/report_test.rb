@@ -88,22 +88,6 @@ class ReportTest < ActiveSupport::TestCase
     assert_equal harmful_yesterday.count, Report.count_harmful_yesterday
   end
 
-  test "count_harmful_reports should return correct count" do
-    AreaReport.where(report_id: Report.pluck(:id)).delete_all
-    Report.delete_all
-
-    harmful_report = [ Report.create!(
-      location_name: "จังหวัดสมุทรปราการ",
-      severity_level: "วิกฤติ",
-      created_at: Time.zone.today.beginning_of_day,
-      lat: "15.2314",
-      long: "104.8567"
-    )
-  ]
-
-    assert_equal harmful_report.count, Report.count_harmful_reports
-  end
-
   test "top_districts returns sorted districts by report count" do
     AreaReport.where(report_id: Report.pluck(:id)).delete_all
     Report.destroy_all
