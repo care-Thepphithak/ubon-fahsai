@@ -6,6 +6,10 @@ class ReportsController < ApplicationController
   def index
     @report = Report.new
     @user_areas = Current.user.areas.sorted_by_created_at.map { |area| { "#{area.id}" => area.coordinates } }.to_json
+
+    if @user_areas == "[]"
+      redirect_to root_path
+    end
   end
 
   # POST /reports or /reports.json
