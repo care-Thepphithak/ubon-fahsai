@@ -53,7 +53,7 @@ class Report < ApplicationRecord
   def as_json(options = {})
     super(options).merge(
       severity_color: severity_color,
-      images_urls: images_urls,
+      image_urls: generated_image_urls,
       time_ago_message: time_ago_in_words(created_at, datetime: :distance_in_words, locale: :th) + " ที่แล้ว",
     )
   end
@@ -82,7 +82,7 @@ class Report < ApplicationRecord
     tags_array.any? { |tag| !TAGS.include?(tag) }
   end
 
-  def images_urls
+  def generated_image_urls
     host = Rails.env.development? ? "localhost:3000" : "ubon-fahsai-dev.odd.works"
     protocol = Rails.env.development? ? "http" : "https"
 

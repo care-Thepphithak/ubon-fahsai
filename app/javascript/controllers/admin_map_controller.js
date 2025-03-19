@@ -200,11 +200,11 @@ export default class extends Controller {
   openModal(report) {
     // Create images in div (fireImages)
     this.fireImagesTarget.innerHTML = "";
-    report.images_urls.forEach(image => {
+    report.image_urls.forEach(image => {
       const img = document.createElement('img');
       // Use a relative URL to route the request to your proxy controller
       img.src = image;
-      if (report.images_urls.length === 1) {
+      if (report.image_urls.length === 1) {
         img.classList.add('w-full', 'h-64', 'object-cover', 'rounded-lg');
       } else {
         img.classList.add('w-96', 'h-64', 'object-cover', 'rounded-lg', 'mr-2');
@@ -212,7 +212,7 @@ export default class extends Controller {
       this.fireImagesTarget.appendChild(img);
     });
 
-    // this.fireImagesTarget = report.images_urls[0];
+    // this.fireImagesTarget = report.image_urls[0];
     this.locationNameTarget.innerHTML = report.location_name;
     this.severityLevelTarget.innerHTML = report.severity_level;
     this.createdAtTarget.innerHTML = report.time_ago_message;
