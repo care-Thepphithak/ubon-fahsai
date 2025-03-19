@@ -9,8 +9,7 @@ class ReportsController < BaseController
 
   # POST /reports or /reports.json
   def create
-    area_ids_arr = report_params[:area_ids].split(",").map(&:to_i)
-    @report = Report.new(report_params.merge(area_ids: area_ids_arr))
+    @report = Report.new(report_params)
 
     respond_to do |format|
       if @report.save
@@ -35,7 +34,9 @@ class ReportsController < BaseController
   private
     # Only allow a list of trusted parameters through.
     def report_params
-      params.expect(report: [ :lat, :long, :location_name, :description, :tags, :severity_level, :area_ids, images: [] ])
+      expected_params = params.expect(report: [ :lat, :long, :location_name, :description, :tags, :severity_level, :area_ids, images: [] ])
+      area_id_array = expected_params[:area_ids].split(",").map(&:to_i)
+      expected_params.merge(area_ids: area_id_array)
     end
 
     def current_user_areas
