@@ -23,7 +23,7 @@ class ReportsController < BaseController
         format.html { redirect_to root_path, notice: @report.location_name }
         format.json { render :show, status: :created, location: @report }
       else
-        format.turbo_stream { render_turbo_stream_error }
+        format.turbo_stream { render_report_creation_error }
       end
     end
   end
@@ -36,7 +36,7 @@ class ReportsController < BaseController
       expected_params.merge(area_ids: area_id_array)
     end
 
-    def render_turbo_stream_error
+    def render_report_creation_error
       location_error = @report.errors.full_messages.join("<br/>")
       error_html = "<p class='mt-2 text-base w-[80%] mx-auto text-gray-500'>#{location_error}</p>"
       render turbo_stream: turbo_stream.update("location-name", error_html.html_safe)
