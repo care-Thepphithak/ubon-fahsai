@@ -1,5 +1,4 @@
 class ReportsController < BaseController
-  # GET /reports or /reports.json
   def index
     @report = Report.new
     @user_areas = current_user_areas
@@ -7,19 +6,12 @@ class ReportsController < BaseController
     redirect_to root_path if @user_areas == "[]"
   end
 
-  # POST /reports or /reports.json
   def create
     @report = Report.new(report_params)
     @reports = Report.all
 
     respond_to do |format|
       if @report.save
-        ActionCable.server.broadcast("report_channel", {
-          message: @report,
-          total_count: @reports.today.count,
-          harmful_count: @reports.today.harmful.count,
-          top_districts: @reports.top_districts.map { |report| { district: report.district, district_count: report.district_count } }
-        })
         format.html { redirect_to root_path, notice: @report.location_name }
         format.json { render :show, status: :created, location: @report }
       else
@@ -29,7 +21,6 @@ class ReportsController < BaseController
   end
 
   private
-    # Only allow a list of trusted parameters through.
     def report_params
       expected_params = params.expect(report: [ :lat, :long, :location_name, :description, :tags, :severity_level, :area_ids, images: [] ])
       area_id_array = expected_params[:area_ids].split(",").map(&:to_i)

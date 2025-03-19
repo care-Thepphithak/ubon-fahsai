@@ -158,4 +158,13 @@ class Report < ApplicationRecord
 
     inside
   end
+
+  def broadcast_report
+    ActionCable.server.broadcast("report_channel", {
+      message: self,
+      total_count: Report.today.count,
+      harmful_count: Report.today.harmful.count,
+      top_districts: Report.top_districts.map { |report| { district: report.district, district_count: report.district_count } }
+    })
+  end
 end
