@@ -6,6 +6,11 @@ RSpec.shared_context 'admin_can_login' do
       @user = User.create!(email_address: "john@example.com", password: "password", admin: true)
     end
 
+    it "does not allow anonymous to access admin dashboard" do
+      user_goes_to_admin_dashboard_page
+      user_should_redirect_to_login_page
+    end
+
     it "allows admin to login with valid email and password" do
       user_goes_to_login_page
       user_fill_in_valid_email_and_password
@@ -15,13 +20,15 @@ RSpec.shared_context 'admin_can_login' do
 
     it "does not allow admin to login with invalid email and password" do
       user_goes_to_login_page
-      fill_in "อีเมล", with: "invalid.email@example.com"
-      fill_in "รหัสผ่าน", with: "invalidpassword"
+      user_fill_in_invalid_email_and_password
       user_click_log_in_button
-      expect(page).to have_content("อีเมลหรือรหัสผ่านไม่ถูกต้อง")
+      user_should_notices_email_or_password_is_invalid
     end
 
-    it "does not allow anonymous to access this website" do
+    private
+
+    def user_goes_to_admin_dashboard_page
+      visit admin_dashboard_index_path
     end
 
     def user_goes_to_login_page
@@ -29,8 +36,16 @@ RSpec.shared_context 'admin_can_login' do
     end
 
     def user_fill_in_valid_email_and_password
-      fill_in "อีเมล", with: @user.email_address
-      fill_in "รหัสผ่าน", with: @user.password
+      fill_email_and_password(@user.email_address, @user.password)
+    end
+
+    def user_fill_in_invalid_email_and_password
+      fill_email_and_password("invalid@email.com", "invalidpassword")
+    end
+
+    def fill_email_and_password(email, password)
+      fill_in "อีเมล", with: email
+      fill_in "รหัสผ่าน", with: password
     end
 
     def user_click_log_in_button
@@ -39,6 +54,14 @@ RSpec.shared_context 'admin_can_login' do
 
     def user_should_redirect_to_admin_dashboard
       expect(page).to have_current_path(admin_dashboard_index_path)
+    end
+
+    def user_should_notices_email_or_password_is_invalid
+      expect(page).to have_content("อีเมลหรือรหัสผ่านไม่ถูกต้อง")
+    end
+
+    def user_should_redirect_to_login_page
+      expect(page).to have_current_path(new_session_path)
     end
   end
 end
