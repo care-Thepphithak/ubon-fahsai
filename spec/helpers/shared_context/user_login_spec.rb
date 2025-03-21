@@ -4,7 +4,7 @@ RSpec.shared_context 'user_login' do
   end
 
   def user_goes_to_login_page
-    visit "/session/new"
+    visit new_session_path
   end
 
   def user_fills_in_credentials
