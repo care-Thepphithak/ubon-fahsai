@@ -4,11 +4,15 @@ require_relative '../helpers/shared_context/user_login_spec'
 RSpec.describe "Admin Dashboard", type: :system do
   include_context 'user_login'
 
-  before do
+  context "When user is an admin and already_logged_in" do
     let(:admin_status) { true }
-    user_logs_in_with_valid_credential
-  end
 
-  it "displays the admin dashboard page" do
+    before do
+      user_logs_in_with_valid_credential
+    end
+
+    it "displays the admin dashboard page" do
+      expect(page).to have_content("Admin")
+    end
   end
 end
