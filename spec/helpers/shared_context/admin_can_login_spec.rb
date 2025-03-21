@@ -20,7 +20,7 @@ RSpec.shared_context 'admin_can_login' do
     end
 
     def user_goes_to_login_page
-      visit "/session/new"
+      visit new_session_path
     end
 
     def user_fill_in_valid_email_and_password
