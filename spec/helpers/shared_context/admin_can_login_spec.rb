@@ -14,6 +14,11 @@ RSpec.shared_context 'admin_can_login' do
     end
 
     it "does not allow admin to login with invalid email and password" do
+      user_goes_to_login_page
+      fill_in "อีเมล", with: "invalid.email@example.com"
+      fill_in "รหัสผ่าน", with: "invalidpassword"
+      user_click_log_in_button
+      expect(page).to have_content("อีเมลหรือรหัสผ่านไม่ถูกต้อง")
     end
 
     it "does not allow anonymous to access this website" do
