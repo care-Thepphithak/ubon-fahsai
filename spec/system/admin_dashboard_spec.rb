@@ -11,6 +11,7 @@ RSpec.describe "Admin Dashboard", type: :system do
     let(:today_reports) { all_reports.today }
     let(:total_harmful_reports_today) { today_reports.harmful.count }
     let(:today_reports_oldest_order) { today_reports.reorder(created_at: :asc) }
+    let(:tags) { Report::TAGS }
 
     before do
       user_logs_in_with_valid_credential
@@ -42,6 +43,12 @@ RSpec.describe "Admin Dashboard", type: :system do
       admin_sees_list_of_reports today_reports_oldest_order
     end
 
+    # it "can filter and show reports reference by tag" do
+    #   tags.each do |tag|
+    #     admin_selects_filter_by_tag(tag)
+    #     admin_sees_list_of_reports today_reports.where(tags: tag)
+    #   end
+    # end
 
     private
 
@@ -51,6 +58,11 @@ RSpec.describe "Admin Dashboard", type: :system do
 
     def admin_selects_filter_all_reports
       find('#filterGroup').find('option', text: 'การรายงานทั้งหมด').click
+    end
+
+    def admin_selects_filter_by_tag(tag)
+      find('#tag-sort').find('option', text: tag).click
+      sleep 3
     end
 
     def admin_sees_total_reports_number_equal_to(expected_count)

@@ -6,7 +6,7 @@ today_one:
   location_name: "อำเภอเมือง"
   description: "Test Description"
   severity_level: "ลุกลาม"
-  tags: <%= ["ไฟป่า", "เผาไร่อ้อย"].to_json %>
+  tags: <%= ["เผาไร่อ้อย", "เผานาข้าว"].to_json %>
   created_at: <%= Time.zone.now.change(hour: 9, min: 30) %>
 
 today_two:
