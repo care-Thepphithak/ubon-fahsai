@@ -3,9 +3,17 @@ require_relative '../helpers/shared_context/user_login_spec'
 
 RSpec.describe "Admin Dashboard", type: :system do
   include_context 'user_login'
+  fixtures :reports
+
   TODAY_REPORTS = []
   HARMFUL_REPORTS = []
   ALL_REPORTS = []
+
+  before do
+    ActiveRecord::FixtureSet.create_fixtures('spec/fixtures', 'reports')
+    let(:report) { reports(:one) }
+    puts report.inspect
+  end
 
   context "When user is an admin and already_logged_in and there are reports today" do
     let(:admin_status) { true }
@@ -36,3 +44,6 @@ RSpec.describe "Admin Dashboard", type: :system do
     end
   end
 end
+
+
+# bundle exec rspec spec/system/admin_dashboard_spec.rb

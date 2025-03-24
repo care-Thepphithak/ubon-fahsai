@@ -1,0 +1,26 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  lat: "15.2314"
+  long: "104.8567"
+  location_name: "Test Location"
+  description: "Test Description"
+  severity_level: "ลุกลาม"
+  tags: <%= ["ไฟป่า", "เผาไร่อ้อย"].to_json %>
+  created_at: <%= 3.days.ago %>
+
+two:
+  lat: MyString
+  long: MyString
+  created_at: <%= 3.days.ago %>
+
+report_with_valid_severity_level:
+  lat: 15.216737857245672
+  long: 104.86441710314402
+  created_at: <%= 3.days.ago %>
+  severity_level: <%= Report::SEVERITIES.sample %>
+  description: "This is a valid report with a valid severity level"
+  location_name: "กรุงเทพมหานคร"
+  tags: [ "ไฟป่า" ]
+
+  
