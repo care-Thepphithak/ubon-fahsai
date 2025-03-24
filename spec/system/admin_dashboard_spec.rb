@@ -20,9 +20,9 @@ RSpec.describe "Admin Dashboard", type: :system do
       admin_sees_total_reports_number_equal_to total_reports_today
     end
 
-    # it "displays the number of harmful reports" do
-    #   admin_sees_harmful_reports_number_equal_to(HARMFUL_REPORTS.length)
-    # end
+    it "displays the number of harmful reports" do
+      admin_sees_harmful_reports_number_equal_to(HARMFUL_REPORTS.length)
+    end
 
     # it "displays list of today's reports" do
     #   admin_sees_list_of_reports TODAY_REPORTS
@@ -36,7 +36,15 @@ RSpec.describe "Admin Dashboard", type: :system do
     private
 
     def admin_sees_total_reports_number_equal_to(expected_count)
-      actual_count = find('#report_counter').text.to_i
+      expect_by_element(expected_count, '#report_counter')
+    end
+
+    def  admin_sees_harmful_reports_number_equal_to(expected_count)
+      expect_by_element(expected_count, '#report_counter')
+    end
+
+    def expect_by_element(expected_count, selector)
+      actual_count = find(selector).text.to_i
       expect(actual_count).to eq(expected_count)
     end
   end
