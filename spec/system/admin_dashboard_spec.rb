@@ -4,22 +4,48 @@ require_relative '../helpers/shared_context/user_login_spec'
 RSpec.describe "Admin Dashboard", type: :system do
   include_context 'user_login'
   fixtures :reports
+  fixtures :areas
 
   TODAY_REPORTS = []
   HARMFUL_REPORTS = []
   ALL_REPORTS = []
-
-  before do
-    ActiveRecord::FixtureSet.create_fixtures('spec/fixtures', 'reports')
-    let(:report) { reports(:one) }
-    puts report.inspect
-  end
 
   context "When user is an admin and already_logged_in and there are reports today" do
     let(:admin_status) { true }
 
     before do
       user_logs_in_with_valid_credential
+
+      area1 = Area.create!(name: "อำเภอเมือง", coordinates: [ [ 15.2313, 104.8567 ], [ 15.2314, 104.8568 ], [ 15.2315, 104.8568 ], [ 15.2315, 104.8567 ], [ 15.2313, 104.8567 ] ])
+      area2 = Area.create!(name: "อำเภอวารินชำราบ", coordinates: [ [ 15.2313, 104.8567 ], [ 15.2314, 104.8568 ], [ 15.2315, 104.8568 ], [ 15.2315, 104.8567 ], [ 15.2313, 104.8567 ] ])
+
+      report1 = Report.create!(
+        location_name: "สถานที่ในอำเภอเมือง",
+        severity_level: "วิกฤติ",
+        lat: "15.2314",
+        long: "104.8567",
+        created_at: Time.zone.today.noon
+      )
+
+      report2 = Report.create!(
+        location_name: "สถานที่ในอำเภอเมืองอีกแห่ง",
+        severity_level: "รุนแรง",
+        lat: "15.2314",
+        long: "104.8567",
+        created_at: Time.zone.today.noon
+      )
+
+      report3 = Report.create!(
+        location_name: "สถานที่ในอำเภอวาริน",
+        severity_level: "วิกฤติ",
+        lat: "15.2314",
+        long: "104.8567",
+        created_at: Time.zone.today.noon
+      )
+
+      AreaReport.create!(area: area1, report: report1)
+      AreaReport.create!(area: area1, report: report2)
+      AreaReport.create!(area: area2, report: report3)
     end
 
     it "displays the admin dashboard page" do
