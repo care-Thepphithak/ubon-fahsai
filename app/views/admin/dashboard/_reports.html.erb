@@ -5,6 +5,7 @@
             <%= form_tag admin_dashboard_index_path, method: :get do %>
                 <select name="filter" 
                         onchange="this.form.requestSubmit()"
+                        id="filterGroup"
                         class="bg-white text-gray-500 p-2 rounded-lg w-full appearance-none outline-none hover:bg-gray-50 transition-all cursor-pointer">
                     <option value="today" <%= 'selected' if params[:filter] == 'today' %>>การรายงานวันนี้</option>
                     <option value="all" <%= 'selected' if params[:filter] == 'all' %>>การรายงานทั้งหมด</option>
