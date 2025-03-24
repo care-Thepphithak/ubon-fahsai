@@ -43,12 +43,18 @@ RSpec.describe "Admin Dashboard", type: :system do
       admin_sees_list_of_reports today_reports_oldest_order
     end
 
-    # it "can filter and show reports reference by tag" do
-    #   tags.each do |tag|
-    #     admin_selects_filter_by_tag(tag)
-    #     admin_sees_list_of_reports today_reports.where(tags: tag)
-    #   end
-    # end
+    it "can filter and show reports reference by tag" do
+      tags.each do |tag|
+        admin_selects_filter_by_tag(tag)
+        tag_filtered_reports = today_reports.select do |report|
+          parsed_tags = JSON.parse(report.tags) rescue []
+          parsed_tags.include?(tag)
+        end
+        puts "tag_filtered_reports: #{tag_filtered_reports}"
+        admin_sees_list_of_reports tag_filtered_reports
+        # admin_sees_list_of_reports today_reports.where(tags: tag)
+      end
+    end
 
     private
 
