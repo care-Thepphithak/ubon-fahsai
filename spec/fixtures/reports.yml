@@ -1,11 +1,35 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
+today_one:
   lat: "15.2314"
   long: "104.8567"
-  location_name: "Test Location"
+  location_name: "อำเภอเมือง"
   description: "Test Description"
   severity_level: "ลุกลาม"
+  tags: <%= ["ไฟป่า", "เผาไร่อ้อย"].to_json %>
+
+today_two:
+  lat: "15.2314"
+  long: "104.8567"
+  location_name: "สนามกีฬา"
+  description: "Test Description"
+  severity_level: "รุนแรง"
+  tags: <%= ["ไฟป่า", "เผาไร่อ้อย"].to_json %>
+
+today_three:
+  lat: "15.2314"
+  long: "104.8567"
+  location_name: "สนามบิน"
+  description: "Test Description"
+  severity_level: "วิกฤต"
+  tags: <%= ["ไฟป่า", "เผาไร่อ้อย"].to_json %>
+
+today_four:
+  lat: "15.2314"
+  long: "104.8567"
+  location_name: "สนามบิน"
+  description: "Test Description"
+  severity_level: <%= Report::SEVERITIES.sample %>
   tags: <%= ["ไฟป่า", "เผาไร่อ้อย"].to_json %>
 
 two:
