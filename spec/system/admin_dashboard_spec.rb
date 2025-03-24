@@ -10,6 +10,7 @@ RSpec.describe "Admin Dashboard", type: :system do
     let(:all_reports) { Report.all.order(created_at: :desc) }
     let(:today_reports) { all_reports.today }
     let(:total_harmful_reports_today) { today_reports.harmful.count }
+    let(:today_reports_oldest_order) { today_reports.reorder(created_at: :asc) }
 
     before do
       user_logs_in_with_valid_credential
@@ -36,10 +37,11 @@ RSpec.describe "Admin Dashboard", type: :system do
       admin_sees_list_of_reports all_reports
     end
 
-    it "can filter oldest reports" do
+    it "can filter and show the oldest reports first" do
       admin_selects_filter_oldest_reports
-      admin_sees_list_of_reports_order_by Report.all.today.order(created_at: :asc)
+      admin_sees_list_of_reports today_reports_oldest_order
     end
+
 
     private
 
@@ -74,29 +76,6 @@ RSpec.describe "Admin Dashboard", type: :system do
 
       expect(child_elements.count).to eq(reports_count)
 
-      reports.each_with_index do |report, index|
-        location_name_text = child_elements[index].find('[data-testid="location-name"]').text
-        severity_level_text = child_elements[index].find('[data-testid="severity-level"]').text
-        tags = JSON.parse(report.tags) rescue []
-
-        expect(location_name_text).to eq(report.location_name)
-        expect(severity_level_text).to eq(report.severity_level)
-
-        if tags.any?
-          report_tags = child_elements[index].all('[data-testid="tags"]').map(&:text)
-          expect(report_tags).to match_array(tags)
-        end
-      end
-    end
-
-    def admin_sees_list_of_reports_order_by(reports)
-      sleep 1
-      reports_count = reports.count
-      report_container = find('#report-container')
-
-      child_elements = report_container.all(:xpath, './*').reject { |element| element[:id] == 'notifications' }
-
-      expect(child_elements.count).to eq(reports_count)
       reports.each_with_index do |report, index|
         location_name_text = child_elements[index].find('[data-testid="location-name"]').text
         severity_level_text = child_elements[index].find('[data-testid="severity-level"]').text
