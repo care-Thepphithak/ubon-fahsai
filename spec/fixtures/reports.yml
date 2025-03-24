@@ -23,7 +23,7 @@ today_three:
   long: "104.8567"
   location_name: "กลางเมือง"
   description: "Test Description"
-  severity_level: "วิกฤต"
+  severity_level: "วิกฤติ"
   tags: <%= ["ไฟป่า", "เผาไร่อ้อย"].to_json %>
   created_at: <%= Time.zone.now.change(hour: 11, min: 30) %>
 
