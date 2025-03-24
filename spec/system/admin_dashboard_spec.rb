@@ -92,7 +92,13 @@ RSpec.describe "Admin Dashboard", type: :system do
     end
 
     def admin_select_highlighted_report_pin
-      find('img[alt="Marker"]', match: :first).click
+      expect(page).to have_selector('.leaflet-marker-icon', visible: true)
+
+      execute_script('document.querySelector(".leaflet-marker-icon").scrollIntoView()')
+
+      find('.leaflet-marker-icon', match: :first).click
+
+      expect(page).to have_selector('[data-testid="modal-location-name"]', visible: true)
     end
 
     def admin_sees_report_location_in_modal
