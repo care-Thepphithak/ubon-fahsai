@@ -45,14 +45,9 @@ RSpec.describe "Admin Dashboard", type: :system do
 
     it "can filter and show reports reference by tag" do
       tags.each do |tag|
-        admin_selects_filter_by_tag(tag)
-        tag_filtered_reports = today_reports.select do |report|
-          parsed_tags = JSON.parse(report.tags) rescue []
-          parsed_tags.include?(tag)
-        end
-        puts "tag_filtered_reports: #{tag_filtered_reports}"
+        admin_selects_filter_by_tag tag
+        tag_filtered_reports = today_reports.where("tags @> ?", [ tag ].to_json)
         admin_sees_list_of_reports tag_filtered_reports
-        # admin_sees_list_of_reports today_reports.where(tags: tag)
       end
     end
 
@@ -68,7 +63,6 @@ RSpec.describe "Admin Dashboard", type: :system do
 
     def admin_selects_filter_by_tag(tag)
       find('#tag-sort').find('option', text: tag).click
-      sleep 3
     end
 
     def admin_sees_total_reports_number_equal_to(expected_count)
@@ -86,6 +80,12 @@ RSpec.describe "Admin Dashboard", type: :system do
 
     def admin_sees_list_of_reports(reports)
       reports_count = reports.count
+
+      if reports_count.zero?
+        expect(page).to have_selector('#report-container > *', count: 0)
+        return
+      end
+
       report_container = find('#report-container')
 
       expect(report_container).to have_selector(:xpath, './*', count: reports_count)
