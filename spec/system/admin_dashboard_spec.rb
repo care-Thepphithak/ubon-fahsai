@@ -85,10 +85,13 @@ RSpec.describe "Admin Dashboard", type: :system do
     end
 
     def admin_select_first_report
+      sleep 2
       find('[data-testid="location-name"]', match: :first).click
+      sleep 5
     end
 
     def admin_select_highlighted_report_pin
+      find('img[alt="Marker"]', match: :first).click
     end
 
     def admin_sees_report_information_modal

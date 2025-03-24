@@ -1,8 +1,8 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 today_one:
-  lat: "15.2314"
-  long: "104.8567"
+  lat: "15.231327860908012"
+  long: "104.85921848353864"
   location_name: "อำเภอเมือง"
   description: "Test Description"
   severity_level: "ลุกลาม"
@@ -28,8 +28,8 @@ today_three:
   created_at: <%= Time.zone.now.change(hour: 11, min: 30) %>
 
 today_four:
-  lat: "15.2314"
-  long: "104.8567"
+  lat: "15.227666834217334"
+  long: "104.85803613214266"
   location_name: "สนามบิน"
   description: "Test Description"
   severity_level: <%= Report::SEVERITIES.sample %>
