@@ -51,6 +51,12 @@ RSpec.describe "Admin Dashboard", type: :system do
       end
     end
 
+    it "can view report information" do
+      admin_select_first_report
+      admin_select_highlighted_report_pin
+      admin_sees_report_information_modal
+    end
+
     private
 
     def admin_selects_filter_oldest_reports
@@ -76,6 +82,16 @@ RSpec.describe "Admin Dashboard", type: :system do
     def expect_by_element(expected_count, selector)
       actual_count = find(selector).text.to_i
       expect(actual_count).to eq(expected_count)
+    end
+
+    def admin_select_first_report
+      find('[data-testid="location-name"]', match: :first).click
+    end
+
+    def admin_select_highlighted_report_pin
+    end
+
+    def admin_sees_report_information_modal
     end
 
     def admin_sees_list_of_reports(reports)
