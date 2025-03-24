@@ -95,11 +95,19 @@ RSpec.describe "Admin Dashboard", type: :system do
       find('img[alt="Marker"]', match: :first).click
     end
 
-    def admin_sees_report_information_modal
-      location_name = find('[data-testid="modal-location-name"]').text
-      expect(location_name).to eq(today_reports.first.location_name)
+    def admin_sees_report_location_in_modal
+       location = find('[data-testid="modal-location-name"]').text
+       expect(location).to eq(today_reports.first.location_name)
+    end
 
-      tag
+    def admin_sees_report_severity_level_in_modal
+      severity = find('[data-testid="modal-severity-level"]').text
+      expect(severity).to eq(today_reports.first.severity_level)
+    end
+
+    def  admin_sees_report_description_in_modal
+      description = find('[data-testid="modal-description"]').text
+      expect(description).to eq(today_reports.first.description)
     end
 
     def admin_sees_list_of_reports(reports)
