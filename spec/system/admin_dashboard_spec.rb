@@ -33,10 +33,23 @@ RSpec.describe "Admin Dashboard", type: :system do
 
     it "displays list of all reports" do
       admin_selects_filter_all_reports
-      admin_sees_list_of_reports all_reports
+      admin_sees_list_of_reports all_reports 
     end
 
+    it "can filter older reports" do
+      admin_selects_filter_older_reports
+      admin_sees_list_of_reports 
+
+    end
+
+
     private
+
+    def admin_selects_filter_older_reports
+      find('#dateFilter').find('option', text: 'เก่าสุด').click
+    end
+
+    def 
 
     def admin_selects_filter_all_reports
       find('#filterGroup').find('option', text: 'การรายงานทั้งหมด').click
@@ -56,9 +69,11 @@ RSpec.describe "Admin Dashboard", type: :system do
     end
 
     def admin_sees_list_of_reports(reports)
-      sleep 1
       reports_count = reports.count
       report_container = find('#report-container')
+
+      expect(report_container).to have_selector(:xpath, './*', count: reports_count)
+
       child_elements = report_container.all(:xpath, './*').reject { |element| element[:id] == 'notifications' }
 
       expect(child_elements.count).to eq(reports_count)
