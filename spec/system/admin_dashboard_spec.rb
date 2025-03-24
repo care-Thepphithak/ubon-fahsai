@@ -54,7 +54,9 @@ RSpec.describe "Admin Dashboard", type: :system do
     it "can view report information" do
       admin_select_first_report
       admin_select_highlighted_report_pin
-      admin_sees_report_information_modal
+      admin_sees_report_location_in_modal
+      admin_sees_report_severity_level_in_modal
+      admin_sees_report_description_in_modal
     end
 
     private
@@ -87,7 +89,6 @@ RSpec.describe "Admin Dashboard", type: :system do
     def admin_select_first_report
       sleep 2
       find('[data-testid="location-name"]', match: :first).click
-      sleep 5
     end
 
     def admin_select_highlighted_report_pin
@@ -95,6 +96,10 @@ RSpec.describe "Admin Dashboard", type: :system do
     end
 
     def admin_sees_report_information_modal
+      location_name = find('[data-testid="modal-location-name"]').text
+      expect(location_name).to eq(today_reports.first.location_name)
+
+      tag
     end
 
     def admin_sees_list_of_reports(reports)
