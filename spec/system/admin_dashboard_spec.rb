@@ -53,7 +53,7 @@ RSpec.describe "Admin Dashboard", type: :system do
 
     it "can view report information" do
       admin_select_first_report
-      admin_select_highlighted_report_pin
+      admin_select_highlighted_report_pin_to_open_infomation_modal
       admin_sees_report_location_in_modal
       admin_sees_report_severity_level_in_modal
       admin_sees_report_description_in_modal
@@ -91,11 +91,9 @@ RSpec.describe "Admin Dashboard", type: :system do
       find('[data-testid="location-name"]', match: :first).click
     end
 
-    def admin_select_highlighted_report_pin
+    def admin_select_highlighted_report_pin_to_open_infomation_modal
       expect(page).to have_selector('.leaflet-marker-icon', visible: true)
-
       execute_script('document.querySelector(".leaflet-marker-icon").scrollIntoView()')
-
       find('.leaflet-marker-icon', match: :first).click
 
       expect(page).to have_selector('[data-testid="modal-location-name"]', visible: true)
