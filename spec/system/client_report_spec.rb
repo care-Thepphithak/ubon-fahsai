@@ -215,21 +215,21 @@ RSpec.describe "Client Report", type: :system do
 
   def assign_current_location(latitude, longitude)
     page.execute_script <<-JS
-    window.navigator.geolocation.getCurrentPosition = function(success) {
-      success({ coords: {latitude: #{latitude}, longitude: #{longitude} } });
-    };
+      window.navigator.geolocation.getCurrentPosition = function(success) {
+        success({ coords: {latitude: #{latitude}, longitude: #{longitude} } });
+      };
     JS
   end
 
   def stub_location_name(location_name)
     page.execute_script <<-JS
-    window.fetch = function() {
-      return Promise.resolve({
-        json: function() {
-          return { display_name: "#{location_name}" };
-        }
-      });
-    };
+      window.fetch = function() {
+        return Promise.resolve({
+          json: function() {
+            return { display_name: "#{location_name}" };
+          }
+        });
+      };
     JS
   end
 
