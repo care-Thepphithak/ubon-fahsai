@@ -28,7 +28,8 @@ RSpec.describe "Admin Dashboard", type: :system do
     it "can create a new area" do
       admin_clicks_on_create_new_area_button
       admin_should_have_current_path_as_new_area
-      admin_selects_area_on_map
+      admin_clicks_on_set_polygon_button
+      admin_draws_area_polygon_on_map
       admin_fills_in_area_name
       admin_assigns_area_to_user
       admin_clicks_on_save_area_button
@@ -45,8 +46,8 @@ RSpec.describe "Admin Dashboard", type: :system do
     it "can edit an area's polygon" do
       admin_clicks_on_edit_area_button
       admin_should_have_current_path_as_edit_area
-      admin_clicks_on_edit_polygon_button
-      admin_changes_area_polygon
+      admin_clicks_on_set_polygon_button
+      admin_changes_area_polygon_on_map
       admin_clicks_on_save_area_button
     end
 
@@ -90,6 +91,10 @@ RSpec.describe "Admin Dashboard", type: :system do
 
     def admin_should_have_current_path_as_new_area
       expect(page).to have_current_path(new_admin_area_path)
+    end
+
+    def admin_clicks_on_set_polygon_button
+      click_button('กำหนดพื้นที่')
     end
   end
 end
