@@ -30,7 +30,7 @@ RSpec.describe "Admin areas management", type: :system do
 
       admin_clicks_on_set_polygon_button
       admin_draws_area_polygon_on_map_with_points 4
-      admin_fills_in_area_name
+      admin_fills_in_area_name "New Area"
       admin_assigns_area_to_user
       admin_clicks_on_save_area_button
       admin_should_have_current_path_as_admin_areas
@@ -53,7 +53,7 @@ RSpec.describe "Admin areas management", type: :system do
 
       admin_clicks_on_set_polygon_button
       admin_draws_area_polygon_on_map_with_points 2
-      admin_fills_in_area_name
+      admin_fills_in_area_name "New Area"
       admin_assigns_area_to_user
       admin_sees_content "โปรดระบุพื้นที่ก่อนบันทึก"
     end
@@ -173,7 +173,7 @@ RSpec.describe "Admin areas management", type: :system do
       click_button('กำหนดพื้นที่')
     end
 
-    def admin_fills_in_area_name(area_name = 'New Area')
+    def admin_fills_in_area_name(area_name)
       fill_in('area_name', with: area_name)
     end
 
