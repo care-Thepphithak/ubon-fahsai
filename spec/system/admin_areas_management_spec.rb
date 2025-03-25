@@ -20,12 +20,12 @@ RSpec.describe "Admin Dashboard", type: :system do
       admin_should_see_a_list_of_areas
     end
 
-    it "can show area polygon on map when admin clicks on an area" do
+    it "allows admin to see area polygon on map when admin clicks on an area" do
       admin_clicks_on_an_area
       admin_should_see_area_polygon_on_map
     end
 
-    it "can create a new area" do
+    it "allows admin to create a new area" do
       admin_clicks_on_create_new_area_button
       admin_should_have_current_path_as_new_area
       admin_clicks_on_set_polygon_button
@@ -37,7 +37,7 @@ RSpec.describe "Admin Dashboard", type: :system do
       admin_should_see_a_new_area 'New Area'
     end
 
-    it "can edit an area" do
+    it "allows admin to edit an area" do
       admin_clicks_on_edit_area_button
       admin_should_have_current_path_as_edit_area
       admin_changes_area_name
@@ -47,13 +47,19 @@ RSpec.describe "Admin Dashboard", type: :system do
       admin_should_see_a_new_area 'Edited Area'
     end
 
-    it "can edit an area's polygon" do
+    it "allows admin to edit an area's polygon" do
       admin_clicks_on_edit_area_button
       admin_should_have_current_path_as_edit_area
       admin_click_reset_area_polygon
       admin_clicks_on_set_polygon_button
       admin_draws_area_polygon_on_map_with_points 3
       admin_clicks_on_save_area_button
+    end
+
+    it "does not allow admin to create new area without filling area name" do
+    end
+
+    it "does not allow admin to create new area without setting atleast 3 polygon points" do
     end
 
     private
