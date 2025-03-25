@@ -1,7 +1,7 @@
 require 'rails_helper'
 require_relative '../helpers/shared_context/user_login_spec'
 
-RSpec.describe "Users Login", type: :system do
+describe "Users Login" do
   include_context 'user_login'
 
   context "when user is an admin" do

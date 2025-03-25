@@ -1,7 +1,7 @@
 require 'rails_helper'
 require_relative '../helpers/shared_context/user_login_spec'
 
-RSpec.describe "Admin areas management", type: :system do
+describe "Admin areas management" do
   include_context 'user_login'
   fixtures :areas, :users
 

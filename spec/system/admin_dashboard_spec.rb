@@ -1,7 +1,7 @@
 require 'rails_helper'
 require_relative '../helpers/shared_context/user_login_spec'
 
-RSpec.describe "Admin Dashboard", type: :system do
+describe "Admin Dashboard" do
   include_context 'user_login'
   fixtures :reports
 

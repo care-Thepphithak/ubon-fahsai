@@ -1,4 +1,4 @@
-RSpec.shared_context 'user_login' do
+shared_context 'user_login' do
   before do
     @user = User.create!(email_address: "john@example.com", password: "password", admin: admin_status)
   end

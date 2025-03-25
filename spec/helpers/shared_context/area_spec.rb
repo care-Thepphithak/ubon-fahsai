@@ -1,4 +1,4 @@
-RSpec.shared_context 'area' do
+shared_context 'area' do
   before do
     @area = Area.create!(
       name: "Test Area 1",

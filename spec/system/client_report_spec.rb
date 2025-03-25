@@ -1,8 +1,15 @@
 require 'rails_helper'
 require_relative '../helpers/shared_context/user_login_spec'
 
-RSpec.describe "Client Report", type: :system do
+describe "Client Report" do
   include_context 'user_login'
+
+  CURRENT_LOCATION_NAME = "ถนนศรีณรงค์ ตำบลในเมือง เทศบาลนครอุบลราชธานี ปทุม จังหวัดอุบลราชธานี"
+  LATITUDE_INSIDE_AREA = 15.2284
+  LONGITUDE_INSIDE_AREA = 104.8561
+  LATITUDE_OUTSIDE_AREA = 15.2295
+  LONGITUDE_OUTSIDE_AREA = 104.8560
+
   fixtures :reports
 
   let(:admin_status) { false }
@@ -43,13 +50,6 @@ RSpec.describe "Client Report", type: :system do
 
   context "When a user is a client and has assigned areas" do
     let(:tags) { Report::TAGS }
-
-    CURRENT_LOCATION_NAME = "ถนนศรีณรงค์ ตำบลในเมือง เทศบาลนครอุบลราชธานี ปทุม จังหวัดอุบลราชธานี"
-    LATITUDE_INSIDE_AREA = 15.2284
-    LONGITUDE_INSIDE_AREA = 104.8561
-
-    LATITUDE_OUTSIDE_AREA = 15.2295
-    LONGITUDE_OUTSIDE_AREA = 104.8560
 
     before do
       user_logs_in_with_valid_credential_and_assigned_area
