@@ -29,7 +29,7 @@ RSpec.describe "Admin Dashboard", type: :system do
       admin_clicks_on_create_new_area_button
       admin_should_have_current_path_as_new_area
       admin_clicks_on_set_polygon_button
-      admin_draws_area_polygon_on_map
+      admin_draws_area_polygon_on_map_with_points 4
       admin_fills_in_area_name
       admin_assigns_area_to_user
       admin_clicks_on_save_area_button
@@ -47,7 +47,8 @@ RSpec.describe "Admin Dashboard", type: :system do
       admin_clicks_on_edit_area_button
       admin_should_have_current_path_as_edit_area
       admin_clicks_on_set_polygon_button
-      admin_changes_area_polygon_on_map
+      admin_reset_area_polygon
+      admin_draws_area_polygon_on_map_with_points 3
       admin_clicks_on_save_area_button
     end
 
@@ -97,24 +98,30 @@ RSpec.describe "Admin Dashboard", type: :system do
       click_button('กำหนดพื้นที่')
     end
 
-    def admin_draws_area_polygon_on_map
+    def admin_fills_in_area_name
+      fill_in('area_name', with: 'New Area')
+    end
+
+    def admin_assigns_area_to_user
+      first_checkbox = find('[data-testid="user-assignee"]', match: :first)
+      first_checkbox.check
+    end
+
+    def admin_draws_area_polygon_on_map_with_points(number_of_points)
       map = find('#area-management-map')
       expect(map).to be_present
 
-      coordinates = [
-        { x: 20, y: 20 },
-        { x: 100, y: 20 },
-        { x: 100, y: 100 },
-        { x: 20, y: 100 }
-      ]
+      coordinates = Array.new(number_of_points) do
+        { x: rand(20..200), y: rand(20..200) }
+      end
 
       coordinates.each do |coord|
         map.click(x: coord[:x], y: coord[:y])
         sleep 0.5
       end
 
+      map.click(x: coordinates.first[:x], y: coordinates.first[:y])
       expect(page).to have_selector('.leaflet-interactive', wait: 5)
-      sleep 5
     end
   end
 end
