@@ -66,7 +66,7 @@ RSpec.describe "Admin Dashboard", type: :system do
     end
 
     def admin_should_see_a_list_of_areas
-      areas_elements = page.all('[data-testid="area-list"]')
+      areas_elements = page.all('[data-testid="area-list-item"]')
       expect(areas_elements.size).to eq(areas.size)
 
       areas.each_with_index do |area, index|

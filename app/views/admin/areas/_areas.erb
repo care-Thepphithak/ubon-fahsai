@@ -1,5 +1,5 @@
 <% @areas.each do |area| %>
-    <div class="w-full flex gap-2" data-testid="area-list">
+    <div class="w-full flex gap-2" data-testid="area-list-item">
         <button data-action="click->area-map#showArea" data-coordinates="<%= area.coordinates %>" class="w-full flex text-gray-600 justify-between hover:bg-gray-50 transition-all items-center bg-white p-2 rounded-lg mb-3 cursor-pointer">
         <p class="text-gray-600 text-start ml-2"><%= area.name %></p>
         </button>
