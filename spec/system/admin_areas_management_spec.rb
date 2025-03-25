@@ -46,7 +46,7 @@ RSpec.describe "Admin areas management", type: :system do
       admin_assigns_area_to_user
       admin_clicks_on_save_area_button
 
-      admin_sees_content "โปรดระบุชื่อพื้นที่"
+      admin_sees_message "โปรดระบุชื่อพื้นที่"
     end
 
     it "does not allow admin to create new area without setting atleast 3 polygon points" do
@@ -56,7 +56,7 @@ RSpec.describe "Admin areas management", type: :system do
       admin_fills_in_area_name "New Area"
       admin_assigns_area_to_user
 
-      admin_sees_content "โปรดระบุพื้นที่ก่อนบันทึก"
+      admin_sees_message "โปรดระบุพื้นที่ก่อนบันทึก"
     end
 
     it "does not allow admin to create new area if area name already exist" do
@@ -67,7 +67,7 @@ RSpec.describe "Admin areas management", type: :system do
       admin_assigns_area_to_user
       admin_clicks_on_save_area_button
 
-      admin_sees_content "ชื่อพื้นที่นี้มีอยู่แล้ว"
+      admin_sees_message "ชื่อพื้นที่นี้มีอยู่แล้ว"
     end
 
     it "allows admin to edit an area" do
@@ -95,7 +95,7 @@ RSpec.describe "Admin areas management", type: :system do
       admin_fills_in_area_name ''
       admin_clicks_on_save_area_button
 
-      admin_sees_content "โปรดระบุชื่อพื้นที่"
+      admin_sees_message "โปรดระบุชื่อพื้นที่"
     end
 
     it "does not allow admin to edit an area without setting atleast 3 polygon points" do
@@ -104,7 +104,7 @@ RSpec.describe "Admin areas management", type: :system do
       admin_clicks_on_set_polygon_button
       admin_draws_area_polygon_on_map_with_points 2
 
-      admin_sees_content "โปรดระบุพื้นที่ก่อนบันทึก"
+      admin_sees_message "โปรดระบุพื้นที่ก่อนบันทึก"
     end
 
     it "does not allow admin to edit an area if area name already exist" do
@@ -112,7 +112,7 @@ RSpec.describe "Admin areas management", type: :system do
       admin_fills_in_area_name(areas.second.name)
       admin_clicks_on_save_area_button
 
-      admin_sees_content "ชื่อพื้นที่นี้มีอยู่แล้ว"
+      admin_sees_message "ชื่อพื้นที่นี้มีอยู่แล้ว"
     end
 
     private
@@ -127,12 +127,12 @@ RSpec.describe "Admin areas management", type: :system do
       admin_should_have_current_path_as_new_area
     end
 
-    def admin_sees_content(content)
+    def admin_sees_message(content)
       expect(page).to have_content(content)
     end
 
     def admin_goes_to_areas_management_page
-      admin_sees_content "Admin"
+      admin_sees_message "Admin"
       visit admin_areas_path
     end
 
@@ -158,7 +158,7 @@ RSpec.describe "Admin areas management", type: :system do
     end
 
     def admin_should_see_a_new_area(area_name)
-      admin_sees_content area_name
+      admin_sees_message area_name
     end
 
     def admin_should_have_current_path_as_edit_area
