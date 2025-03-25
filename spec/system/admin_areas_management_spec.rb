@@ -57,21 +57,69 @@ RSpec.describe "Admin Dashboard", type: :system do
     end
 
     it "does not allow admin to create new area without filling area name" do
+      admin_clicks_on_create_new_area_button
+      admin_should_have_current_path_as_new_area
+      admin_clicks_on_set_polygon_button
+      admin_draws_area_polygon_on_map_with_points 3
+      admin_assigns_area_to_user
+      admin_clicks_on_save_area_button
+      admin_sees_content "โปรดระบุชื่อพื้นที่"
     end
 
     it "does not allow admin to create new area without setting atleast 3 polygon points" do
+      admin_clicks_on_create_new_area_button
+      admin_should_have_current_path_as_new_area
+      admin_clicks_on_set_polygon_button
+      admin_draws_area_polygon_on_map_with_points 2
+      admin_fills_in_area_name
+      admin_assigns_area_to_user
+      admin_sees_content "โปรดระบุพื้นที่ก่อนบันทึก"
     end
 
     it "does not allow admin to create new area if area name already exist" do
+      admin_clicks_on_create_new_area_button
+      admin_should_have_current_path_as_new_area
+      admin_clicks_on_set_polygon_button
+      admin_draws_area_polygon_on_map_with_points 3
+      admin_fills_in_area_name(areas.first.name)
+      admin_assigns_area_to_user
+      admin_clicks_on_save_area_button
+      admin_sees_content "ชื่อพื้นที่นี้มีอยู่แล้ว"
     end
 
     it "does not allow admin to edit an area without filling area name" do
+      admin_clicks_on_edit_area_button
+      admin_should_have_current_path_as_edit_area
+      admin_fills_in_area_name ''
+      admin_clicks_on_save_area_button
+      admin_sees_content "โปรดระบุชื่อพื้นที่"
+    end
+
+    it "does not allow admin to edit an area without setting atleast 3 polygon points" do
+      admin_clicks_on_edit_area_button
+      admin_should_have_current_path_as_edit_area
+      admin_click_reset_area_polygon
+      admin_clicks_on_set_polygon_button
+      admin_draws_area_polygon_on_map_with_points 2
+      admin_sees_content "โปรดระบุพื้นที่ก่อนบันทึก"
+    end
+
+    it "does not allow admin to edit an area if area name already exist" do
+      admin_clicks_on_edit_area_button
+      admin_should_have_current_path_as_edit_area
+      admin_fills_in_area_name(areas.second.name)
+      admin_clicks_on_save_area_button
+      admin_sees_content "ชื่อพื้นที่นี้มีอยู่แล้ว"
     end
 
     private
 
+    def admin_sees_content(content)
+      expect(page).to have_content(content)
+    end
+
     def admin_goes_to_areas_management_page
-      expect(page).to have_content("Admin")
+      admin_sees_content "Admin"
       visit admin_areas_path
     end
 
@@ -114,8 +162,8 @@ RSpec.describe "Admin Dashboard", type: :system do
       click_button('กำหนดพื้นที่')
     end
 
-    def admin_fills_in_area_name
-      fill_in('area_name', with: 'New Area')
+    def admin_fills_in_area_name(area_name = 'New Area')
+      fill_in('area_name', with: area_name)
     end
 
     def admin_assigns_area_to_user
@@ -130,7 +178,7 @@ RSpec.describe "Admin Dashboard", type: :system do
     end
 
     def admin_should_see_a_new_area(area_name)
-      expect(page).to have_content(area_name)
+      admin_sees_content area_name
     end
 
     def admin_clicks_on_edit_area_button
@@ -167,7 +215,6 @@ RSpec.describe "Admin Dashboard", type: :system do
         sleep 0.5
       end
 
-      map.click(x: coordinates.first[:x], y: coordinates.first[:y])
       expect(page).to have_selector('.leaflet-interactive', wait: 5)
     end
 
