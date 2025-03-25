@@ -31,6 +31,7 @@ RSpec.describe "Admin Dashboard", type: :system do
     end
 
     def admin_should_see_a_map
+      expect(page).to have_selector('[data-testid="areas-management-map"]')
     end
 
     def admin_should_see_a_list_of_areas
