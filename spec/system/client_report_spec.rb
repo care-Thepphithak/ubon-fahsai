@@ -5,7 +5,7 @@ RSpec.describe "Client Report", type: :system do
   include_context 'user_login'
   fixtures :reports
 
-  context "When user is a client and already_logged_in and there are reports today" do
+  context "When a user is a client and has assigned areas" do
     let(:admin_status) { false }
     let(:all_reports) { Report.all.order(created_at: :desc) }
     let(:today_reports) { all_reports.today }
