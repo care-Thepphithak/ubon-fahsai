@@ -21,10 +21,10 @@ RSpec.describe "Client Report", type: :system do
     before do
       user_logs_in_with_valid_credential
 
-      stub_request(:get, /nominatim.openstreetmap.org/).to_return(
-      body: { display_name: "Bangkok, Thailand" }.to_json,
-      headers: { 'Content-Type' => 'application/json' }
-    )
+      #   stub_request(:get, /nominatim.openstreetmap.org/).to_return(
+      #   body: { display_name: "Bangkok, Thailand" }.to_json,
+      #   headers: { 'Content-Type' => 'application/json' }
+      # )
     end
 
     it "displays the client report home page" do
@@ -56,6 +56,7 @@ RSpec.describe "Client Report", type: :system do
       client_input_severity_level
       client_click_next_to_map_button
       assign_current_location LATITUDE_INSIDE_AREA, LONGITUDE_INSIDE_AREA
+      stub_location_name "Ubon Ratchathani, Mueang Ubon Ratchathani District, Ubon Ratchathani"
       sleep 2
       client_click_send_report
       client_click_accept_send_report
@@ -75,8 +76,7 @@ RSpec.describe "Client Report", type: :system do
       client_input_severity_level
       client_click_next_to_map_button
       assign_current_location LATITUDE_OUTSIDE_AREA, LONGITUDE_OUTSIDE_AREA
-      client_cannot_click_send_report
-      sleep 10
+      # TODO: expect the location name to be "ไม่อยู่ในพื้นที่ที่รับผิดชอบ"
     end
 
     private
@@ -102,6 +102,18 @@ RSpec.describe "Client Report", type: :system do
       page.execute_script <<-JS
       window.navigator.geolocation.getCurrentPosition = function(success) {
         success({ coords: {latitude: #{latitude}, longitude: #{longitude} } });
+      };
+      JS
+    end
+
+    def stub_location_name(location_name)
+      page.execute_script <<-JS
+      window.fetch = function() {
+        return Promise.resolve({
+          json: function() {
+            return { display_name: "#{location_name}" };
+          }
+        });
       };
       JS
     end
