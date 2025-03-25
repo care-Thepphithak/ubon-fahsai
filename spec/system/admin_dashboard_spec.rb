@@ -74,16 +74,16 @@ RSpec.describe "Admin Dashboard", type: :system do
     end
 
     def admin_sees_total_reports_number_equal_to(expected_count)
-      expect_by_element(expected_count, '#report_counter')
+      expect_element_count(expected_count, '#report_counter')
     end
 
     def admin_sees_harmful_reports_number_equal_to(expected_count)
-      expect_by_element(expected_count, '#report_harmful_counter')
+      expect_element_count(expected_count, '#report_harmful_counter')
     end
 
-    def expect_by_element(expected_count, selector)
-      actual_count = find(selector).text.to_i
-      expect(actual_count).to eq(expected_count)
+    def expect_element_count(expected_count, selector)
+      element_count = find(selector).text.to_i
+      expect(element_count).to eq(expected_count)
     end
 
     def admin_select_first_report
