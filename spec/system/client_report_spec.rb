@@ -20,7 +20,7 @@ RSpec.describe "Client Report", type: :system do
 
     before do
       user_logs_in_with_valid_credential
-      
+
       stub_request(:get, /nominatim.openstreetmap.org/).to_return(
       body: { display_name: "Bangkok, Thailand" }.to_json,
       headers: { 'Content-Type' => 'application/json' }
@@ -111,9 +111,9 @@ RSpec.describe "Client Report", type: :system do
     end
 
     def client_click(selector)
-      report_button = find(selector)
-      expect(report_button).to be_visible
-      report_button.click
+      button = find(selector)
+      expect(button).to be_visible
+      button.click
     end
 
     def client_click_next_to_map_button
