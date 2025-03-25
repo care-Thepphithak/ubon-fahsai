@@ -27,7 +27,7 @@
                 <div class="flex flex-col gap-3 w-full overflow-scroll no-scrollbar rounded-md mb-3">
                     <% client_users.each do |user| %>
                         <% checkbox_id = "user_#{user.id}" %>
-                        <label for="<%= checkbox_id %>" class="cursor-pointer">
+                        <label for="<%= checkbox_id %>" class="cursor-pointer" data-testid="user-assignee">
                         <div class="bg-white w-full rounded-md p-3 flex items-center gap-3 hover:bg-gray-50 transition-all">
                             <div class="relative">
                             <%= check_box_tag "area[user_ids][]", user.id, 
