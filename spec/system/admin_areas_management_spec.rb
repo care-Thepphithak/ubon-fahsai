@@ -109,6 +109,10 @@ RSpec.describe "Admin Dashboard", type: :system do
       first_user.click
     end
 
+    def admin_clicks_on_save_area_button
+      click_button('บันทึกพื้นที่')
+    end
+
     def admin_draws_area_polygon_on_map_with_points(number_of_points)
       map = find('#area-management-map')
       expect(map).to be_present
