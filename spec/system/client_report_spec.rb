@@ -19,8 +19,8 @@ RSpec.describe "Client Report", type: :system do
     )
     end
 
-    it "displays the report page" do
-      client_sees_greeting_in_report_page
+    it "displays the client report home page" do
+      client_sees_greeting_in_report_home_page
     end
 
     it "displays the current date and time" do
@@ -46,15 +46,15 @@ RSpec.describe "Client Report", type: :system do
       client_sees_total_reports_number_equal_to today_reports.count
     end
 
-    it "display the report page when client clicks the report button" do
-       client_click_report_button
-       sleep 3
+    it "display the report list when client report" do
+      client_click_report_button
+      client_sees_heading_in_report_page
+      client_click_choose_image_button
     end
-
 
     private
 
-    def client_sees_greeting_in_report_page
+    def client_sees_greeting_in_report_home_page
       expect(page).to have_content("อุบลฟ้าใส สวัสดี")
     end
 
@@ -75,10 +75,30 @@ RSpec.describe "Client Report", type: :system do
     #   expect(page).to have_content("ถนนวิทยวัฒนา บ้านศูนย์แพทย์ 1 เทศบาลนครขอนแก่น ศิลา จังหวัดขอนแก่น")
     # end
 
-    def client_click_report_button
-      report_button = find('[data-testid="client-report-button"]')
+    def client_click(selector)
+      report_button = find(selector)
       expect(report_button).to be_visible
       report_button.click
+    end
+
+    def client_click_report_button
+      report_button = '[data-testid="client-report-button"]'
+      client_click report_button
+    end
+
+    def client_sees_heading_in_report_page
+      expect(page).to have_content("รายงานไฟไหม้")
+    end
+
+    def client_click_choose_image_button
+      choose_image_button = "label[for='report_images']"
+      client_click choose_image_button
+    end
+
+    def client_choose_image
+    end
+
+    def client_sees_preview_selected_image
     end
   end
 end
