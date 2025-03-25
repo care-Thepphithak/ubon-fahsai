@@ -11,6 +11,8 @@ RSpec.describe "Client Report", type: :system do
     let(:today_reports) { all_reports.today }
     let(:tags) { Report::TAGS }
 
+    CURRENT_LOCATION_NAME = "ถนนศรีณรงค์ ตำบลในเมือง เทศบาลนครอุบลราชธานี ปทุม จังหวัดอุบลราชธานี"
+
     # location of Ubon Ratchathani
     LATITUDE_INSIDE_AREA = 15.2284
     LONGITUDE_INSIDE_AREA = 104.8561
@@ -37,6 +39,7 @@ RSpec.describe "Client Report", type: :system do
 
     it "displays the current location" do
       assign_current_location LATITUDE_INSIDE_AREA, LONGITUDE_INSIDE_AREA
+      stub_location_name CURRENT_LOCATION_NAME
       client_sees_current_location
     end
 
@@ -56,7 +59,7 @@ RSpec.describe "Client Report", type: :system do
       client_input_severity_level
       client_click_next_to_map_button
       assign_current_location LATITUDE_INSIDE_AREA, LONGITUDE_INSIDE_AREA
-      stub_location_name "Ubon Ratchathani, Mueang Ubon Ratchathani District, Ubon Ratchathani"
+      stub_location_name CURRENT_LOCATION_NAME
       sleep 2
       client_click_send_report
       client_click_accept_send_report
@@ -76,7 +79,9 @@ RSpec.describe "Client Report", type: :system do
       client_input_severity_level
       client_click_next_to_map_button
       assign_current_location LATITUDE_OUTSIDE_AREA, LONGITUDE_OUTSIDE_AREA
-      # TODO: expect the location name to be "ไม่อยู่ในพื้นที่ที่รับผิดชอบ"
+
+      client_sees_outside_area_warning_message
+      client_sees_submit_button_disabled
     end
 
     private
@@ -119,7 +124,7 @@ RSpec.describe "Client Report", type: :system do
     end
 
     def client_sees_current_location
-      expect(page).to have_content("ถนนศรีณรงค์ ตำบลในเมือง เทศบาลนครอุบลราชธานี ปทุม จังหวัดอุบลราชธานี")
+      expect(page).to have_content(CURRENT_LOCATION_NAME)
     end
 
     def client_click(selector)
@@ -198,8 +203,11 @@ RSpec.describe "Client Report", type: :system do
       expect(page).to have_content(distance)
     end
 
-    def client_cannot_click_send_report
+    def client_sees_outside_area_warning_message
       expect(page).to have_content("ตำแหน่งนี้ไม่ได้อยู่ในพื้นที่ที่รับผิดชอบ")
+    end
+
+    def client_sees_submit_button_disabled
       submit_button = find('#submit')
       expect(submit_button).to be_disabled
     end
