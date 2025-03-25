@@ -103,8 +103,10 @@ RSpec.describe "Admin Dashboard", type: :system do
     end
 
     def admin_assigns_area_to_user
-      first_checkbox = find('[data-testid="user-assignee"]', match: :first)
-      first_checkbox.check
+      first_user = find('label', text: users(:one).email_address)
+      expect(first_user).to be_present
+
+      first_user.click
     end
 
     def admin_draws_area_polygon_on_map_with_points(number_of_points)
