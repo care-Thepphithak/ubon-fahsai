@@ -26,7 +26,7 @@ RSpec.describe "Admin areas management", type: :system do
     end
 
     it "allows admin to create a new area" do
-      start_area_creation
+      admin_start_area_creation
 
       admin_clicks_on_set_polygon_button
       admin_draws_area_polygon_on_map_with_points 4
@@ -39,7 +39,7 @@ RSpec.describe "Admin areas management", type: :system do
 
 
     it "does not allow admin to create new area without filling area name" do
-      start_area_creation
+      admin_start_area_creation
 
       admin_clicks_on_set_polygon_button
       admin_draws_area_polygon_on_map_with_points 3
@@ -49,7 +49,7 @@ RSpec.describe "Admin areas management", type: :system do
     end
 
     it "does not allow admin to create new area without setting atleast 3 polygon points" do
-      start_area_creation
+      admin_start_area_creation
 
       admin_clicks_on_set_polygon_button
       admin_draws_area_polygon_on_map_with_points 2
@@ -59,7 +59,7 @@ RSpec.describe "Admin areas management", type: :system do
     end
 
     it "does not allow admin to create new area if area name already exist" do
-      start_area_creation
+      admin_start_area_creation
 
       admin_clicks_on_set_polygon_button
       admin_draws_area_polygon_on_map_with_points 3
@@ -115,7 +115,7 @@ RSpec.describe "Admin areas management", type: :system do
 
     private
 
-    def start_area_creation
+    def admin_start_area_creation
       admin_clicks_on_create_new_area_button
       admin_should_have_current_path_as_new_area
     end
