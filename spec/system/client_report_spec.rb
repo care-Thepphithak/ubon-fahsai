@@ -11,9 +11,8 @@ RSpec.describe "Client Report", type: :system do
     let(:today_reports) { all_reports.today }
     let(:tags) { Report::TAGS }
 
-    CURRENT_LOCATION_NAME = "ถนนศรีณรงค์ ตำบลในเมือง เทศบาลนครอุบลราชธานี ปทุม จังหวัดอุบลราชธานี"
-
     # location of Ubon Ratchathani
+    CURRENT_LOCATION_NAME = "ถนนศรีณรงค์ ตำบลในเมือง เทศบาลนครอุบลราชธานี ปทุม จังหวัดอุบลราชธานี"
     LATITUDE_INSIDE_AREA = 15.2284
     LONGITUDE_INSIDE_AREA = 104.8561
 
@@ -22,11 +21,6 @@ RSpec.describe "Client Report", type: :system do
 
     before do
       user_logs_in_with_valid_credential
-
-      #   stub_request(:get, /nominatim.openstreetmap.org/).to_return(
-      #   body: { display_name: "Bangkok, Thailand" }.to_json,
-      #   headers: { 'Content-Type' => 'application/json' }
-      # )
     end
 
     it "displays the client report home page" do
