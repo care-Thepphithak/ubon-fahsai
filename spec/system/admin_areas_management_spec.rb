@@ -3,7 +3,7 @@ require_relative '../helpers/shared_context/user_login_spec'
 
 RSpec.describe "Admin Dashboard", type: :system do
   include_context 'user_login'
-  fixtures :areas, :users, :user_areas
+  fixtures :areas, :users
 
   context "When user is an admin and already logged in" do
     let(:admin_status) { true }
