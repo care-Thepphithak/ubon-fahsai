@@ -9,6 +9,7 @@ RSpec.describe "Client Report", type: :system do
     let(:admin_status) { false }
     let(:all_reports) { Report.all.order(created_at: :desc) }
     let(:today_reports) { all_reports.today }
+    let(:tags) { Report::TAGS }
 
     # location of Ubon Ratchathani
     LATITUDE = 15.2284
@@ -47,6 +48,9 @@ RSpec.describe "Client Report", type: :system do
       client_choose_image
       client_sees_preview_selected_image
       client_click_next_button
+      client_click_tags
+      client_write_description "ไฟไหม้ในที่รกร้าง"
+      client_input_severity_level
       sleep 5
     end
 
@@ -115,6 +119,23 @@ RSpec.describe "Client Report", type: :system do
     def client_click_next_button
       next_button = "#upload-step-next"
       client_click next_button
+    end
+
+    def client_click_tags
+      tags.each do |tag|
+        tag_selected = '[data-tag="' + tag + '"]'
+        client_click tag_selected
+      end
+    end
+
+    def client_write_description(description)
+      fill_in "report[description]", with: description
+    end
+
+    def client_input_severity_level
+      slider = find('#severity-range')
+      slider.set(75)
+      expect(find('[data-testid="severity-level-label"]').text).to eq("รุนแรงมาก")
     end
   end
 end
