@@ -44,6 +44,7 @@ RSpec.describe "Client Report", type: :system do
       client_click_report_button
       client_sees_heading_in_report_page
       client_click_choose_image_button
+      client_choose_image
     end
 
     private
@@ -98,6 +99,7 @@ RSpec.describe "Client Report", type: :system do
     end
 
     def client_choose_image
+      attach_file("report[images][]", Rails.root.join('spec/fixtures/files/fire.jpg'), make_visible: true)
     end
 
     def client_sees_preview_selected_image
