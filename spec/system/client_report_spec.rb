@@ -96,11 +96,11 @@ RSpec.describe "Client Report", type: :system do
     client_click_choose_image_button
     client_choose_image
     client_sees_preview_selected_image
-    client_click_next_button
+    client_click_upload_step_next_button
     client_click_tags
     client_write_description "ไฟไหม้ในที่รกร้าง"
     client_input_severity_level
-    client_click_next_to_map_button
+    client_click_detail_step_next_button
     set_current_location(latitude, longitude, location_name)
     sleep 2
     client_click_send_report
@@ -113,11 +113,11 @@ RSpec.describe "Client Report", type: :system do
     client_click_choose_image_button
     client_choose_image
     client_sees_preview_selected_image
-    client_click_next_button
+    client_click_upload_step_next_button
     client_click_tags
     client_write_description "ไฟไหม้ในที่รกร้าง"
     client_input_severity_level
-    client_click_next_to_map_button
+    client_click_detail_step_next_button
     assign_current_location(latitude, longitude)
   end
 
@@ -137,8 +137,12 @@ RSpec.describe "Client Report", type: :system do
     button.click
   end
 
-  def client_click_next_to_map_button
-    client_click '[data-action="click->report#next"]'
+  def client_click_upload_step_next_button
+    client_click '[data-testid="upload-step-next-button"]'
+  end
+
+  def client_click_detail_step_next_button
+    client_click '[data-testid="detail-step-next-button"]'
   end
 
   def client_click_send_report
@@ -170,10 +174,6 @@ RSpec.describe "Client Report", type: :system do
 
   def client_sees_preview_selected_image
     expect(page).to have_css("img[src^='data:image/jpeg;base64,'][class='min-w-64 h-72 w-64 object-cover rounded-lg shadow-md']")
-  end
-
-  def client_click_next_button
-    client_click "#upload-step-next"
   end
 
   def client_click_tags
