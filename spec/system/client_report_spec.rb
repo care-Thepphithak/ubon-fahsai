@@ -48,6 +48,7 @@ RSpec.describe "Client Report", type: :system do
 
     it "display the report page when client clicks the report button" do
        client_click_report_button
+       sleep 3
     end
 
 

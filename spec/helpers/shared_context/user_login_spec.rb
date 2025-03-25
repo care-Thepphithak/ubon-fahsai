@@ -1,6 +1,16 @@
 RSpec.shared_context 'user_login' do
   before do
     @user = User.create!(email_address: "john@example.com", password: "password", admin: admin_status)
+
+    if admin_status == false
+      @area = Area.create!(
+        name: "Test Area 1",
+        created_at: "2021-06-02 00:00:00",
+        updated_at: "2021-06-02 00:00:00",
+        coordinates: [ [ 15.216737857245673, 104.86441710314403 ], [ 15.219926459031183, 104.86705846834863 ], [ 15.217855943886963, 104.86662897807143 ] ]
+      )
+      UserArea.create(user: @user, area: @area)
+    end
   end
 
   def user_goes_to_login_page
