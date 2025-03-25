@@ -45,6 +45,9 @@ RSpec.describe "Client Report", type: :system do
       client_sees_heading_in_report_page
       client_click_choose_image_button
       client_choose_image
+      client_sees_preview_selected_image
+      client_click_next_button
+      sleep 5
     end
 
     private
@@ -99,10 +102,19 @@ RSpec.describe "Client Report", type: :system do
     end
 
     def client_choose_image
-      attach_file("report[images][]", Rails.root.join('spec/fixtures/files/fire.jpg'), make_visible: true)
+      attach_file("report[images][]", [
+        Rails.root.join('spec/fixtures/files/fire.jpg'),
+        Rails.root.join('spec/fixtures/files/test.jpg')
+      ], make_visible: true)
     end
 
     def client_sees_preview_selected_image
+      expect(page).to have_css("img[src^='data:image/jpeg;base64,'][class='min-w-64 h-72 w-64 object-cover rounded-lg shadow-md']")
+    end
+
+    def client_click_next_button
+      next_button = "#upload-step-next"
+      client_click next_button
     end
   end
 end
