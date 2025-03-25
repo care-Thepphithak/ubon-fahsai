@@ -8,6 +8,7 @@ RSpec.describe "Client Report", type: :system do
   let(:admin_status) { false }
   let(:all_reports) { Report.all.order(created_at: :desc) }
   let(:today_reports) { all_reports.today }
+  let(:first_report) { all_reports.first }
 
   context "When a user is a client and has no assigned areas" do
     before do
@@ -30,6 +31,16 @@ RSpec.describe "Client Report", type: :system do
 
     it "displays the number of reports today" do
       client_sees_total_reports_number_equal_to today_reports.count
+    end
+
+    it "no displays report button and not allow to click the report button" do
+      report_button = '[data-testid="client-report-button"]'
+      client_cannot_see report_button
+    end
+
+    private
+    def client_cannot_see(selector)
+      expect(page).to have_no_selector(selector, visible: true)
     end
   end
 
@@ -84,6 +95,7 @@ RSpec.describe "Client Report", type: :system do
       client_click_accept_send_report
       client_sees_success_message
       client_sees_the_nearest_distance_report 0.00
+      client_sees_the_latest_report
     end
 
     it "doesn't allow client to report outside the area" do
@@ -104,6 +116,13 @@ RSpec.describe "Client Report", type: :system do
     end
 
     private
+
+    def client_sees_the_latest_report
+      puts tags
+      expect(first_report.severity_level).to eq("รุนแรงมาก")
+      expect(first_report.description).to eq("ไฟไหม้ในที่รกร้าง")
+      expect(first_report.created_at).to be_within(1.minute).of(Time.current)
+    end
 
     def client_click(selector)
       button = find(selector)
