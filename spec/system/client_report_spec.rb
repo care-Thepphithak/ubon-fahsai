@@ -46,6 +46,13 @@ RSpec.describe "Client Report", type: :system do
       client_sees_total_reports_number_equal_to today_reports.count
     end
 
+    it "display the report page when client clicks the report button" do
+       client_click_report_button
+    end
+
+
+    private
+
     def client_sees_greeting_in_report_page
       expect(page).to have_content("อุบลฟ้าใส สวัสดี")
     end
@@ -66,5 +73,11 @@ RSpec.describe "Client Report", type: :system do
     # def client_sees_current_location
     #   expect(page).to have_content("ถนนวิทยวัฒนา บ้านศูนย์แพทย์ 1 เทศบาลนครขอนแก่น ศิลา จังหวัดขอนแก่น")
     # end
+
+    def client_click_report_button
+      report_button = find('[data-testid="client-report-button"]')
+      expect(report_button).to be_visible
+      report_button.click
+    end
   end
 end
