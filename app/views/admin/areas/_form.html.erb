@@ -3,7 +3,7 @@
 <%= form_with(model: [:admin, @area], class: "w-full") do |form| %>
     <div data-controller="area-map" data-area-map-current-coordinates-value="<%= @area.coordinates%>"  class="flex flex-col xl:flex-row w-full h-full gap-[20px] pb-[20px]">
 
-            <div data-area-map-target="map" class="h-full min-h-[500px] w-full rounded-xl"> </div>
+            <div data-area-map-target="map" class="h-full min-h-[500px] w-full rounded-xl" id="area-management-map"> </div>
 
             <div class="w-full xl:w-[550px] bg-[#F3F3F3] flex h-full  flex-col p-5 rounded-xl">
                 <div class="flex gap-3 w-full mb-4">
