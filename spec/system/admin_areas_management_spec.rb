@@ -50,8 +50,8 @@ RSpec.describe "Admin Dashboard", type: :system do
     it "can edit an area's polygon" do
       admin_clicks_on_edit_area_button
       admin_should_have_current_path_as_edit_area
+      admin_click_reset_area_polygon
       admin_clicks_on_set_polygon_button
-      admin_reset_area_polygon
       admin_draws_area_polygon_on_map_with_points 3
       admin_clicks_on_save_area_button
     end
@@ -157,6 +157,10 @@ RSpec.describe "Admin Dashboard", type: :system do
 
       map.click(x: coordinates.first[:x], y: coordinates.first[:y])
       expect(page).to have_selector('.leaflet-interactive', wait: 5)
+    end
+
+    def admin_click_reset_area_polygon
+      click_button('รีเซ็ตพื้นที่')
     end
   end
 end
