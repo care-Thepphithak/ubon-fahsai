@@ -10,11 +10,7 @@ RSpec.describe "Client Report", type: :system do
   let(:today_reports) { all_reports.today }
   let(:first_report) { all_reports.first }
 
-  context "When a user is a client and has no assigned areas" do
-    before do
-      user_logs_in_with_valid_credential_and_assigned_no_area
-    end
-
+  shared_examples "client report home page" do
     it "displays the client report home page" do
       client_sees_greeting_in_report_home_page
     end
@@ -22,6 +18,14 @@ RSpec.describe "Client Report", type: :system do
     it "displays the current date and time" do
       client_sees_current_date_and_time_correctly
     end
+  end
+
+  context "When a user is a client and has no assigned areas" do
+    before do
+      user_logs_in_with_valid_credential_and_assigned_no_area
+    end
+
+    include_examples "client report home page"
 
     it "displays the current location" do
       set_current_location(LATITUDE_INSIDE_AREA, LONGITUDE_INSIDE_AREA, CURRENT_LOCATION_NAME)
@@ -40,7 +44,6 @@ RSpec.describe "Client Report", type: :system do
   context "When a user is a client and has assigned areas" do
     let(:tags) { Report::TAGS }
 
-    # location of Ubon Ratchathani
     CURRENT_LOCATION_NAME = "ถนนศรีณรงค์ ตำบลในเมือง เทศบาลนครอุบลราชธานี ปทุม จังหวัดอุบลราชธานี"
     LATITUDE_INSIDE_AREA = 15.2284
     LONGITUDE_INSIDE_AREA = 104.8561
@@ -52,13 +55,7 @@ RSpec.describe "Client Report", type: :system do
       user_logs_in_with_valid_credential_and_assigned_area
     end
 
-    it "displays the client report home page" do
-      client_sees_greeting_in_report_home_page
-    end
-
-    it "displays the current date and time" do
-      client_sees_current_date_and_time_correctly
-    end
+    include_examples "client report home page"
 
     it "displays the current location" do
       set_current_location(LATITUDE_INSIDE_AREA, LONGITUDE_INSIDE_AREA, CURRENT_LOCATION_NAME)
@@ -146,11 +143,11 @@ RSpec.describe "Client Report", type: :system do
   end
 
   def client_click_send_report
-    client_click '[data-action="click->bottom-sheet#open"]'
+    client_click '[data-testid="send-report-button"]'
   end
 
   def client_click_accept_send_report
-    client_click '[data-action="click->bottom-sheet#submit"]'
+    client_click '[data-testid="submit-report-button"]'
   end
 
   def client_click_report_button
