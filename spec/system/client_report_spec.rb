@@ -89,7 +89,7 @@ RSpec.describe "Client Report", type: :system do
 
   def client_reports_fire_in_area(latitude, longitude, location_name)
     client_click_report_button
-    client_sees_heading_in_report_page
+    client_should_have_current_path_as_reports
     client_click_choose_image_button
     client_choose_image
     client_sees_preview_selected_image
@@ -106,7 +106,7 @@ RSpec.describe "Client Report", type: :system do
 
   def client_reports_fire_outside_area(latitude, longitude)
     client_click_report_button
-    client_sees_heading_in_report_page
+    client_should_have_current_path_as_reports
     client_click_choose_image_button
     client_choose_image
     client_sees_preview_selected_image
@@ -154,8 +154,8 @@ RSpec.describe "Client Report", type: :system do
     client_click '[data-testid="client-report-button"]'
   end
 
-  def client_sees_heading_in_report_page
-    expect(page).to have_content("รายงานไฟไหม้")
+  def client_should_have_current_path_as_reports
+    expect(page).to have_current_path(reports_path)
   end
 
   def client_click_choose_image_button
