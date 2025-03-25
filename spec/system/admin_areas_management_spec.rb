@@ -1,7 +1,7 @@
 require 'rails_helper'
 require_relative '../helpers/shared_context/user_login_spec'
 
-RSpec.describe "Admin Dashboard", type: :system do
+RSpec.describe "Admin areas management", type: :system do
   include_context 'user_login'
   fixtures :areas, :users
 
@@ -26,8 +26,8 @@ RSpec.describe "Admin Dashboard", type: :system do
     end
 
     it "allows admin to create a new area" do
-      admin_clicks_on_create_new_area_button
-      admin_should_have_current_path_as_new_area
+      start_area_creation
+
       admin_clicks_on_set_polygon_button
       admin_draws_area_polygon_on_map_with_points 4
       admin_fills_in_area_name
@@ -35,6 +35,38 @@ RSpec.describe "Admin Dashboard", type: :system do
       admin_clicks_on_save_area_button
       admin_should_have_current_path_as_admin_areas
       admin_should_see_a_new_area 'New Area'
+    end
+
+
+    it "does not allow admin to create new area without filling area name" do
+      start_area_creation
+
+      admin_clicks_on_set_polygon_button
+      admin_draws_area_polygon_on_map_with_points 3
+      admin_assigns_area_to_user
+      admin_clicks_on_save_area_button
+      admin_sees_content "โปรดระบุชื่อพื้นที่"
+    end
+
+    it "does not allow admin to create new area without setting atleast 3 polygon points" do
+      start_area_creation
+
+      admin_clicks_on_set_polygon_button
+      admin_draws_area_polygon_on_map_with_points 2
+      admin_fills_in_area_name
+      admin_assigns_area_to_user
+      admin_sees_content "โปรดระบุพื้นที่ก่อนบันทึก"
+    end
+
+    it "does not allow admin to create new area if area name already exist" do
+      start_area_creation
+
+      admin_clicks_on_set_polygon_button
+      admin_draws_area_polygon_on_map_with_points 3
+      admin_fills_in_area_name(areas.first.name)
+      admin_assigns_area_to_user
+      admin_clicks_on_save_area_button
+      admin_sees_content "ชื่อพื้นที่นี้มีอยู่แล้ว"
     end
 
     it "allows admin to edit an area" do
@@ -54,37 +86,6 @@ RSpec.describe "Admin Dashboard", type: :system do
       admin_clicks_on_set_polygon_button
       admin_draws_area_polygon_on_map_with_points 3
       admin_clicks_on_save_area_button
-    end
-
-    it "does not allow admin to create new area without filling area name" do
-      admin_clicks_on_create_new_area_button
-      admin_should_have_current_path_as_new_area
-      admin_clicks_on_set_polygon_button
-      admin_draws_area_polygon_on_map_with_points 3
-      admin_assigns_area_to_user
-      admin_clicks_on_save_area_button
-      admin_sees_content "โปรดระบุชื่อพื้นที่"
-    end
-
-    it "does not allow admin to create new area without setting atleast 3 polygon points" do
-      admin_clicks_on_create_new_area_button
-      admin_should_have_current_path_as_new_area
-      admin_clicks_on_set_polygon_button
-      admin_draws_area_polygon_on_map_with_points 2
-      admin_fills_in_area_name
-      admin_assigns_area_to_user
-      admin_sees_content "โปรดระบุพื้นที่ก่อนบันทึก"
-    end
-
-    it "does not allow admin to create new area if area name already exist" do
-      admin_clicks_on_create_new_area_button
-      admin_should_have_current_path_as_new_area
-      admin_clicks_on_set_polygon_button
-      admin_draws_area_polygon_on_map_with_points 3
-      admin_fills_in_area_name(areas.first.name)
-      admin_assigns_area_to_user
-      admin_clicks_on_save_area_button
-      admin_sees_content "ชื่อพื้นที่นี้มีอยู่แล้ว"
     end
 
     it "does not allow admin to edit an area without filling area name" do
@@ -113,6 +114,11 @@ RSpec.describe "Admin Dashboard", type: :system do
     end
 
     private
+
+    def start_area_creation
+      admin_clicks_on_create_new_area_button
+      admin_should_have_current_path_as_new_area
+    end
 
     def admin_sees_content(content)
       expect(page).to have_content(content)
