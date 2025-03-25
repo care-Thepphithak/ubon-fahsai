@@ -51,7 +51,7 @@ RSpec.describe "Client Report", type: :system do
       client_click_tags
       client_write_description "ไฟไหม้ในที่รกร้าง"
       client_input_severity_level
-      cliend_click_next_to_map_button
+      client_click_next_to_map_button
       assign_current_location LATITUDE, LONGITUDE
       sleep 2
       client_click_send_report
@@ -97,7 +97,7 @@ RSpec.describe "Client Report", type: :system do
       report_button.click
     end
 
-    def cliend_click_next_to_map_button
+    def client_click_next_to_map_button
       next_to_map_button = '[data-action="click->report#next"]'
       client_click next_to_map_button
     end
