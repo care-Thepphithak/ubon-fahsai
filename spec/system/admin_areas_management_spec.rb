@@ -151,14 +151,22 @@ RSpec.describe "Admin areas management", type: :system do
       end
     end
 
+    def admin_should_see_area_polygon_on_map
+      expect(page).to have_selector('.leaflet-interactive')
+    end
+
+    def admin_should_see_a_new_area(area_name)
+      admin_sees_content area_name
+    end
+
+    def admin_should_have_current_path_as_edit_area
+      expect(page).to have_current_path(edit_admin_area_path(areas.first))
+    end
+
     def admin_clicks_on_an_area
       area = find('[data-testid="area-list-item"]', match: :first)
       expect(area).to be_present
       area.click
-    end
-
-    def admin_should_see_area_polygon_on_map
-      expect(page).to have_selector('.leaflet-interactive')
     end
 
     def admin_clicks_on_create_new_area_button
@@ -188,18 +196,10 @@ RSpec.describe "Admin areas management", type: :system do
       click_button('บันทึกพื้นที่')
     end
 
-    def admin_should_see_a_new_area(area_name)
-      admin_sees_content area_name
-    end
-
     def admin_clicks_on_edit_area_button
       area = find('[data-testid="area-list-item"]', match: :first)
       expect(area).to be_present
       area.find('a').click
-    end
-
-    def admin_should_have_current_path_as_edit_area
-      expect(page).to have_current_path(edit_admin_area_path(areas.first))
     end
 
     def admin_changes_area_name
