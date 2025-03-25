@@ -5,10 +5,35 @@ RSpec.describe "Client Report", type: :system do
   include_context 'user_login'
   fixtures :reports
 
+  let(:admin_status) { false }
+  let(:all_reports) { Report.all.order(created_at: :desc) }
+  let(:today_reports) { all_reports.today }
+
+  context "When a user is a client and has no assigned areas" do
+    before do
+      user_logs_in_with_valid_credential_and_assigned_no_area
+    end
+
+    it "displays the client report home page" do
+      client_sees_greeting_in_report_home_page
+    end
+
+    it "displays the current date and time" do
+      client_sees_current_date_and_time_correctly
+    end
+
+    it "displays the current location" do
+      assign_current_location LATITUDE_INSIDE_AREA, LONGITUDE_INSIDE_AREA
+      stub_location_name CURRENT_LOCATION_NAME
+      client_sees_current_location
+    end
+
+    it "displays the number of reports today" do
+      client_sees_total_reports_number_equal_to today_reports.count
+    end
+  end
+
   context "When a user is a client and has assigned areas" do
-    let(:admin_status) { false }
-    let(:all_reports) { Report.all.order(created_at: :desc) }
-    let(:today_reports) { all_reports.today }
     let(:tags) { Report::TAGS }
 
     # location of Ubon Ratchathani
@@ -79,47 +104,6 @@ RSpec.describe "Client Report", type: :system do
     end
 
     private
-
-    def client_sees_greeting_in_report_home_page
-      expect(page).to have_content("อุบลฟ้าใส สวัสดี")
-    end
-
-    def client_sees_current_date_and_time_correctly
-      expect(page).to have_content(I18n.l(Time.current, format: :full, locale: :th))
-    end
-
-    def client_sees_total_reports_number_equal_to(expected_count)
-      expect_by_element(expected_count, '[data-testid="client-report-counter"]')
-    end
-
-    def expect_by_element(expected_count, selector)
-      actual_count = find(selector).text.to_i
-      expect(actual_count).to eq(expected_count)
-    end
-
-    def assign_current_location(latitude, longitude)
-      page.execute_script <<-JS
-      window.navigator.geolocation.getCurrentPosition = function(success) {
-        success({ coords: {latitude: #{latitude}, longitude: #{longitude} } });
-      };
-      JS
-    end
-
-    def stub_location_name(location_name)
-      page.execute_script <<-JS
-      window.fetch = function() {
-        return Promise.resolve({
-          json: function() {
-            return { display_name: "#{location_name}" };
-          }
-        });
-      };
-      JS
-    end
-
-    def client_sees_current_location
-      expect(page).to have_content(CURRENT_LOCATION_NAME)
-    end
 
     def client_click(selector)
       button = find(selector)
@@ -205,5 +189,46 @@ RSpec.describe "Client Report", type: :system do
       submit_button = find('#submit')
       expect(submit_button).to be_disabled
     end
+  end
+
+  def client_sees_greeting_in_report_home_page
+    expect(page).to have_content("อุบลฟ้าใส สวัสดี")
+  end
+
+  def client_sees_current_date_and_time_correctly
+    expect(page).to have_content(I18n.l(Time.current, format: :full, locale: :th))
+  end
+
+  def assign_current_location(latitude, longitude)
+    page.execute_script <<-JS
+    window.navigator.geolocation.getCurrentPosition = function(success) {
+      success({ coords: {latitude: #{latitude}, longitude: #{longitude} } });
+    };
+    JS
+  end
+
+  def stub_location_name(location_name)
+    page.execute_script <<-JS
+    window.fetch = function() {
+      return Promise.resolve({
+        json: function() {
+          return { display_name: "#{location_name}" };
+        }
+      });
+    };
+    JS
+  end
+
+  def client_sees_current_location
+    expect(page).to have_content(CURRENT_LOCATION_NAME)
+  end
+
+  def client_sees_total_reports_number_equal_to(expected_count)
+    expect_by_element(expected_count, '[data-testid="client-report-counter"]')
+  end
+
+  def expect_by_element(expected_count, selector)
+    actual_count = find(selector).text.to_i
+    expect(actual_count).to eq(expected_count)
   end
 end
