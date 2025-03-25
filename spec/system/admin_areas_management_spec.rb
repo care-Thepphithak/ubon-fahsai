@@ -96,5 +96,25 @@ RSpec.describe "Admin Dashboard", type: :system do
     def admin_clicks_on_set_polygon_button
       click_button('กำหนดพื้นที่')
     end
+
+    def admin_draws_area_polygon_on_map
+      map = find('#area-management-map')
+      expect(map).to be_present
+
+      coordinates = [
+        { x: 20, y: 20 },
+        { x: 100, y: 20 },
+        { x: 100, y: 100 },
+        { x: 20, y: 100 }
+      ]
+
+      coordinates.each do |coord|
+        map.click(x: coord[:x], y: coord[:y])
+        sleep 0.5
+      end
+
+      expect(page).to have_selector('.leaflet-interactive', wait: 5)
+      sleep 5
+    end
   end
 end
