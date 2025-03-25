@@ -12,12 +12,15 @@ RSpec.describe "Client Report", type: :system do
     let(:tags) { Report::TAGS }
 
     # location of Ubon Ratchathani
-    LATITUDE = 15.2284
-    LONGITUDE = 104.8561
+    LATITUDE_INSIDE_AREA = 15.2284
+    LONGITUDE_INSIDE_AREA = 104.8561
+
+    LATITUDE_OUTSIDE_AREA = 15.2295
+    LONGITUDE_OUTSIDE_AREA = 104.8560
 
     before do
       user_logs_in_with_valid_credential
-
+      
       stub_request(:get, /nominatim.openstreetmap.org/).to_return(
       body: { display_name: "Bangkok, Thailand" }.to_json,
       headers: { 'Content-Type' => 'application/json' }
@@ -33,7 +36,7 @@ RSpec.describe "Client Report", type: :system do
     end
 
     it "displays the current location" do
-      assign_current_location LATITUDE, LONGITUDE
+      assign_current_location LATITUDE_INSIDE_AREA, LONGITUDE_INSIDE_AREA
       client_sees_current_location
     end
 
@@ -41,7 +44,7 @@ RSpec.describe "Client Report", type: :system do
       client_sees_total_reports_number_equal_to today_reports.count
     end
 
-    it "display the report list when client report" do
+    it "allows client to report inside their area" do
       client_click_report_button
       client_sees_heading_in_report_page
       client_click_choose_image_button
@@ -52,12 +55,28 @@ RSpec.describe "Client Report", type: :system do
       client_write_description "ไฟไหม้ในที่รกร้าง"
       client_input_severity_level
       client_click_next_to_map_button
-      assign_current_location LATITUDE, LONGITUDE
+      assign_current_location LATITUDE_INSIDE_AREA, LONGITUDE_INSIDE_AREA
       sleep 2
       client_click_send_report
       client_click_accept_send_report
-      client_sees_greeting_in_report_home_page
-      sleep 2
+      client_sees_success_message
+      client_sees_the_nearest_distance_report 0.00
+    end
+
+    it "doesn't allow client to report outside the area" do
+      client_click_report_button
+      client_sees_heading_in_report_page
+      client_click_choose_image_button
+      client_choose_image
+      client_sees_preview_selected_image
+      client_click_next_button
+      client_click_tags
+      client_write_description "ไฟไหม้ในที่รกร้าง"
+      client_input_severity_level
+      client_click_next_to_map_button
+      assign_current_location LATITUDE_OUTSIDE_AREA, LONGITUDE_OUTSIDE_AREA
+      client_cannot_click_send_report
+      sleep 10
     end
 
     private
@@ -157,6 +176,20 @@ RSpec.describe "Client Report", type: :system do
       slider = find('#severity-range')
       slider.set(75)
       expect(find('[data-testid="severity-level-label"]').text).to eq("รุนแรงมาก")
+    end
+
+    def client_sees_success_message
+      expect(page).to have_content("รายงานสำเร็จ")
+    end
+
+    def client_sees_the_nearest_distance_report(distance)
+      expect(page).to have_content(distance)
+    end
+
+    def client_cannot_click_send_report
+      expect(page).to have_content("ตำแหน่งนี้ไม่ได้อยู่ในพื้นที่ที่รับผิดชอบ")
+      submit_button = find('#submit')
+      expect(submit_button).to be_disabled
     end
   end
 end

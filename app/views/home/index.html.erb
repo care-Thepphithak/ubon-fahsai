@@ -1,7 +1,7 @@
 <% if notice %>
   <div data-controller="bottom-sheet" data-bottom-sheet-open="true">
     <%= render "shared/bottom_sheet" do %>
-      <h2 class="text-2xl text-green-500 pb-[20px]"><i class="fas fa-check-circle"></i> รายงานสำเร็จ</h2>
+      <h2 data-testid="client-report-success" class="text-2xl text-green-500 pb-[20px]"><i class="fas fa-check-circle"></i> รายงานสำเร็จ</h2>
       <p class="text-sm text-gray-500 pb-2"><%= l(Time.current, format: :full, locale: :th) %></p>
       <p id="location-name-bottom-sheet" class="text-center text-lg text-gray-500 pb-[30px]"><%= notice %></p>
     <% end %>
