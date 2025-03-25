@@ -10,6 +10,10 @@ RSpec.describe "Client Report", type: :system do
     let(:all_reports) { Report.all.order(created_at: :desc) }
     let(:today_reports) { all_reports.today }
 
+    # location of Ubon Ratchathani
+    LATITUDE = 15.2284
+    LONGITUDE = 104.8561
+
     before do
       user_logs_in_with_valid_credential
 
@@ -27,20 +31,10 @@ RSpec.describe "Client Report", type: :system do
       client_sees_current_date_and_time_correctly
     end
 
-    # it "displays the current location" do
-    #   sleep 3
-
-    #   page.execute_script <<-JS
-    #   window.navigator.geolocation.getCurrentPosition = function(success) {
-    #     success({ coords: { latitude: 13.7563, longitude: 100.5018 } }); // Bangkok
-    #   };
-    # JS
-
-    # sleep 5
-
-    # # Wait for the page to update (optional sleep if needed)
-    # expect(page).to have_content("กรุงเทพ")
-    # end
+    it "displays the current location" do
+      assign_current_location LATITUDE, LONGITUDE
+      client_sees_current_location
+    end
 
     it "displays the number of reports today" do
       client_sees_total_reports_number_equal_to today_reports.count
@@ -71,9 +65,17 @@ RSpec.describe "Client Report", type: :system do
       expect(actual_count).to eq(expected_count)
     end
 
-    # def client_sees_current_location
-    #   expect(page).to have_content("ถนนวิทยวัฒนา บ้านศูนย์แพทย์ 1 เทศบาลนครขอนแก่น ศิลา จังหวัดขอนแก่น")
-    # end
+    def assign_current_location(latitude, longitude)
+      page.execute_script <<-JS
+      window.navigator.geolocation.getCurrentPosition = function(success) {
+        success({ coords: {latitude: #{latitude}, longitude: #{longitude} } });
+      };
+      JS
+    end
+
+    def client_sees_current_location
+      expect(page).to have_content("ถนนศรีณรงค์ ตำบลในเมือง เทศบาลนครอุบลราชธานี ปทุม จังหวัดอุบลราชธานี")
+    end
 
     def client_click(selector)
       report_button = find(selector)
