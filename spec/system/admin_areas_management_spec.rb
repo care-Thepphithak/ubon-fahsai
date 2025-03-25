@@ -10,7 +10,7 @@ RSpec.describe "Admin areas management", type: :system do
     let(:areas) { Area.all.order(created_at: :desc) }
 
     before do
-      user_logs_in_with_valid_credential
+      user_logs_in_with_valid_credential_and_assigned_no_area
       admin_goes_to_areas_management_page
     end
 

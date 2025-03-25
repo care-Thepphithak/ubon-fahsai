@@ -13,7 +13,7 @@ RSpec.describe "Users Login", type: :system do
     end
 
     it "allows admin to login with valid email and password" do
-      user_logs_in_with_valid_credential
+      user_logs_in_with_valid_credential_and_assigned_no_area
       user_should_redirect_to admin_dashboard_index_path
     end
 
@@ -32,7 +32,7 @@ RSpec.describe "Users Login", type: :system do
     end
 
     it "allows client to login with valid email and password" do
-      user_logs_in_with_valid_credential
+      user_logs_in_with_valid_credential_and_assigned_no_area
       user_should_redirect_to root_path
     end
 

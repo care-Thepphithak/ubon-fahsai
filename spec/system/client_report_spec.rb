@@ -20,7 +20,7 @@ RSpec.describe "Client Report", type: :system do
     LONGITUDE_OUTSIDE_AREA = 104.8560
 
     before do
-      user_logs_in_with_valid_credential
+      user_logs_in_with_valid_credential_and_assigned_area
     end
 
     it "displays the client report home page" do

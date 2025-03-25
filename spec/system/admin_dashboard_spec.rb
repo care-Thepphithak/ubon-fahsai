@@ -14,7 +14,7 @@ RSpec.describe "Admin Dashboard", type: :system do
     let(:tags) { Report::TAGS }
 
     before do
-      user_logs_in_with_valid_credential
+      user_logs_in_with_valid_credential_and_assigned_no_area
     end
 
     it "displays the admin dashboard page" do
