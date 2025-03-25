@@ -5,7 +5,7 @@ RSpec.describe "Admin Dashboard", type: :system do
   include_context 'user_login'
   fixtures :reports
 
-  context "When user is an admin and already_logged_in and there are reports today" do
+  context "When user is an admin and already logged in" do
     let(:admin_status) { true }
     let(:all_reports) { Report.all.order(created_at: :desc) }
     let(:today_reports) { all_reports.today }
