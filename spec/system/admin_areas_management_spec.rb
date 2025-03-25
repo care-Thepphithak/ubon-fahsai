@@ -70,8 +70,8 @@ RSpec.describe "Admin areas management", type: :system do
     end
 
     it "allows admin to edit an area" do
-      admin_clicks_on_edit_area_button
-      admin_should_have_current_path_as_edit_area
+      admin_start_area_editing
+
       admin_changes_area_name
       admin_changes_assigned_user
       admin_clicks_on_save_area_button
@@ -80,8 +80,8 @@ RSpec.describe "Admin areas management", type: :system do
     end
 
     it "allows admin to edit an area's polygon" do
-      admin_clicks_on_edit_area_button
-      admin_should_have_current_path_as_edit_area
+      admin_start_area_editing
+
       admin_click_reset_area_polygon
       admin_clicks_on_set_polygon_button
       admin_draws_area_polygon_on_map_with_points 3
@@ -89,16 +89,16 @@ RSpec.describe "Admin areas management", type: :system do
     end
 
     it "does not allow admin to edit an area without filling area name" do
-      admin_clicks_on_edit_area_button
-      admin_should_have_current_path_as_edit_area
+      admin_start_area_editing
+
       admin_fills_in_area_name ''
       admin_clicks_on_save_area_button
       admin_sees_content "โปรดระบุชื่อพื้นที่"
     end
 
     it "does not allow admin to edit an area without setting atleast 3 polygon points" do
-      admin_clicks_on_edit_area_button
-      admin_should_have_current_path_as_edit_area
+      admin_start_area_editing
+
       admin_click_reset_area_polygon
       admin_clicks_on_set_polygon_button
       admin_draws_area_polygon_on_map_with_points 2
@@ -106,14 +106,19 @@ RSpec.describe "Admin areas management", type: :system do
     end
 
     it "does not allow admin to edit an area if area name already exist" do
-      admin_clicks_on_edit_area_button
-      admin_should_have_current_path_as_edit_area
+      admin_start_area_editing
+
       admin_fills_in_area_name(areas.second.name)
       admin_clicks_on_save_area_button
       admin_sees_content "ชื่อพื้นที่นี้มีอยู่แล้ว"
     end
 
     private
+
+    def admin_start_area_editing
+      admin_clicks_on_edit_area_button
+      admin_should_have_current_path_as_edit_area
+    end
 
     def admin_start_area_creation
       admin_clicks_on_create_new_area_button
