@@ -78,10 +78,18 @@ RSpec.describe "Admin Dashboard", type: :system do
       area = find('[data-testid="area-list-item"]', match: :first)
       expect(area).to be_present
       area.click
-      sleep 5
     end
 
     def admin_should_see_area_polygon_on_map
+      expect(page).to have_selector('.leaflet-interactive')
+    end
+
+    def admin_clicks_on_create_new_area_button
+      click_link('เพิ่มพื้นที่')
+    end
+
+    def admin_should_have_current_path_as_new_area
+      expect(page).to have_current_path(new_admin_area_path)
     end
   end
 end
