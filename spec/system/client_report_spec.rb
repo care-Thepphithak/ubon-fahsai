@@ -118,7 +118,6 @@ RSpec.describe "Client Report", type: :system do
     private
 
     def client_sees_the_latest_report
-      puts tags
       expect(first_report.severity_level).to eq("รุนแรงมาก")
       expect(first_report.description).to eq("ไฟไหม้ในที่รกร้าง")
       expect(first_report.created_at).to be_within(1.minute).of(Time.current)
