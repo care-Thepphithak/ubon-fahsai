@@ -7,7 +7,7 @@ RSpec.describe "Admin Dashboard", type: :system do
 
   context "When user is an admin and already logged in" do
     let(:admin_status) { true }
-    let(:areas) { Area.all }
+    let(:areas) { Area.all.order(created_at: :desc) }
 
     before do
       user_logs_in_with_valid_credential
@@ -33,6 +33,8 @@ RSpec.describe "Admin Dashboard", type: :system do
       admin_fills_in_area_name
       admin_assigns_area_to_user
       admin_clicks_on_save_area_button
+      admin_should_have_current_path_as_admin_areas
+      admin_should_see_a_new_area 'New Area'
     end
 
     it "can edit an area" do
@@ -41,6 +43,8 @@ RSpec.describe "Admin Dashboard", type: :system do
       admin_changes_area_name
       admin_changes_assigned_user
       admin_clicks_on_save_area_button
+      admin_should_have_current_path_as_admin_areas
+      admin_should_see_a_new_area 'Edited Area'
     end
 
     it "can edit an area's polygon" do
@@ -103,7 +107,7 @@ RSpec.describe "Admin Dashboard", type: :system do
     end
 
     def admin_assigns_area_to_user
-      first_user = find('label', text: users(:one).email_address)
+      first_user = find('label', text: users(:client_one).email_address)
       expect(first_user).to be_present
 
       first_user.click
@@ -111,6 +115,31 @@ RSpec.describe "Admin Dashboard", type: :system do
 
     def admin_clicks_on_save_area_button
       click_button('บันทึกพื้นที่')
+    end
+
+    def admin_should_see_a_new_area(area_name)
+      expect(page).to have_content(area_name)
+    end
+
+    def admin_clicks_on_edit_area_button
+      area = find('[data-testid="area-list-item"]', match: :first)
+      expect(area).to be_present
+      area.find('a').click
+    end
+
+    def admin_should_have_current_path_as_edit_area
+      expect(page).to have_current_path(edit_admin_area_path(areas.first))
+    end
+
+    def admin_changes_area_name
+      fill_in('area_name', with: 'Edited Area')
+    end
+
+    def admin_changes_assigned_user
+      second_user = find('label', text: users(:client_two).email_address)
+      expect(second_user).to be_present
+
+      second_user.click
     end
 
     def admin_draws_area_polygon_on_map_with_points(number_of_points)
