@@ -11,10 +11,10 @@ RSpec.describe "Admin Dashboard", type: :system do
 
     before do
       user_logs_in_with_valid_credential
+      admin_goes_to_areas_management_page
     end
 
     it "allows admin to see areas management page" do
-      admin_goes_to_areas_management_page
       admin_should_have_current_path_as_admin_areas
       admin_should_see_a_map
       admin_should_see_a_list_of_areas
@@ -72,6 +72,16 @@ RSpec.describe "Admin Dashboard", type: :system do
       areas.each_with_index do |area, index|
         expect(areas_elements[index]).to have_content(area.name)
       end
+    end
+
+    def admin_clicks_on_an_area
+      area = find('[data-testid="area-list-item"]', match: :first)
+      expect(area).to be_present
+      area.click
+      sleep 5
+    end
+
+    def admin_should_see_area_polygon_on_map
     end
   end
 end
