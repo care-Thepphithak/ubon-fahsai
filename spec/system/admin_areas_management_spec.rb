@@ -62,6 +62,12 @@ RSpec.describe "Admin Dashboard", type: :system do
     it "does not allow admin to create new area without setting atleast 3 polygon points" do
     end
 
+    it "does not allow admin to create new area if area name already exist" do
+    end
+
+    it "does not allow admin to edit an area without filling area name" do
+    end
+
     private
 
     def admin_goes_to_areas_management_page
