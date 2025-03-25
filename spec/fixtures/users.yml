@@ -5,8 +5,22 @@ one:
   password_digest: <%= password_digest %>
   admin: false
 
-
 two:
   email_address: two@example.com
   password_digest: <%= password_digest %>
   admin: true
+
+client_one:
+  email_address: test2@example.com
+  password_digest: <%= password_digest %>
+  admin: false
+
+client_two:
+  email_address: client@email.com
+  password_digest: <%= password_digest %>
+  admin: false
+
+client_three:
+  email_address: mumi@email.com
+  password_digest: <%= password_digest %>
+  admin: false
