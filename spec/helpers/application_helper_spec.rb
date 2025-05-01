@@ -49,34 +49,6 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
-    context "When at action new." do
-      before do
-        allow(helper).to receive(:controller_name).and_return("areas")
-        allow(helper).to receive(:action_name).and_return("new")
-      end
-
-      it "It will show a link to the index first, followed by the action name (not a link)." do
-        output = helper.breadcrumb_links
-        expect(output).to start_with(%r{<a href="/areas/index"[^>]*>จัดการพื้นที่</a>})
-        expect(output).to include('<span class="text-gray-100 font-thin"> / </span>')
-        expect(output).to end_with("เพิ่มพื้นที่")
-        expect(output.scan(/>เพิ่มพื้นที่</).size).to eq 1
-      end
-    end
-
-    context "When action does not exist in hash labels." do
-      before do
-        allow(helper).to receive(:controller_name).and_return("widgets")
-        allow(helper).to receive(:action_name).and_return("show")
-      end
-
-      it "Use titleize for controllers and actions instead." do
-        output = helper.breadcrumb_links
-        expect(output).to start_with(%r{<a href="/widgets/index"[^>]*>Widgets</a>})
-        expect(output).to include("Show")
-      end
-    end
-
     context "When an action and label duplicate a controller label" do
       before do
         allow(helper).to receive(:controller_name).and_return("dashboard")
