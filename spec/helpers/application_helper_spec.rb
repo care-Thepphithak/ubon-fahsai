@@ -49,6 +49,34 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
+  context "when action is new" do
+    before do
+      allow(helper).to receive(:controller_name).and_return("areas")
+      allow(helper).to receive(:action_name).and_return("new")
+    end
+
+    it 'Show a link to the index first, followed by the action name (not a link).' do
+      output = helper.breadcrumb_links
+      text = strip_tags(output)
+      expect(text).to start_with('จัดการพื้นที่')
+      expect(text).to include(' / ')
+      expect(text).to end_with('เพิ่มพื้นที่')
+    end
+  end
+
+  context "when controller/action not in labels hash" do
+    before do
+      allow(helper).to receive(:controller_name).and_return("widgets")
+      allow(helper).to receive(:action_name).and_return("show")
+    end
+
+    it "uses titleized controller and action" do
+      output = helper.breadcrumb_links
+      expect(output).to match(%r{\A<a[^>]*href="/widgets/index"[^>]*>Widgets</a>})
+      expect(output).to include("Show")
+    end
+  end
+
     context "When an action and label duplicate a controller label" do
       before do
         allow(helper).to receive(:controller_name).and_return("dashboard")
