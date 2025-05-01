@@ -79,8 +79,7 @@ Ubon Fahsai is a Progressive Web Application built with Ruby on Rails that enabl
 ### Running Tests
 ```bash
 rails db:prepare
-rails db:migrate
-rails test
+rspec spec
 ```
 Make sure that you already create database or prepare database
 
