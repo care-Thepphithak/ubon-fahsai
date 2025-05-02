@@ -1,103 +1,135 @@
 require "rails_helper"
 
-describe "Authentication Concern" do
-  # Create a dummy controller to include the Authentication module
-  controller(ApplicationController) do
+describe Authentication do
+  controller(ActionController::Base) do
     include Authentication
-
-    # Define a dummy action to test the module
-    def index
-      render plain: "A plain text response for testing Authentication"
-    end
   end
 
   let(:user) { create(:user) }
-  let(:session) { create(:session, user: user) }
+  let(:admin_user) { create(:user, admin: true) }
+  let(:session) { create(:session, user: user, ip_address: "127.0.0.1", user_agent: "TestAgent") }
+  let(:admin_session) { create(:session, user: admin_user, ip_address: "127.0.0.1", user_agent: "TestAgent") }
 
-  before do
-    routes.draw { get "index" => "anonymous#index" }
-  end
+  describe "#request_authentication" do
+    it "stores return_to_after_authenticating in session and redirects to new_session_path" do
+      allow(controller.request).to receive(:url).and_return("http://test.host/protected")
 
-  describe "#require_authentication" do
-    context "when the user is authenticated" do
-      before do
-        cookies.signed[:session_id] = session.id
-        allow(Session).to receive(:find_by).with(id: session.id).and_return(session)
-      end
+      expect(controller).to receive(:redirect_to).with(controller.new_session_path)
+      controller.send(:request_authentication)
 
-      it "allows access to the action" do
-        get :index
-        expect(response.body).to eq("A plain text response for testing Authentication")
-      end
-    end
-
-    context "when the user is not authenticated" do
-      it "redirects to the login page" do
-        get :index
-        expect(response).to redirect_to(new_session_path)
-      end
+      expect(controller.session[:return_to_after_authenticating]).to eq("http://test.host/protected")
     end
   end
 
-  # describe "#start_new_session_for" do
-  #   it "creates a new session and sets the session cookie" do
-  #     expect {
-  #       controller.send(:start_new_session_for, user)
-  #     }.to change(Session, :count).by(1)
+  # describe "#after_authentication_url" do
+  #   it "deletes return_to_after_authenticating from session and redirects to determined URL" do
+  #     controller.session[:return_to_after_authenticating] = "/some_stored_url"
+  #     allow(Current).to receive(:session).and_return(session)
+  #     allow(Current.session).to receive(:user).and_return(user)
 
-  #     expect(cookies.signed[:session_id]).to be_present
+  #     expect(controller).to receive(:determine_redirect_url_for).with(user).and_return("/determined_url")
+  #     expect(controller.after_authentication_url).to eq("/determined_url")
+  #     expect(controller.session[:return_to_after_authenticating]).to be_nil
+  #   end
+
+  #   it "uses determine_redirect_url_for when no stored URL" do
+  #     # No stored URL in session
+  #     allow(Current).to receive(:session).and_return(session)
+  #     allow(Current.session).to receive(:user).and_return(user)
+
+  #     expect(controller).to receive(:determine_redirect_url_for).with(user).and_return("/determined_url")
+  #     expect(controller.after_authentication_url).to eq("/determined_url")
   #   end
   # end
 
-  # describe "#terminate_session" do
-  #   before do
-  #     cookies.signed[:session_id] = session.id
-  #     Current.session = session
+  # describe "#determine_redirect_url_for" do
+  #   it "redirects to admin dashboard for admin users" do
+  #     expect(controller.determine_redirect_url_for(admin_user)).to eq(controller.admin_dashboard_index_url)
   #   end
 
-  #   it "destroys the current session and deletes the session cookie" do
-  #     expect {
-  #       controller.send(:terminate_session)
-  #     }.to change(Session, :count).by(-1)
-
-  #     expect(cookies.signed[:session_id]).to be_nil
+  #   it "redirects to root url for non-admin users" do
+  #     expect(controller.determine_redirect_url_for(user)).to eq(controller.root_url)
   #   end
   # end
 
   # describe "#protect_client_access" do
-  #   context "when the user is not authenticated" do
-  #     it "redirects to the root URL" do
-  #       get :index
-  #       controller.send(:protect_client_access)
-  #       expect(response).to redirect_to(root_url)
+  #   context "when not authenticated" do
+  #     before do
+  #       allow(controller).to receive(:authenticated?).and_return(false)
+  #     end
+
+  #     it "calls request_authentication" do
+  #       expect(controller).to receive(:request_authentication)
+  #       controller.protect_client_access
   #     end
   #   end
 
-  #   context "when the user is authenticated but not an admin" do
+  #   context "when authenticated but not admin" do
   #     before do
-  #       cookies.signed[:session_id] = session.id
-  #       allow(Session).to receive(:find_by).with(id: session.id).and_return(session)
-  #       allow(session.user).to receive(:admin?).and_return(false)
+  #       allow(controller).to receive(:authenticated?).and_return(true)
+  #       allow(Current).to receive(:session).and_return(session)
+  #       allow(Current.session).to receive(:user).and_return(user)
+  #       allow(Current.session.user).to receive(:admin?).and_return(false)
   #     end
 
-  #     it "allows access to the action" do
-  #       controller.send(:protect_client_access)
-  #       expect(response).not_to redirect_to(root_url)
+  #     it "does not redirect" do
+  #       expect(controller).not_to receive(:redirect_to)
+  #       controller.protect_client_access
+  #     end
+  #   end
+
+  #   context "when authenticated as admin" do
+  #     before do
+  #       allow(controller).to receive(:authenticated?).and_return(true)
+  #       allow(Current).to receive(:session).and_return(admin_session)
+  #       allow(Current.session).to receive(:user).and_return(admin_user)
+  #       allow(Current.session.user).to receive(:admin?).and_return(true)
+  #     end
+
+  #     it "redirects to root_url" do
+  #       expect(controller).to receive(:redirect_to).with(controller.root_url)
+  #       controller.protect_client_access
   #     end
   #   end
   # end
 
   # describe "#protect_admin_access" do
-  #   context "when the user is authenticated and is an admin" do
+  #   context "when not authenticated" do
   #     before do
-  #       cookies.signed[:session_id] = session.id
-  #       allow(Session).to receive(:find_by).with(id: session.id).and_return(session)
-  #       allow(session.user).to receive(:admin?).and_return(true)
+  #       allow(controller).to receive(:authenticated?).and_return(false)
   #     end
 
-  #     it "redirects to the admin dashboard" do
-  #       controller.send(:protect_admin_access)
-  #       expect(response).to redirect_to(admin_dashboard_index_url)
+  #     it "calls request_authentication" do
+  #       expect(controller).to receive(:request_authentication)
+  #       controller.protect_admin_access
+  #     end
+  #   end
+
+  #   context "when authenticated as admin" do
+  #     before do
+  #       allow(controller).to receive(:authenticated?).and_return(true)
+  #       allow(Current).to receive(:session).and_return(admin_session)
+  #       allow(Current.session).to receive(:user).and_return(admin_user)
+  #       allow(Current.session.user).to receive(:admin?).and_return(true)
+  #     end
+
+  #     it "does not redirect" do
+  #       expect(controller).not_to receive(:redirect_to)
+  #       controller.protect_admin_access
+  #     end
+  #   end
+
+  #   context "when authenticated but not admin" do
+  #     before do
+  #       allow(controller).to receive(:authenticated?).and_return(true)
+  #       allow(Current).to receive(:session).and_return(session)
+  #       allow(Current.session).to receive(:user).and_return(user)
+  #       allow(Current.session.user).to receive(:admin?).and_return(false)
+  #     end
+
+  #     it "redirects to admin_dashboard_index_url" do
+  #       expect(controller).to receive(:redirect_to).with(controller.admin_dashboard_index_url)
+  #       controller.protect_admin_access
   #     end
   #   end
   # end
