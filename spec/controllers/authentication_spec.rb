@@ -21,26 +21,22 @@ describe Authentication do
     end
   end
 
-  # describe "#after_authentication_url" do
-  #   it "deletes return_to_after_authenticating from session and redirects to determined URL" do
-  #     controller.session[:return_to_after_authenticating] = "/some_stored_url"
-  #     allow(Current).to receive(:session).and_return(session)
-  #     allow(Current.session).to receive(:user).and_return(user)
+  describe "#after_authentication_url" do
+    it "deletes return_to_after_authenticating from session and also returns the deleted url" do
+      controller.session[:return_to_after_authenticating] = "/some_stored_url"
 
-  #     expect(controller).to receive(:determine_redirect_url_for).with(user).and_return("/determined_url")
-  #     expect(controller.after_authentication_url).to eq("/determined_url")
-  #     expect(controller.session[:return_to_after_authenticating]).to be_nil
-  #   end
+      expect(controller.send(:after_authentication_url)).to eq("/some_stored_url")
+      expect(controller.session[:return_to_after_authenticating]).to be_nil
+    end
 
-  #   it "uses determine_redirect_url_for when no stored URL" do
-  #     # No stored URL in session
-  #     allow(Current).to receive(:session).and_return(session)
-  #     allow(Current.session).to receive(:user).and_return(user)
+    it "uses determine_redirect_url_for when no stored URL in session" do
+      allow(Current).to receive(:session).and_return(session)
+      allow(Current.session).to receive(:user).and_return(user)
 
-  #     expect(controller).to receive(:determine_redirect_url_for).with(user).and_return("/determined_url")
-  #     expect(controller.after_authentication_url).to eq("/determined_url")
-  #   end
-  # end
+      expect(controller).to receive(:determine_redirect_url_for).with(user).and_return("/determined_url")
+      expect(controller.send(:after_authentication_url)).to eq("/determined_url")
+    end
+  end
 
   # describe "#determine_redirect_url_for" do
   #   it "redirects to admin dashboard for admin users" do
