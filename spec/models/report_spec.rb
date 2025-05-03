@@ -116,4 +116,135 @@ RSpec.describe Report, type: :model do
       end
     end
   end
+
+  describe '#parse_tags' do
+    context 'when tags is already an Array' do
+      it 'returns the original array unchanged' do
+        tags_array = [ 'ไฟป่า', 'เผาขยะ' ]
+        expect(report.send(:parse_tags, tags_array)).to eq(tags_array)
+      end
+    end
+
+    context 'when tags is a valid JSON string' do
+      it 'parses the JSON into an Array' do
+        tags_json = [ 'ไฟป่า', 'เผาขยะ' ].to_json
+        expect(report.send(:parse_tags, tags_json)).to eq([ 'ไฟป่า', 'เผาขยะ' ])
+      end
+    end
+
+    context 'when tags is an invalid JSON string' do
+      it 'rescues parsing errors and returns an empty Array' do
+        invalid_json = '{invalid:json}'
+        expect(report.send(:parse_tags, invalid_json)).to eq([])
+      end
+    end
+
+    context 'when tags is nil or blank' do
+      it 'returns an empty Array' do
+        expect(report.send(:parse_tags, nil)).to eq([])
+        expect(report.send(:parse_tags, '')).to eq([])
+      end
+    end
+  end
+
+  describe '#invalid_tags?' do
+    let(:valid_tags) { %w[ไฟป่า เผาขยะ] }
+    let(:invalid_tags) { %w[ไฟป่า invalid_tag] }
+
+    it 'returns false if all tags are in the whitelist' do
+      expect(report.send(:invalid_tags?, valid_tags)).to be false
+    end
+
+    it 'returns true if any tag is not in the whitelist' do
+      expect(report.send(:invalid_tags?, invalid_tags)).to be true
+    end
+
+    it 'returns false for an empty array' do
+      expect(report.send(:invalid_tags?, [])).to be false
+    end
+  end
+
+  describe '#tags_must_be_valid' do
+    subject { report.valid? }
+
+    context 'with only valid tags' do
+      before do
+        allow(report).to receive(:tags).and_return([ 'ไฟป่า', 'เผาขยะ' ].to_json)
+      end
+
+      it 'does not add any errors on :tags' do
+        report.send(:tags_must_be_valid)
+        expect(report.errors[:tags]).to be_empty
+      end
+    end
+
+    context 'with at least one invalid tag' do
+      before do
+        allow(report).to receive(:tags).and_return([ 'ไฟป่า', 'invalid_tag' ].to_json)
+      end
+
+      it 'adds a validation error on :tags' do
+        report.send(:tags_must_be_valid)
+        expect(report.errors[:tags]).to include('มีค่าไม่ถูกต้อง')
+      end
+    end
+  end
+
+  describe '#generated_image_urls' do
+    context 'when no images are attached' do
+      before do
+        allow(report.images).to receive(:attached?).and_return(false)
+      end
+
+      it 'returns an empty Array' do
+        expect(report.send(:generated_image_urls)).to eq([])
+      end
+    end
+
+    context 'when images are attached' do
+      before do
+        report.images.attach(
+          io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'test.jpg')),
+          filename: 'test.jpg',
+          content_type: 'image/jpg'
+        )
+        # Mock Rails.application.routes.url_helpers to avoid real URL generation
+        allow(Rails.application.routes).to receive(:url_helpers).and_return(
+          double(minio_proxy_url: '/minio/test.jpg')
+        )
+      end
+
+      context 'in development environment' do
+        before do
+          allow(Rails.env).to receive(:development?).and_return(true)
+          allow(Rails.env).to receive(:production?).and_return(false)
+        end
+
+        it 'builds URLs with http and localhost:3000' do
+          urls = report.send(:generated_image_urls)
+          expect(urls).to be_an(Array)
+          expect(urls.first).to eq('/minio/test.jpg')
+          # Since we've mocked url_helpers, we just verify it was called with right params
+          expect(Rails.application.routes.url_helpers).to have_received(:minio_proxy_url)
+            .with(anything, hash_including(protocol: 'http', host: 'localhost:3000'))
+        end
+      end
+
+      context 'in production environment' do
+        before do
+          allow(Rails.env).to receive(:development?).and_return(false)
+          allow(Rails.env).to receive(:production?).and_return(true)
+        end
+
+        it 'builds URLs with https and ubon-fahsai-dev.odd.works' do
+          urls = report.send(:generated_image_urls)
+          expect(urls).to be_an(Array)
+          expect(urls.first).to eq('/minio/test.jpg')
+          # Since we've mocked url_helpers, we just verify it was called with right params
+          expect(Rails.application.routes.url_helpers).to have_received(:minio_proxy_url)
+            .with(anything, hash_including(protocol: 'https', host: 'ubon-fahsai-dev.odd.works'))
+        end
+      end
+    end
+  end
 end
