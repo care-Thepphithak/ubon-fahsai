@@ -21,6 +21,25 @@ describe Authentication do
     end
   end
 
+  describe "#start_new_session_for" do
+    before do
+      allow(controller.request).to receive(:user_agent).and_return("TestAgent")
+      allow(controller.request).to receive(:remote_ip).and_return("127.0.0.1")
+    end
+
+    it "creates a new session for the user and sets cookies" do
+      signed_cookies = {}
+      allow(controller.send(:cookies)).to receive(:signed).and_return(double(permanent: signed_cookies))
+
+      expect(user.sessions).to receive(:create!).with(user_agent: "TestAgent", ip_address: "127.0.0.1").and_return(session)
+      expect(Current).to receive(:session=).with(session)
+      expect(signed_cookies).to receive(:[]=).with(:session_id, { value: session.id, httponly: true, same_site: :lax })
+
+      result = controller.send(:start_new_session_for, user)
+      expect(result).to eq(session)
+    end
+  end
+
   describe "#after_authentication_url" do
     it "deletes return_to_after_authenticating from session and also returns the deleted url" do
       controller.session[:return_to_after_authenticating] = "/some_stored_url"
