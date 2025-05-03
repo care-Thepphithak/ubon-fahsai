@@ -38,6 +38,16 @@ describe Authentication do
     end
   end
 
+  describe "#terminate_session" do
+    it "destroys the current session and deletes the session_id cookie" do
+      allow(Current).to receive(:session).and_return(session)
+      allow(controller.send(:cookies)).to receive(:delete).with(:session_id)
+
+      expect(Current.session).to receive(:destroy)
+      controller.send(:terminate_session)
+    end
+  end
+
   describe "#after_authentication_url" do
     it "deletes return_to_after_authenticating from session and also returns the deleted url" do
       controller.session[:return_to_after_authenticating] = "/some_stored_url"
