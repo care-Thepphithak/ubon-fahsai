@@ -22,12 +22,10 @@ describe Authentication do
   end
 
   describe "#start_new_session_for" do
-    before do
+    it "creates a new session for the user and sets cookies" do
       allow(controller.request).to receive(:user_agent).and_return("TestAgent")
       allow(controller.request).to receive(:remote_ip).and_return("127.0.0.1")
-    end
 
-    it "creates a new session for the user and sets cookies" do
       signed_cookies = {}
       allow(controller.send(:cookies)).to receive(:signed).and_return(double(permanent: signed_cookies))
 
