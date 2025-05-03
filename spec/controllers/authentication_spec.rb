@@ -6,7 +6,7 @@ describe Authentication do
   end
 
   let(:user) { create(:user) }
-  let(:admin_user) { create(:user, admin: true) }
+  let(:admin_user) { create(:user, :admin) }
   let(:session) { create(:session, user: user, ip_address: "127.0.0.1", user_agent: "TestAgent") }
   let(:admin_session) { create(:session, user: admin_user, ip_address: "127.0.0.1", user_agent: "TestAgent") }
 
@@ -38,56 +38,54 @@ describe Authentication do
     end
   end
 
-  # describe "#determine_redirect_url_for" do
-  #   it "redirects to admin dashboard for admin users" do
-  #     expect(controller.determine_redirect_url_for(admin_user)).to eq(controller.admin_dashboard_index_url)
-  #   end
+  describe "#determine_redirect_url_for" do
+    it "redirects to admin dashboard for admin users" do
+      expect(controller.send(:determine_redirect_url_for, admin_user)).to eq(admin_dashboard_index_url)
+    end
 
-  #   it "redirects to root url for non-admin users" do
-  #     expect(controller.determine_redirect_url_for(user)).to eq(controller.root_url)
-  #   end
-  # end
+    it "redirects to root url for non-admin users" do
+      expect(controller.send(:determine_redirect_url_for, user)).to eq(root_url)
+    end
+  end
 
-  # describe "#protect_client_access" do
-  #   context "when not authenticated" do
-  #     before do
-  #       allow(controller).to receive(:authenticated?).and_return(false)
-  #     end
+  describe "#protect_client_access" do
+    context "when not authenticated" do
+      before do
+        allow(controller).to receive(:authenticated?).and_return(false)
+      end
 
-  #     it "calls request_authentication" do
-  #       expect(controller).to receive(:request_authentication)
-  #       controller.protect_client_access
-  #     end
-  #   end
+      it "redirects to root_url" do
+        expect(controller).to receive(:redirect_to).with(root_url)
+        controller.send(:protect_client_access)
+      end
+    end
 
-  #   context "when authenticated but not admin" do
-  #     before do
-  #       allow(controller).to receive(:authenticated?).and_return(true)
-  #       allow(Current).to receive(:session).and_return(session)
-  #       allow(Current.session).to receive(:user).and_return(user)
-  #       allow(Current.session.user).to receive(:admin?).and_return(false)
-  #     end
+    context "when authenticated but not admin" do
+      before do
+        allow(controller).to receive(:authenticated?).and_return(true)
+        allow(Current).to receive(:session).and_return(session)
+        allow(Current.session).to receive(:user).and_return(user)
+      end
 
-  #     it "does not redirect" do
-  #       expect(controller).not_to receive(:redirect_to)
-  #       controller.protect_client_access
-  #     end
-  #   end
+      it "redirects to root_url" do
+        expect(controller).to receive(:redirect_to).with(root_url)
+        controller.send(:protect_client_access)
+      end
+    end
 
-  #   context "when authenticated as admin" do
-  #     before do
-  #       allow(controller).to receive(:authenticated?).and_return(true)
-  #       allow(Current).to receive(:session).and_return(admin_session)
-  #       allow(Current.session).to receive(:user).and_return(admin_user)
-  #       allow(Current.session.user).to receive(:admin?).and_return(true)
-  #     end
+    context "when authenticated as admin" do
+      before do
+        allow(controller).to receive(:authenticated?).and_return(true)
+        allow(Current).to receive(:session).and_return(admin_session)
+        allow(Current.session).to receive(:user).and_return(admin_user)
+      end
 
-  #     it "redirects to root_url" do
-  #       expect(controller).to receive(:redirect_to).with(controller.root_url)
-  #       controller.protect_client_access
-  #     end
-  #   end
-  # end
+      it "allows admin and then protect_client_access return nil" do
+        expect(controller).not_to receive(:redirect_to)
+        controller.send(:protect_client_access)
+      end
+    end
+  end
 
   # describe "#protect_admin_access" do
   #   context "when not authenticated" do
