@@ -87,44 +87,42 @@ describe Authentication do
     end
   end
 
-  # describe "#protect_admin_access" do
-  #   context "when not authenticated" do
-  #     before do
-  #       allow(controller).to receive(:authenticated?).and_return(false)
-  #     end
+  describe "#protect_admin_access" do
+    context "when not authenticated" do
+      before do
+        allow(controller).to receive(:authenticated?).and_return(false)
+      end
 
-  #     it "calls request_authentication" do
-  #       expect(controller).to receive(:request_authentication)
-  #       controller.protect_admin_access
-  #     end
-  #   end
+      it "redirects to admin_dashboard_index_url" do
+        expect(controller).to receive(:redirect_to).with(admin_dashboard_index_url)
+        controller.send(:protect_admin_access)
+      end
+    end
 
-  #   context "when authenticated as admin" do
-  #     before do
-  #       allow(controller).to receive(:authenticated?).and_return(true)
-  #       allow(Current).to receive(:session).and_return(admin_session)
-  #       allow(Current.session).to receive(:user).and_return(admin_user)
-  #       allow(Current.session.user).to receive(:admin?).and_return(true)
-  #     end
+    context "when authenticated as admin" do
+      before do
+        allow(controller).to receive(:authenticated?).and_return(true)
+        allow(Current).to receive(:session).and_return(admin_session)
+        allow(Current.session).to receive(:user).and_return(admin_user)
+      end
 
-  #     it "does not redirect" do
-  #       expect(controller).not_to receive(:redirect_to)
-  #       controller.protect_admin_access
-  #     end
-  #   end
+      it "redirects to admin_dashboard_index_url" do
+        expect(controller).to receive(:redirect_to).with(admin_dashboard_index_url)
+        controller.send(:protect_admin_access)
+      end
+    end
 
-  #   context "when authenticated but not admin" do
-  #     before do
-  #       allow(controller).to receive(:authenticated?).and_return(true)
-  #       allow(Current).to receive(:session).and_return(session)
-  #       allow(Current.session).to receive(:user).and_return(user)
-  #       allow(Current.session.user).to receive(:admin?).and_return(false)
-  #     end
+    context "when authenticated but not admin" do
+      before do
+        allow(controller).to receive(:authenticated?).and_return(true)
+        allow(Current).to receive(:session).and_return(session)
+        allow(Current.session).to receive(:user).and_return(user)
+      end
 
-  #     it "redirects to admin_dashboard_index_url" do
-  #       expect(controller).to receive(:redirect_to).with(controller.admin_dashboard_index_url)
-  #       controller.protect_admin_access
-  #     end
-  #   end
-  # end
+      it "allows non-admin and then protect_admin_access return nil" do
+        expect(controller).not_to receive(:redirect_to)
+        controller.send(:protect_admin_access)
+      end
+    end
+  end
 end
