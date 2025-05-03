@@ -46,6 +46,27 @@ RSpec.describe Report, type: :model do
     end
   end
 
+  describe 'as_json' do
+    let(:report) { create(:report, severity_level: "รุนแรง", created_at: 2.hours.ago) }
+
+    before do
+      report.images.attach(
+        io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'test.jpg')),
+        filename: 'test.jpg',
+        content_type: 'image/jpg'
+      )
+    end
+
+    it 'returns the correct JSON representation of the report' do
+      json = report.as_json
+
+      expect(json[:severity_color]).to eq("#FF6159")
+      expect(json[:image_urls]).to be_an(Array)
+      expect(json[:image_urls].first).to include("http")
+      expect(json[:time_ago_message]).to include("ที่แล้ว")
+    end
+  end
+
   # describe '#location_within_responsible_areas?' do
   #   context 'when the report location is within the user areas' do
   #     it 'does not add an error' do
