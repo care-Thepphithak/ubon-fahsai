@@ -3,8 +3,7 @@ require 'rails_helper'
 RSpec.describe Report, type: :model do
   let(:user) { create(:user) }
   let(:area) { create(:area) }
-  let(:report) { create(:report) }
-  let(:reports) { create_list(:report, 3) }
+  let(:report) { create(:report, severity_level: "รุนแรง") }
 
   before do
     allow(Current).to receive(:user).and_return(user)
@@ -64,6 +63,12 @@ RSpec.describe Report, type: :model do
       expect(json[:image_urls]).to be_an(Array)
       expect(json[:image_urls].first).to include("http")
       expect(json[:time_ago_message]).to include("ที่แล้ว")
+    end
+  end
+
+  describe 'severity_color' do
+    it 'returns the correct color for a valid severity level' do
+      expect(report.severity_color).to eq("#FF6159")
     end
   end
 

@@ -10,4 +10,7 @@ FactoryBot.define do
       ].to_json
     end
   end
+  factory :area_with_reports, parent: :area do
+    name { "Test Area Unit 1" }
+  end
 end
