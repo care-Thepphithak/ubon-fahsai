@@ -14,7 +14,7 @@ RSpec.describe Report, type: :model do
     user.areas << area
   end
 
-  describe '.top_districts_today' do
+  describe 'top_districts_today' do
     it 'returns the districts with the correct report counts for today' do
       result = Report.top_districts_today
       expect(result.first.district).to eq("Test Area Unit")
@@ -23,6 +23,26 @@ RSpec.describe Report, type: :model do
     it 'does not include reports created outside of today' do
       result = Report.top_districts_today
       expect(result.map(&:district_count).sum).to eq(1)
+    end
+  end
+
+  describe 'severity_levels_json' do
+    describe 'SEVERITY_LEVEL_RANGES' do
+      it 'returns the correct maximum severity levels for each severity' do
+        expected_result = {
+          "เล็กน้อย" => 14,
+          "ลุกลาม" => 28,
+          "เฝ้าระวัง" => 42,
+          "ปานกลาง" => 56,
+          "รุนแรง" => 70,
+          "รุนแรงมาก" => 84,
+          "วิกฤติ" => 98
+        }.to_json
+
+        result = Report::SEVERITY_LEVEL_RANGES.transform_values(&:max).to_json
+
+        expect(result).to eq(expected_result)
+      end
     end
   end
 
