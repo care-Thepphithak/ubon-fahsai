@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Report, type: :model do
   let(:user) { create(:user) }
   let(:area) { create(:area) }
-  let(:report) { create(:report, severity_level: "รุนแรง") }
+  let(:report) { create(:report) }
 
   before do
     allow(Current).to receive(:user).and_return(user)
@@ -72,23 +72,48 @@ RSpec.describe Report, type: :model do
     end
   end
 
-  # describe '#location_within_responsible_areas?' do
-  #   context 'when the report location is within the user areas' do
-  #     it 'does not add an error' do
-  #       report.lat = 15.245
-  #       report.long = 104.860
-  #       report.valid?
-  #       expect(report.errors[:base]).to be_empty
-  #     end
-  #   end
+  describe 'generated_image_urls' do
+    context 'when images are attached' do
+      before do
+        report.images.attach(
+          io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'test.jpg')),
+          filename: 'test.jpg',
+          content_type: 'image/jpg'
+        )
+      end
 
-  #   context 'when the report location is outside the user areas' do
-  #     it 'adds an error' do
-  #       report.lat = 16.0
-  #       report.long = 105.0
-  #       report.valid?
-  #       expect(report.errors[:base]).to include("ตำแหน่งนี้ไม่ได้อยู่ในพื้นที่ที่รับผิดชอบ")
-  #     end
-  #   end
-  # end
+      it 'returns an array of image URLs' do
+        urls = report.send(:generated_image_urls)
+        expect(urls).to be_an(Array)
+        expect(urls.first).to include("http")
+      end
+    end
+
+    context 'when no images are attached' do
+      it 'returns an empty array' do
+        urls = report.send(:generated_image_urls)
+        expect(urls).to eq([])
+      end
+    end
+  end
+
+  describe '#location_within_responsible_areas?' do
+    context 'when the report location is within the user areas' do
+      it 'does not add an error' do
+        report.lat = 15.245
+        report.long = 104.860
+        report.valid?
+        expect(report.errors[:base]).to be_empty
+      end
+    end
+
+    context 'when the report location is outside the user areas' do
+      it 'adds an error' do
+        report.lat = 16.0
+        report.long = 105.0
+        report.valid?
+        expect(report.errors[:base]).to include("ตำแหน่งนี้ไม่ได้อยู่ในพื้นที่ที่รับผิดชอบ")
+      end
+    end
+  end
 end
