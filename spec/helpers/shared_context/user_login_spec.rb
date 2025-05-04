@@ -1,6 +1,6 @@
 shared_context 'user_login' do
   before do
-    @user = User.create!(email_address: "john@example.com", password: "password", admin: admin_status)
+    @user = User.create!(email_address: "john@example.com", password: "P@ssw0rdS3cure", admin: admin_status)
   end
 
   def user_goes_to_login_page
