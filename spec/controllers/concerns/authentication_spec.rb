@@ -1,4 +1,5 @@
 require "rails_helper"
+require "helpers/shared_context/authentication_spec"
 
 describe Authentication do
   controller(ActionController::Base) do
@@ -9,28 +10,6 @@ describe Authentication do
   let(:admin_user) { create(:user, :admin) }
   let(:session) { create(:session, user: user, ip_address: "127.0.0.1", user_agent: "TestAgent") }
   let(:admin_session) { create(:session, user: admin_user, ip_address: "127.0.0.1", user_agent: "TestAgent") }
-
-  shared_context "not authenticated" do
-    before do
-      allow(controller).to receive(:authenticated?).and_return(false)
-    end
-  end
-
-  shared_context "authenticated as client" do
-    before do
-      allow(controller).to receive(:authenticated?).and_return(true)
-      allow(Current).to receive(:session).and_return(session)
-      allow(Current.session).to receive(:user).and_return(user)
-    end
-  end
-
-  shared_context "authenticated as admin" do
-    before do
-      allow(controller).to receive(:authenticated?).and_return(true)
-      allow(Current).to receive(:session).and_return(admin_session)
-      allow(Current.session).to receive(:user).and_return(admin_user)
-    end
-  end
 
   describe "#request_authentication" do
     it "stores return_to_after_authenticating in session and redirects to new_session_path" do
