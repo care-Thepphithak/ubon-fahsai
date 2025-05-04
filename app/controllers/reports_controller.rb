@@ -1,41 +1,39 @@
-class ReportsController < ApplicationController
-  before_action :require_client
-  skip_before_action :restrict_by_user_role
-
-  # GET /reports or /reports.json
+class ReportsController < BaseController
   def index
     @report = Report.new
-    @user_areas = Current.user.areas.sorted_by_created_at.map { |area| { "#{area.id}" => area.coordinates } }.to_json
+    @user_areas = current_user_areas
+
+    redirect_to root_path if @user_areas == "[]"
   end
 
-  # POST /reports or /reports.json
   def create
-    area_ids_arr = report_params[:area_ids].split(",").map(&:to_i)
-    @report = Report.new(report_params.merge(area_ids: area_ids_arr))
+    @report = Report.new(report_params)
+    @reports = Report.all
 
     respond_to do |format|
       if @report.save
-        ActionCable.server.broadcast("report_channel", {
-          message: @report,
-          total_count: Report.count_today,
-          harmful_count: Report.count_harmful_today,
-          top_districts: Report.top_districts.map { |report| { district: report.district, district_count: report.district_count } }
-        })
         format.html { redirect_to root_path, notice: @report.location_name }
         format.json { render :show, status: :created, location: @report }
       else
-        format.turbo_stream do
-          location_error = @report.errors.map { |error| error.message }.join("<br/>")
-          error_html = "<p class='mt-2 text-base w-[80%] mx-auto text-gray-500'>#{location_error}</p>"
-          render turbo_stream: turbo_stream.update("location-name", error_html.html_safe)
-        end
+        format.turbo_stream { render_report_creation_error }
       end
     end
   end
 
   private
-    # Only allow a list of trusted parameters through.
     def report_params
-      params.expect(report: [ :lat, :long, :location_name, :description, :tags, :severity_level, :area_ids, images: [] ])
+      expected_params = params.expect(report: [ :lat, :long, :location_name, :description, :tags, :severity_level, :area_ids, images: [] ])
+      area_id_array = expected_params[:area_ids].split(",").map(&:to_i)
+      expected_params.merge(area_ids: area_id_array)
+    end
+
+    def render_report_creation_error
+      location_error = @report.errors.full_messages.join("<br/>")
+      error_html = "<p class='mt-2 text-base w-[80%] mx-auto text-gray-500'>#{location_error}</p>"
+      render turbo_stream: turbo_stream.update("location-name", error_html.html_safe)
+    end
+
+    def current_user_areas
+      Current.user.areas.sorted_by_created_at.map { |area| { "#{area.id}" => area.coordinates } }.to_json
     end
 end

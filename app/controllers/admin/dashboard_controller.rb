@@ -1,32 +1,21 @@
-class Admin::DashboardController < ApplicationController
-  layout "dashboard"
+module Admin
+  class DashboardController < BaseController
+    def index
+      @reports = Report.all.order(created_at: :desc)
+      @reports = @reports.today if params[:filter] != "all"
 
-  before_action :require_admin
-  skip_before_action :restrict_by_user_role
+      @total_today_report = @reports.today.count
+      total_yesterday_report = @reports.yesterday.count
+      @total_today_harmful_report = @reports.today.harmful.count
 
-  def index
-    @reports = filtered_reports
-    @report_count = Report.count_today
-    @report_harmful_count = Report.count_harmful_today
-    @top_districts = Report.top_districts
-    @areas = Area.all
+      @top_districts = Report.top_districts_today
+      @areas = Area.all
 
-    @report_count_comparisons = {
-      more: Report.count_today > Report.count_yesterday,
-      less: Report.count_today < Report.count_yesterday
-    }
+      @report_trend = compare_counts(@total_today_report, total_yesterday_report)
 
-    @report_harmful_count_comparisons = {
-      more: Report.count_harmful_today > Report.count_harmful_yesterday,
-      less: Report.count_harmful_today < Report.count_harmful_yesterday
-    }
-  end
-
-  private
-
-  def filtered_reports
-    reports = Report.all.order(created_at: :desc)
-    return reports if params[:filter] == "all"
-    reports.where("created_at >= ?", Time.zone.today.beginning_of_day)
+      @harmful_report_trend = compare_counts(
+        @reports.today.harmful.count,
+        @reports.yesterday.harmful.count)
+    end
   end
 end

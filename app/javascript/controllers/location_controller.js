@@ -137,7 +137,7 @@ export default class extends Controller {
     if (confirmButton) {
       confirmButton.removeAttribute("disabled");
       confirmButton.classList.remove("bg-gray-200", "cursor-not-allowed");
-      confirmButton.classList.add("hover:bg-[#FF6C64]");
+      confirmButton.classList.add("bg-[#FF6159]", "hover:bg-[#FF6C64]");
     }
   }
 
@@ -147,7 +147,7 @@ export default class extends Controller {
     if (confirmButton) {
       confirmButton.setAttribute("disabled", "true");
       confirmButton.classList.add("bg-gray-200", "cursor-not-allowed");
-      confirmButton.classList.remove("hover:bg-[#FF6C64]");
+      confirmButton.classList.remove("bg-[#FF6159]", "hover:bg-[#FF6C64]");
     }
   }
 

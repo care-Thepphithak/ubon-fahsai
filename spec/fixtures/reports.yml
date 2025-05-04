@@ -1,0 +1,57 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+today_one:
+  lat: "15.231327860908012"
+  long: "104.85921848353864"
+  location_name: "อำเภอเมือง"
+  description: "Test Description"
+  severity_level: "ลุกลาม"
+  tags: <%= ["เผาไร่อ้อย", "เผานาข้าว"].to_json %>
+  created_at: <%= Time.zone.now.change(hour: 9, min: 30) %>
+
+today_two:
+  lat: "15.2314"
+  long: "104.8567"
+  location_name: "สนามกีฬา"
+  description: "Test Description"
+  severity_level: "รุนแรง"
+  tags: <%= ["ไฟป่า", "เผาไร่อ้อย"].to_json %>
+  created_at: <%= Time.zone.now.change(hour: 10, min: 30) %>
+
+today_three:
+  lat: "15.2314"
+  long: "104.8567"
+  location_name: "กลางเมือง"
+  description: "Test Description"
+  severity_level: "วิกฤติ"
+  tags: <%= ["ไฟป่า", "เผาไร่อ้อย"].to_json %>
+  created_at: <%= Time.zone.now.change(hour: 11, min: 30) %>
+
+today_four:
+  lat: "15.227666834217334"
+  long: "104.85803613214266"
+  location_name: "สนามบิน"
+  description: "Test Description"
+  severity_level: <%= Report::SEVERITIES.sample %>
+  tags: <%= ["ไฟป่า", "เผาไร่อ้อย"].to_json %>
+  created_at: <%= Time.zone.now.change(hour: 12, min: 30) %>
+
+past_one:
+  lat: "15.2314"
+  long: "104.8567"
+  location_name: "สวนสาธารณะ"
+  description: "Test Description"
+  severity_level: "รุนแรง"
+  tags: <%= ["ไฟป่า", "เผาไร่อ้อย"].to_json %>
+  created_at: <%= 1.day.ago %>
+
+past_two:
+  lat: "15.2314"
+  long: "104.8567"
+  location_name: "มหาวิทยาลัย"
+  description: "Test Description"
+  severity_level: "รุนแรง"
+  tags: <%= ["ไฟป่า", "เผาไร่อ้อย"].to_json %>
+  created_at: <%= 2.days.ago %>
+
+  

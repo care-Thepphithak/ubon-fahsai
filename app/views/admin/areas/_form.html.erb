@@ -1,7 +1,9 @@
+<% client_users = User.where(admin: false) %>
+
 <%= form_with(model: [:admin, @area], class: "w-full") do |form| %>
     <div data-controller="area-map" data-area-map-current-coordinates-value="<%= @area.coordinates%>"  class="flex flex-col xl:flex-row w-full h-full gap-[20px] pb-[20px]">
 
-            <div data-area-map-target="map" class="h-full min-h-[500px] w-full rounded-xl"> </div>
+            <div data-area-map-target="map" class="h-full min-h-[500px] w-full rounded-xl" id="area-management-map"> </div>
 
             <div class="w-full xl:w-[550px] bg-[#F3F3F3] flex h-full  flex-col p-5 rounded-xl">
                 <div class="flex gap-3 w-full mb-4">
@@ -23,9 +25,9 @@
 
                 <p class="mt-4 mb-2 text-gray-500">กำหนดผู้รับผิดชอบ</p>
                 <div class="flex flex-col gap-3 w-full overflow-scroll no-scrollbar rounded-md mb-3">
-                    <% @users.each do |user| %>
+                    <% client_users.each do |user| %>
                         <% checkbox_id = "user_#{user.id}" %>
-                        <label for="<%= checkbox_id %>" class="cursor-pointer">
+                        <label for="<%= checkbox_id %>" class="cursor-pointer" data-testid="user-assignee">
                         <div class="bg-white w-full rounded-md p-3 flex items-center gap-3 hover:bg-gray-50 transition-all">
                             <div class="relative">
                             <%= check_box_tag "area[user_ids][]", user.id, 

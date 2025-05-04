@@ -1,0 +1,8 @@
+<% case trend %>
+<% when :increased %>
+    <p class="text-red-400">เพิ่มขึ้น <i class="ml-1 fa-solid fa-angles-up"></i></p>
+<% when :decreased %>
+    <p class="text-green-500">ลดลง <i class="fa-solid fa-angles-down"></i></p>
+<% else %>
+    <p class="text-gray-500">เท่าเดิม <i class="fa-solid fa-minus"></i></p>
+<% end %>

@@ -33,9 +33,6 @@ export default class extends Controller {
     this.nearestDistanceTarget.innerHTML = isFinite(nearestDistance) ? nearestDistance.toFixed(2) : " -";
   
     // Remove the specified classes
-    
-  
-
     this.updateReportDistances(lat, long);
   }
 

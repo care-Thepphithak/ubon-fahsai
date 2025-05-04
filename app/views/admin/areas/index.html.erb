@@ -2,8 +2,8 @@
 <div>
     <div class="mx-auto flex w-[90%] max-w-[1300px] xl:h-svh min-h-[600px] xl:max-h-[800px] mt-8 gap-[20px]">
       <div data-controller="area-map" class="flex flex-col xl:flex-row w-full h-full gap-[20px] pb-[20px]">
-        <div data-area-map-target="map" class="h-full min-h-[500px] w-full rounded-xl"> </div>
-        <div class="w-full xl:w-[550px] bg-[#F3F3F3] flex h-full  flex-col p-5 rounded-xl">
+        <div data-area-map-target="map" class="h-full min-h-[500px] w-full rounded-xl" data-testid="areas-management-map"> </div>
+        <div class="w-full xl:w-[550px] bg-[#F3F3F3] flex h-full  flex-col overflow-y-scroll no-scrollbar p-5 rounded-xl">
           <%= link_to new_admin_area_path, class: "bg-white w-full text-center text-gray-500 px-4 py-2 rounded-md hover:bg-gray-50 transition-all cursor-pointer" do %>
             <i class="fa-solid fa-plus-circle mr-2"></i> เพิ่มพื้นที่
           <% end %>

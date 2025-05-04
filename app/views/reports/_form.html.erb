@@ -24,7 +24,16 @@
         <%= render "upload_image", form:form %>
       
         <div class="flex justify-end w-[90%]">
-          <%= button_helper("ถัดไป", iconEnd: "angle-right", size: 'lg', variant: 'plain', id: "upload-step-next", data: { "action": "click->report#next" }, css_class: "opacity-50 mt-3", disabled: true) %>
+          <button 
+            type="button"
+            id="upload-step-next"
+            disabled
+            data-testid="upload-step-next-button"
+            data-action="click->report#next"
+            class="flex items-center justify-center gap-2 text-lg px-1 py-3 rounded-xl text-[#FF6159] hover:scale-[1.01] hover:text-[#FF6C64] transition-all opacity-50 mt-3 cursor-pointer">
+            <span>ถัดไป</span>
+            <i class="fa-solid fa-angle-right"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -33,7 +42,12 @@
       <div class="h-svh overflow-y-scroll w-full flex flex-col items-center py-6 justify-between">
         <div class="w-full flex flex-col items-center">
           <div class="w-[90%] mx-auto relative text-center">
-            <%= button_helper("", icon: "angle-left", size: 'xl', variant: 'plain', css_class: 'absolute px-0 top-0 left-0', data: { "action": "click->report#prev" }) %>
+            <button 
+              type="button"
+              data-action="click->report#prev"
+              class="absolute px-0 top-0 left-0 text-2xl text-[#FF6159] cursor-pointer hover:scale-[1.01] hover:text-[#FF6C64] transition-all">
+              <i class="fa-solid fa-angle-left"></i>
+            </button>
             <h1 class="text-2xl font-meduim text-[#FF6159]">ระบุรายละเอียด</h1>
             <p class="text-sm text-gray-500"><%= l(Time.current, format: :full, locale: :th) %></p>
           </div>
@@ -42,7 +56,14 @@
         </div>
       
         <div class="flex justify-end w-[90%]">
-          <%= button_helper("ถัดไป", iconEnd: "angle-right", size: 'lg', variant: 'plain', data: { "action": "click->report#next" }) %>
+          <button 
+            type="button"
+            data-testid="detail-step-next-button"
+            data-action="click->report#next"
+            class="flex items-center justify-center gap-2 text-lg px-1 py-3 rounded-xl text-[#FF6159] cursor-pointer hover:scale-[1.01] hover:text-[#FF6C64] transition-all">
+            <span>ถัดไป</span>
+            <i class="fa-solid fa-angle-right"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -51,7 +72,12 @@
       <div class="h-svh overflow-y-scroll w-full flex flex-col items-center py-6 justify-between">
         <div class="w-full h-full flex flex-col items-center">
           <div class="w-[90%] relative text-center">
-            <%= button_helper("", icon: "angle-left", size: 'xl', variant: 'plain', css_class: 'absolute px-0 top-0 left-0', data: { "action": "click->report#prev" }) %>
+            <button 
+              type="button"
+              data-action="click->report#prev"
+              class="absolute px-0 top-0 left-0 text-2xl text-[#FF6159] cursor-pointer hover:scale-[1.01] hover:text-[#FF6C64] transition-all">
+              <i class="fa-solid fa-angle-left"></i>
+            </button>
             <h1 class="text-2xl font-meduim text-[#FF6159]">ระบุตำแหน่งไฟไหม้</h1>
             <p id="location-name" class="mt-2 text-base w-[80%] line-clamp-1 mx-auto text-gray-500">กำลังหาตำแหน่ง...</p>
             <p class="text-sm text-gray-500"><%= l(Time.current, format: :full, locale: :th) %></p>
@@ -67,7 +93,16 @@
         </div>
 
         <div class="w-[90%] inset-0"  data-controller="bottom-sheet" >
-          <%= button_helper("ส่งรายงาน", size: 'lg', css_class: 'absolute bottom-4 z-50 left-0 right-0 w-[90%] mx-auto bg-gray-200 disabled:hover:bg-gray-200' ,id: 'submit', disabled: true, data: {action: "click->bottom-sheet#open" }) %>
+          <button
+            type="button"
+            id="submit"
+            disabled
+            data-action="click->bottom-sheet#open"
+            data-testid="send-report-button"
+            class="absolute bottom-4 z-50 left-0 right-0 w-[90%] text-white mx-auto disabled:hover:bg-gray-200 disabled:scale-100 text-lg px-1 py-3 rounded-xl text-center hover:scale-[1.01] cursor-pointer transition-all">
+            ส่งรายงาน
+          </button>  
+          
           <%= render "confirm", form: form %>
         </div>
       </div>
