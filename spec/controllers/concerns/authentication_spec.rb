@@ -117,11 +117,7 @@ describe Authentication do
   end
 
   describe "#protect_admin_access" do
-    context "when not authenticated" do
-      before do
-        allow(controller).to receive(:authenticated?).and_return(false)
-      end
-
+    include_context "when not authenticated" do
       it "redirects to admin_dashboard_index_url" do
         expect(controller).to receive(:redirect_to).with(admin_dashboard_index_url)
         controller.send(:protect_admin_access)
