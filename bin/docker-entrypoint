@@ -8,7 +8,7 @@ fi
 
 # If running the rails server then create or migrate existing database
 if [ "$1" = "./bin/thrust" ] && [ "$2" = "./bin/rails" ] && [ "$3" = "server" ]; then
-  RAILS_ENV=production ./bin/rails runner "Report.delete_all"
+  # RAILS_ENV=production ./bin/rails runner "Report.delete_all"
   ./bin/rails db:create
   ./bin/rails db:prepare
   ./bin/rails solid_cache:install
