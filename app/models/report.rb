@@ -109,7 +109,7 @@ class Report < ApplicationRecord
 
   def parse_user_areas
     Current.user.areas.map(&:coordinates).map do |area|
-      area.map { |coordinate| coordinate.to_fs }
+      area.map { |coordinate| coordinate.to_s }
     end
   end
 
