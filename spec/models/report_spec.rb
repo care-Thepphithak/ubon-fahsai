@@ -420,7 +420,7 @@ RSpec.describe Report, type: :model do
       
       it 'handles edge cases correctly' do
         result = report.send(:point_within_polygon?, point, polygon)
-        expect(result).to be(true).or be(false) # Could be either depending on implementation
+        expect(result).to be(true).or be(false)
       end
     end
   end
