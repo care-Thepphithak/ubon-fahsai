@@ -11,7 +11,7 @@ describe Authentication do
   let(:session) { create(:session, user: user, ip_address: "127.0.0.1", user_agent: "TestAgent") }
   let(:admin_session) { create(:session, user: admin_user, ip_address: "127.0.0.1", user_agent: "TestAgent") }
 
-  describe "#request_authentication" do
+  describe "request_authentication method" do
     it "stores return_to_after_authenticating in session and redirects to new_session_path" do
       allow(controller.request).to receive(:url).and_return("http://test.host/protected")
 
@@ -22,7 +22,7 @@ describe Authentication do
     end
   end
 
-  describe "#start_new_session_for" do
+  describe "start_new_session_for method" do
     it "creates a new session for the user and sets cookies" do
       allow(controller.request).to receive(:user_agent).and_return("TestAgent")
       allow(controller.request).to receive(:remote_ip).and_return("127.0.0.1")
@@ -39,7 +39,7 @@ describe Authentication do
     end
   end
 
-  describe "#terminate_session" do
+  describe "terminate_session method" do
     it "destroys the current session and deletes the session_id cookie" do
       allow(Current).to receive(:session).and_return(session)
       allow(controller.send(:cookies)).to receive(:delete).with(:session_id)
@@ -49,7 +49,7 @@ describe Authentication do
     end
   end
 
-  describe "#after_authentication_url" do
+  describe "after_authentication_url method" do
     it "deletes return_to_after_authenticating from session and also returns the deleted url" do
       controller.session[:return_to_after_authenticating] = "/some_stored_url"
 
@@ -66,7 +66,7 @@ describe Authentication do
     end
   end
 
-  describe "#determine_redirect_url_for" do
+  describe "determine_redirect_url_for method" do
     it "redirects to admin dashboard for admin users" do
       expect(controller.send(:determine_redirect_url_for, admin_user)).to eq(admin_dashboard_index_url)
     end
@@ -76,7 +76,7 @@ describe Authentication do
     end
   end
 
-  describe "#protect_client_access" do
+  describe "protect_client_access method" do
     context "when not authenticated" do
       include_context "not authenticated"
 
@@ -98,14 +98,14 @@ describe Authentication do
     context "when authenticated as admin" do
       include_context "authenticated as admin"
 
-      it "allows admin and then protect_client_access return nil" do
+      it "allows the request to proceed without redirection" do
         expect(controller).not_to receive(:redirect_to)
         controller.send(:protect_client_access)
       end
     end
   end
 
-  describe "#protect_admin_access" do
+  describe "protect_admin_access method" do
     context "when not authenticated" do
       include_context "not authenticated"
 
@@ -124,12 +124,12 @@ describe Authentication do
       end
     end
 
-    context "when authenticated but not admin" do
+    context "when authenticated as client" do
       include_context "authenticated as client"
 
-      it "allows non-admin and then protect_admin_access return nil" do
+      it "allows the request to proceed without redirection" do
         expect(controller).not_to receive(:redirect_to)
-        controller.send(:protect_admin_access)
+        expect(controller.send(:protect_admin_access)).to be_nil
       end
     end
   end
