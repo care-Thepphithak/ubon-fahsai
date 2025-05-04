@@ -82,11 +82,7 @@ describe Authentication do
   end
 
   describe "#protect_client_access" do
-    context "when not authenticated" do
-      before do
-        allow(controller).to receive(:authenticated?).and_return(false)
-      end
-
+    include_context "when not authenticated" do
       it "redirects to root_url" do
         expect(controller).to receive(:redirect_to).with(root_url)
         controller.send(:protect_client_access)
