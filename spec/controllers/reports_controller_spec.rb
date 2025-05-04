@@ -57,30 +57,30 @@ describe ReportsController do
     end
   end
 
-  context 'with invalid parameters' do
-    let(:invalid_attributes) do
-      {
-        lat: nil,
-        long: nil,
-        location_name: nil,
-        description: nil,
-        severity_level: nil,
-        tags: nil,
-        area_ids: nil,
-        images: []
-      }
-    end
+    context 'with invalid parameters' do
+      let(:invalid_attributes) do
+        {
+          lat: nil,
+          long: nil,
+          location_name: nil,
+          description: nil,
+          tags: nil,
+          severity_level: nil,
+          area_ids: nil,
+          images: []
+        }
+      end
 
-    # it 'does not create a new report' do
-    #   expect {
-    #     post :create, params: { report: invalid_attributes }
-    #   }.not_to change(Report, :count)
-    # end
+      # it 'does not create a new report' do
+      #   expect {
+      #     post :create, params: { report: invalid_attributes }
+      #   }.not_to change(Report, :count)
+      # end
 
-    it 'renders the turbo_stream response with errors' do
-      post :create, params: { report: invalid_attributes }, format: :turbo_stream
-      expect(response.content_type).to eq('text/vnd.turbo-stream.html; charset=utf-8')
+      it 'renders the turbo_stream response with errors' do
+        post :create, params: { report: invalid_attributes }, format: :turbo_stream
+        expect(response.content_type).to eq('text/vnd.turbo-stream.html; charset=utf-8')
+      end
     end
   end
-end
 end

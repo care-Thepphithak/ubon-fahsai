@@ -173,8 +173,8 @@ RSpec.describe Report, type: :model do
   describe '#location_within_responsible_areas?' do
     context 'when the report location is within the user areas' do
       it 'does not add an error' do
-        report.lat = 15.245
-        report.long = 104.860
+        report.lat = -255.1638094
+        report.long = 15.2721763
         report.valid?
         expect(report.errors[:base]).to be_empty
       end
