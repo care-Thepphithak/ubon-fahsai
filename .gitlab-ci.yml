@@ -23,6 +23,8 @@ base:
     - docker push $CI_REGISTRY_IMAGE/base:$CI_COMMIT_SHA
     - docker push $CI_REGISTRY_IMAGE/base:latest
   rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: always
     - changes:
       - .gitlab-ci.yml
       - Dockerfile.base
@@ -42,6 +44,8 @@ buildtool:
     - docker push $CI_REGISTRY_IMAGE/buildtool:$CI_COMMIT_SHA
     - docker push $CI_REGISTRY_IMAGE/buildtool:latest
   rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: always
     - changes:
       - .gitlab-ci.yml
       - Gemfile
