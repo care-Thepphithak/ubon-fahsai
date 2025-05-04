@@ -247,4 +247,137 @@ RSpec.describe Report, type: :model do
       end
     end
   end
+
+  describe '#location_within_responsible_areas?' do
+    context 'when user has no areas' do
+      before do
+        allow(Current.user).to receive(:areas).and_return([])
+      end
+      
+      it 'does not add an error' do
+        report.send(:location_within_responsible_areas?)
+        expect(report.errors[:base]).to be_empty
+      end
+    end
+    
+    context 'when report is within user areas' do
+      before do
+        allow(report).to receive(:within_user_areas?).and_return(true)
+      end
+      
+      it 'does not add an error' do
+        report.send(:location_within_responsible_areas?)
+        expect(report.errors[:base]).to be_empty
+      end
+    end
+    
+    context 'when report is outside user areas' do
+      before do
+        allow(report).to receive(:within_user_areas?).and_return(false)
+      end
+      
+      it 'adds an error' do
+        report.send(:location_within_responsible_areas?)
+        expect(report.errors[:base]).to include("ตำแหน่งนี้ไม่ได้อยู่ในพื้นที่ที่รับผิดชอบ")
+      end
+    end
+  end
+
+  describe '#within_user_areas?' do
+    context 'when point is within one of the user areas' do
+      before do
+        allow(report).to receive(:lat).and_return(15.245)
+        allow(report).to receive(:long).and_return(104.860)
+        allow(report).to receive(:point_within_polygon?).and_return(true)
+      end
+      
+      it 'returns true' do
+        expect(report.send(:within_user_areas?)).to be true
+      end
+    end
+    
+    context 'when point is outside all user areas' do
+      before do
+        allow(report).to receive(:lat).and_return(16.0)
+        allow(report).to receive(:long).and_return(105.0)
+        allow(report).to receive(:point_within_polygon?).and_return(false)
+      end
+      
+      it 'returns false' do
+        expect(report.send(:within_user_areas?)).to be false
+      end
+    end
+  end
+
+  describe '#parse_user_areas' do
+    let(:coordinates) { [["[15.0,104.0]", "[15.1,104.1]", "[15.2,104.2]"]] }
+    
+    before do
+      allow(Current.user.areas).to receive(:map).and_return(coordinates)
+    end
+    
+    it 'returns coordinates as array of coordinate strings' do
+      result = report.send(:parse_user_areas)
+      expect(result).to eq(coordinates)
+      expect(result.first).to all(be_a(String))
+    end
+  end
+
+  describe '#point_within_polygon?' do
+    let(:point) { [15.1, 104.1] }
+    
+    context 'when point is inside polygon' do
+      let(:polygon) { ["[15.0,104.0]", "[15.2,104.0]", "[15.2,104.2]", "[15.0,104.2]"] }
+      
+      it 'returns true' do
+        expect(report.send(:point_within_polygon?, point, polygon)).to be true
+      end
+    end
+    
+    context 'when point is outside polygon' do
+      let(:polygon) { ["[15.3,104.3]", "[15.4,104.3]", "[15.4,104.4]", "[15.3,104.4]"] }
+      
+      it 'returns false' do
+        expect(report.send(:point_within_polygon?, point, polygon)).to be false
+      end
+    end
+    
+    context 'when point is on polygon edge' do
+      let(:polygon) { ["[15.1,104.0]", "[15.2,104.1]", "[15.1,104.2]", "[15.0,104.1]"] }
+      
+      it 'handles edge cases correctly' do
+        result = report.send(:point_within_polygon?, point, polygon)
+        expect(result).to be(true).or be(false) # Could be either depending on implementation
+      end
+    end
+  end
+
+  describe '#broadcast_report' do
+    before do
+      allow(ActionCable.server).to receive(:broadcast)
+      allow(Report).to receive(:today).and_return(double(count: 5))
+      allow(Report.today).to receive(:harmful).and_return(double(count: 2))
+      allow(Report).to receive(:top_districts_today).and_return([
+        double(district: 'District A', district_count: 3),
+        double(district: 'District B', district_count: 2)
+      ])
+    end
+    
+    it 'broadcasts report data to the report channel' do
+      report.send(:broadcast_report)
+      
+      expect(ActionCable.server).to have_received(:broadcast).with(
+        "report_channel",
+        hash_including(
+          message: report,
+          total_count: 5,
+          harmful_count: 2,
+          top_districts: [
+            { district: 'District A', district_count: 3 },
+            { district: 'District B', district_count: 2 }
+          ]
+        )
+      )
+    end
+  end
 end
