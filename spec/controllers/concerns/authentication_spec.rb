@@ -10,9 +10,25 @@ describe Authentication do
   let(:session) { create(:session, user: user, ip_address: "127.0.0.1", user_agent: "TestAgent") }
   let(:admin_session) { create(:session, user: admin_user, ip_address: "127.0.0.1", user_agent: "TestAgent") }
 
-  shared_context "when not authenticated" do
+  shared_context "not authenticated" do
     before do
       allow(controller).to receive(:authenticated?).and_return(false)
+    end
+  end
+
+  shared_context "authenticated as client" do
+    before do
+      allow(controller).to receive(:authenticated?).and_return(true)
+      allow(Current).to receive(:session).and_return(session)
+      allow(Current.session).to receive(:user).and_return(user)
+    end
+  end
+
+  shared_context "authenticated as admin" do
+    before do
+      allow(controller).to receive(:authenticated?).and_return(true)
+      allow(Current).to receive(:session).and_return(admin_session)
+      allow(Current.session).to receive(:user).and_return(admin_user)
     end
   end
 
@@ -82,19 +98,17 @@ describe Authentication do
   end
 
   describe "#protect_client_access" do
-    include_context "when not authenticated" do
+    context "when not authenticated" do
+      include_context "not authenticated"
+
       it "redirects to root_url" do
         expect(controller).to receive(:redirect_to).with(root_url)
         controller.send(:protect_client_access)
       end
     end
 
-    context "when authenticated but not admin" do
-      before do
-        allow(controller).to receive(:authenticated?).and_return(true)
-        allow(Current).to receive(:session).and_return(session)
-        allow(Current.session).to receive(:user).and_return(user)
-      end
+    context "when authenticated as client" do
+      include_context "authenticated as client"
 
       it "redirects to root_url" do
         expect(controller).to receive(:redirect_to).with(root_url)
@@ -103,11 +117,7 @@ describe Authentication do
     end
 
     context "when authenticated as admin" do
-      before do
-        allow(controller).to receive(:authenticated?).and_return(true)
-        allow(Current).to receive(:session).and_return(admin_session)
-        allow(Current.session).to receive(:user).and_return(admin_user)
-      end
+      include_context "authenticated as admin"
 
       it "allows admin and then protect_client_access return nil" do
         expect(controller).not_to receive(:redirect_to)
@@ -117,7 +127,9 @@ describe Authentication do
   end
 
   describe "#protect_admin_access" do
-    include_context "when not authenticated" do
+    context "when not authenticated" do
+      include_context "not authenticated"
+
       it "redirects to admin_dashboard_index_url" do
         expect(controller).to receive(:redirect_to).with(admin_dashboard_index_url)
         controller.send(:protect_admin_access)
@@ -125,11 +137,7 @@ describe Authentication do
     end
 
     context "when authenticated as admin" do
-      before do
-        allow(controller).to receive(:authenticated?).and_return(true)
-        allow(Current).to receive(:session).and_return(admin_session)
-        allow(Current.session).to receive(:user).and_return(admin_user)
-      end
+      include_context "authenticated as admin"
 
       it "redirects to admin_dashboard_index_url" do
         expect(controller).to receive(:redirect_to).with(admin_dashboard_index_url)
@@ -138,11 +146,7 @@ describe Authentication do
     end
 
     context "when authenticated but not admin" do
-      before do
-        allow(controller).to receive(:authenticated?).and_return(true)
-        allow(Current).to receive(:session).and_return(session)
-        allow(Current.session).to receive(:user).and_return(user)
-      end
+      include_context "authenticated as client"
 
       it "allows non-admin and then protect_admin_access return nil" do
         expect(controller).not_to receive(:redirect_to)
