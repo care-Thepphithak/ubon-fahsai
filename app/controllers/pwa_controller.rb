@@ -26,8 +26,8 @@ class PwaController < ApplicationController
       "display": "standalone",
       "scope": "/",
       "description": "UbonFahsai.",
-      "theme_color": "red",
-      "background_color": "red"
+      "theme_color": "#FF6159",
+      "background_color": "#FF6159"
     }
   end
 end
