@@ -15,7 +15,7 @@ module ApplicationHelper
         "update" => "แก้ไขพื้นที่"
       }
     }
-    
+
     links = []
     controller_label = labels[controller_name] || { controller_name => controller_name.titleize }
     controller_path = url_for(controller: controller_name, action: :index)

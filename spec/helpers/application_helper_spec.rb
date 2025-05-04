@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe ApplicationHelper, type: :helper do
-  describe 'active_link_class' do
+  describe 'method active_link_class' do
     let(:path) { '/areas' }
 
     context 'when the request path starts with the given path' do
@@ -24,7 +24,7 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
-  describe "breadcrumb_links" do
+  describe "method breadcrumb_links" do
   before do
     allow(helper).to receive(:url_for) do |**opts|
       "/#{opts[:controller]}/#{opts[:action]}"
@@ -56,6 +56,7 @@ RSpec.describe ApplicationHelper, type: :helper do
 
     it 'Show a link to the index first, followed by the action name' do
       output = helper.breadcrumb_links
+      expect(output).to match %r{\A<a href="/areas/index"[^>]*>จัดการพื้นที่</a><span[^>]*> / </span>เพิ่มพื้นที่\z}
       text = strip_tags(output)
       expect(text).to start_with('จัดการพื้นที่')
       expect(text).to include(' / ')
