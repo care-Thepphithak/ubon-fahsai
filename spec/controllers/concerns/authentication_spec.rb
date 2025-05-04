@@ -10,6 +10,12 @@ describe Authentication do
   let(:session) { create(:session, user: user, ip_address: "127.0.0.1", user_agent: "TestAgent") }
   let(:admin_session) { create(:session, user: admin_user, ip_address: "127.0.0.1", user_agent: "TestAgent") }
 
+  shared_context "when not authenticated" do
+    before do
+      allow(controller).to receive(:authenticated?).and_return(false)
+    end
+  end
+
   describe "#request_authentication" do
     it "stores return_to_after_authenticating in session and redirects to new_session_path" do
       allow(controller.request).to receive(:url).and_return("http://test.host/protected")
@@ -76,11 +82,7 @@ describe Authentication do
   end
 
   describe "#protect_client_access" do
-    context "when not authenticated" do
-      before do
-        allow(controller).to receive(:authenticated?).and_return(false)
-      end
-
+    include_context "when not authenticated" do
       it "redirects to root_url" do
         expect(controller).to receive(:redirect_to).with(root_url)
         controller.send(:protect_client_access)
@@ -115,11 +117,7 @@ describe Authentication do
   end
 
   describe "#protect_admin_access" do
-    context "when not authenticated" do
-      before do
-        allow(controller).to receive(:authenticated?).and_return(false)
-      end
-
+    include_context "when not authenticated" do
       it "redirects to admin_dashboard_index_url" do
         expect(controller).to receive(:redirect_to).with(admin_dashboard_index_url)
         controller.send(:protect_admin_access)
