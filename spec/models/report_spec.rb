@@ -13,6 +13,79 @@ RSpec.describe Report, type: :model do
     user.areas << area
   end
 
+  describe 'validations' do
+    before do
+      allow(report).to receive(:within_user_areas?).and_return(true)
+    end
+
+    describe 'description' do
+      it 'allows descriptions up to 300 characters' do
+        report.description = 'a' * 300
+        expect(report).to be_valid
+      end
+  
+      it 'rejects descriptions longer than 300 characters' do
+        report.description = 'a' * 301
+        expect(report).not_to be_valid
+        expect(report.errors[:description]).to be_present
+      end
+    end
+  
+    describe 'severity_level' do
+      it 'is valid with a valid severity level' do
+        Report::SEVERITIES.each do |severity|
+          report.severity_level = severity
+          expect(report).to be_valid
+        end
+      end
+  
+      it 'is invalid with an invalid severity level' do
+        report.severity_level = 'invalid-severity'
+        expect(report).not_to be_valid
+        expect(report.errors[:severity_level]).to include('is not included in the list')
+      end
+    end
+  
+    describe 'lat' do
+      it 'is valid with a latitude' do
+        report.lat = 15.245
+        expect(report.errors[:lat]).to be_empty
+      end
+  
+      it 'is invalid without a latitude' do
+        report.lat = nil
+        report.valid?
+        expect(report.errors[:lat]).to include("ไม่พบข้อมูลละติจูด")
+      end
+    end
+  
+    describe 'long' do
+      it 'is valid with a longitude' do
+        report.long = 104.860
+        expect(report.errors[:long]).to be_empty
+      end
+  
+      it 'is invalid without a longitude' do
+        report.long = nil
+        report.valid?
+        expect(report.errors[:long]).to include("ไม่พบข้อมูลลองจิจูด")
+      end
+    end
+  
+    describe 'location_name' do
+      it 'is valid with a location name' do
+        report.location_name = 'Some Location'
+        expect(report.errors[:location_name]).to be_empty
+      end
+  
+      it 'is invalid without a location name' do
+        report.location_name = nil
+        report.valid?
+        expect(report.errors[:location_name]).to include("ไม่พบข้อมูลชื่อสถานที่")
+      end
+    end
+  end
+
   describe 'top_districts_today' do
     it 'returns the districts with the correct report counts for today' do
       result = Report.top_districts_today
