@@ -1,14 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe ApplicationHelper, type: :helper do
-  describe '#active_link_class' do
+  describe 'active_link_class' do
     let(:path) { '/areas' }
 
     context 'when the request path starts with the given path' do
       before do
         allow(helper.request).to receive(:path).and_return('/areas/edit')
       end
-
       it 'returns the active class' do
         expect(helper.active_link_class(path)).to eq('bg-[#FF6159] text-white')
       end
@@ -25,7 +24,7 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
-  describe "#breadcrumb_links" do
+  describe "breadcrumb_links" do
   before do
     allow(helper).to receive(:url_for) do |**opts|
       "/#{opts[:controller]}/#{opts[:action]}"
@@ -55,7 +54,7 @@ RSpec.describe ApplicationHelper, type: :helper do
       allow(helper).to receive(:action_name).and_return("new")
     end
 
-    it 'Show a link to the index first, followed by the action name (not a link).' do
+    it 'Show a link to the index first, followed by the action name' do
       output = helper.breadcrumb_links
       text = strip_tags(output)
       expect(text).to start_with('จัดการพื้นที่')
