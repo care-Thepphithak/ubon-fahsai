@@ -29,6 +29,7 @@ base:
       - Gemfile
       - Gemfile.lock
       - .ruby-version
+      - bin/docker-entrypoint
 
 buildtool:
   stage: buildtool
@@ -47,6 +48,7 @@ buildtool:
       - Gemfile.lock
       - Dockerfile.base
       - Dockerfile.buildtool
+      - bin/docker-entrypoint
 
 unit_test:
   stage: unit_test
