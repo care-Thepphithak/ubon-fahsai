@@ -38,7 +38,7 @@ RSpec.describe Report, type: :model do
           "วิกฤติ" => 98
         }.to_json
 
-        result = Report::SEVERITY_LEVEL_RANGES.transform_values(&:max).to_json
+        result = Report.severity_levels_json
 
         expect(result).to eq(expected_result)
       end
