@@ -18,7 +18,7 @@ describe ReportsController do
     user.areas << area
   end
 
-  describe 'GET #index' do
+  context 'GET #index' do
     context 'when user has areas' do
       it 'assigns user areas as JSON' do
         get :index
@@ -35,27 +35,27 @@ describe ReportsController do
     end
   end
 
-  describe 'POST #create' do
-  context 'with valid parameters' do
-    let(:valid_attributes) do
-      {
-        lat: "-255.1196925",
-        long: "15.2304411",
-        location_name: "Test Location",
-        description: "Test Description",
-        severity_level: "รุนแรง",
-        tags: [ "tag1", "tag2" ],
-        area_ids: area.id.to_s,
-        images: []
-      }
-    end
+  context 'POST #create' do
+    context 'with valid parameters' do
+      let(:valid_attributes) do
+        {
+          lat: "-255.1196925",
+          long: "15.2304411",
+          location_name: "Test Location",
+          description: "Test Description",
+          severity_level: "รุนแรง",
+          tags: [ "tag1", "tag2" ],
+          area_ids: area.id.to_s,
+          images: []
+        }
+      end
 
-    it 'creates a new report' do
-      expect {
-        post :create, params: { report: valid_attributes }
-      }.to change(Report, :count).by(1)
+      it 'creates a new report' do
+        expect {
+          post :create, params: { report: valid_attributes }
+        }.to change(Report, :count).by(1)
+      end
     end
-  end
 
     context 'with invalid parameters' do
       let(:invalid_attributes) do
