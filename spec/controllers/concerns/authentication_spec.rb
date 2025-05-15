@@ -14,7 +14,7 @@ describe Authentication do
   it "request_authentication method stores return_to_after_authenticating in session and redirects to new_session_path" do
     allow(controller.request).to receive(:url).and_return("http://test.host/protected")
 
-    expect(controller).to receive(:redirect_to).with(controller.new_session_path)
+    expect(controller).to receive(:redirect_to).with(new_session_path)
     controller.send(:request_authentication)
 
     expect(controller.session[:return_to_after_authenticating]).to eq("http://test.host/protected")
