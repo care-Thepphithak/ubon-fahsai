@@ -68,6 +68,16 @@ export default class extends Controller {
     }
   }
 
+  toggleUploadButton() {
+    const uploadButton = document.querySelector("label[for='report_images']");
+    if (this.selectedFiles.length >= 4) {
+      uploadButton.classList.add("hidden", "cursor-not-allowed");
+    } else {
+      uploadButton.classList.remove("hidden", "cursor-not-allowed");
+      uploadButton.classList.add("cursor-pointer", "fade-in");
+    }
+  }
+
   handleImageUpload(event) {
     let files = Array.from(event.target.files);
     files = files.filter(file => !this.selectedFiles.some(f => f.name === file.name));
@@ -136,50 +146,60 @@ export default class extends Controller {
     detailPreviewContainer.innerHTML = "";
 
     if (this.selectedFiles.length === 0) {
-      previewContainer.innerHTML = `
-        <i class="min-w-64 h-72 bg-white rounded-lg flex items-center justify-center">
-          <i class="fas fa-camera text-5xl text-gray-300"></i>
-        </i>
-      `;
+      this.renderEmptyPreview(previewContainer);
     } else {
-      this.selectedFiles.forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const div = document.createElement("div");
-          div.classList.add("relative");
-          const img = document.createElement("img");
-          img.src = e.target.result;
-          img.classList.add("min-w-64", "h-72", "w-64", "object-cover", "rounded-lg", "shadow-md");
-          const deleteButton = document.createElement("button");
-          deleteButton.type = "button";
-          deleteButton.classList.add("absolute", "h-7", "w-7", "cursor-pointer", "hover:scale-110", "top-2", "right-2", "bg-gray-100", "text-gray-500", "rounded-full");
-          deleteButton.dataset.index = index;
-          deleteButton.dataset.action = "click->report#removeImage";
-          deleteButton.innerHTML = `<i class="fas fa-times"></i>`;
-          div.appendChild(img);
-          div.appendChild(deleteButton);
-          previewContainer.appendChild(div);
-          const detailDiv = document.createElement("div");
-          const detailImg = document.createElement("img");
-          detailImg.src = e.target.result;
-          detailImg.classList.add("min-w-48", "h-52", "w-48", "object-cover", "rounded-lg", "shadow-md");
-          detailDiv.appendChild(detailImg);
-          detailPreviewContainer.appendChild(detailDiv);
-        };
-        reader.readAsDataURL(file);
-      });
+      this.renderFilesPreviews(previewContainer, detailPreviewContainer);
     }
+
     document.querySelector("p.text-gray-400").textContent = `เลือกแล้ว ${this.selectedFiles.length} รูปภาพ`;
   }
 
-  toggleUploadButton() {
-    const uploadButton = document.querySelector("label[for='report_images']");
-    if (this.selectedFiles.length >= 4) {
-      uploadButton.classList.add("hidden", "cursor-not-allowed");
-    } else {
-      uploadButton.classList.remove("hidden", "cursor-not-allowed");
-      uploadButton.classList.add("cursor-pointer", "fade-in");
-    }
+  renderEmptyPreview(container) {
+    container.innerHTML = `
+      <i class="min-w-64 h-72 bg-white rounded-lg flex items-center justify-center">
+        <i class="fas fa-camera text-5xl text-gray-300"></i>
+      </i>
+    `;
+  }
+
+  renderFilesPreviews(previewContainer, detailPreviewContainer) {
+    this.selectedFiles.forEach((file, index) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewContainer.appendChild(this.createPreviewElement(e.target.result, index));
+        detailPreviewContainer.appendChild(this.createDetailPreviewElement(e.target.result));
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  createPreviewElement(src, index) {
+    const div = document.createElement("div");
+    const img = document.createElement("img");
+    const deleteButton = document.createElement("button");
+
+    div.classList.add("relative");
+    img.src = src;
+    img.classList.add("min-w-64", "h-72", "w-64", "object-cover", "rounded-lg", "shadow-md");
+
+    deleteButton.type = "button";
+    deleteButton.classList.add("absolute", "h-7", "w-7", "cursor-pointer", "hover:scale-110", "top-2", "right-2", "bg-gray-100", "text-gray-500", "rounded-full");
+    deleteButton.dataset.index = index;
+    deleteButton.dataset.action = "click->report#removeImage";
+    deleteButton.innerHTML = `<i class="fas fa-times"></i>`;
+
+    div.appendChild(img);
+    div.appendChild(deleteButton);
+    return div;
+  }
+
+  createDetailPreviewElement(src) {
+    const detailDiv = document.createElement("div");
+    const detailImg = document.createElement("img");
+    detailImg.src = src;
+    detailImg.classList.add("min-w-48", "h-52", "w-48", "object-cover", "rounded-lg", "shadow-md");
+    detailDiv.appendChild(detailImg);
+    return detailDiv;
   }
 
   toggleTag(event) {
