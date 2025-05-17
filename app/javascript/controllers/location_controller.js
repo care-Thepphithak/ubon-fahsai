@@ -153,9 +153,12 @@ export default class extends Controller {
 
   async getLocationName(lat, lng) {
     try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=th`
-      );
+      const referer = ["https://ubon-fahsai-dev.odd.works", "https://ubon-fahsai-uat.odd.works"];
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=th`, {
+          headers: {
+            "Referer": referer,
+          }
+      });
       const data = await response.json();
       let locationString = data.display_name || "";
       locationString = locationString.replace(/, /g, " ").replace(/ประเทศไทย/g, "").replace(/\d{5}/g, "").trim();
