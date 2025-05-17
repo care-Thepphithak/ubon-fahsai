@@ -7,7 +7,7 @@ today_one:
   description: "Test Description"
   severity_level: "ลุกลาม"
   tags: <%= ["เผาไร่อ้อย", "เผานาข้าว"].to_json %>
-  created_at: <%= Time.zone.now.change(hour: 9, min: 30) %>
+  created_at: <%= [Time.zone.now, Time.zone.now.change(hour: 9, min: 30)].min %>
 
 today_two:
   lat: "15.2314"
@@ -16,7 +16,7 @@ today_two:
   description: "Test Description"
   severity_level: "รุนแรง"
   tags: <%= ["ไฟป่า", "เผาไร่อ้อย"].to_json %>
-  created_at: <%= Time.zone.now.change(hour: 10, min: 30) %>
+  created_at: <%= [Time.zone.now, Time.zone.now.change(hour: 10, min: 30)].min %>
 
 today_three:
   lat: "15.2314"
@@ -25,7 +25,7 @@ today_three:
   description: "Test Description"
   severity_level: "วิกฤติ"
   tags: <%= ["ไฟป่า", "เผาไร่อ้อย"].to_json %>
-  created_at: <%= Time.zone.now.change(hour: 11, min: 30) %>
+  created_at: <%= [Time.zone.now, Time.zone.now.change(hour: 11, min: 30)].min %>
 
 today_four:
   lat: "15.227666834217334"
@@ -34,7 +34,7 @@ today_four:
   description: "Test Description"
   severity_level: <%= Report::SEVERITIES.sample %>
   tags: <%= ["ไฟป่า", "เผาไร่อ้อย"].to_json %>
-  created_at: <%= Time.zone.now.change(hour: 12, min: 30) %>
+  created_at: <%= [Time.zone.now, Time.zone.now.change(hour: 12, min: 30)].min %>
 
 past_one:
   lat: "15.2314"
