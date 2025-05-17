@@ -49,10 +49,10 @@ export default class extends Controller {
 
   toggleAreaPolygon(event) {
     const button = event.currentTarget;
-    const isSelected = button.classList.contains('bg-[#FF6159]');
+    const isSelected = button.classList.contains('bg-primary');
     
     this.areaButtonTargets.forEach(btn => {
-      btn.classList.remove('bg-[#FF6159]', 'text-white');
+      btn.classList.remove('bg-primary', 'text-white');
       btn.classList.add('bg-white', 'hover:bg-gray-50');
       btn.querySelectorAll('p').forEach(p => p.classList.remove('text-white'));
     });
@@ -67,7 +67,7 @@ export default class extends Controller {
         this.areaSelectTarget.dispatchEvent(new Event('change'));
       }
       button.classList.remove('bg-white', 'hover:bg-gray-50');
-      button.classList.add('bg-[#FF6159]');
+      button.classList.add('bg-primary');
       button.querySelectorAll('p').forEach(p => p.classList.add('text-white'));
     } else {
       this.areaSelectTarget.value = '';
@@ -77,7 +77,7 @@ export default class extends Controller {
 
   resetToggleAreaMenu() {
     this.areaButtonTargets.forEach(btn => {
-      btn.classList.remove('bg-[#FF6159]', 'text-white');
+      btn.classList.remove('bg-primary', 'text-white');
       btn.classList.add('bg-white', 'hover:bg-gray-50');
       btn.querySelectorAll('p').forEach(p => p.classList.remove('text-white'));
     });

@@ -1,8 +1,8 @@
-<div class="w-full h-screen bg-[#F5F5F5] relative flex flex-col items-center justify-center">
-  <div class="absolute bottom-0 left-0-0 w-full h-1/2 flex bg-[#FF6159] z-0"></div>
+<div class="w-full h-screen bg-background relative flex flex-col items-center justify-center">
+  <div class="absolute bottom-0 left-0-0 w-full h-1/2 flex bg-primary z-0"></div>
   <div class="w-[90%] max-w-[800px] md:h-[400px] md:px-12 p-12 flex items-center bg-white border border-[#D7D7D7] rounded-2xl z-10 md:flex-row flex-col">
     <div class="flex flex-col items-center w-full">
-      <h1 class="font-medium text-3xl mb-5 text-[#FF6159]">อุบลฟ้าใส สวัสดี</h1>
+      <h1 class="font-medium text-3xl mb-5 text-primary">อุบลฟ้าใส สวัสดี</h1>
       <%= image_tag "Seal_Ubon_Ratchathani.png", class: "h-42" %>
     </div>
 
@@ -10,11 +10,11 @@
       <%= form_with url: session_url, class: "contents" do |form| %>
         <div class="my-5">
           <%= form.label :email_address, "อีเมล", class: "text-gray-500" %>
-          <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "กรอกอีเมล", value: params[:email_address], class: "block rounded-lg focus:outline-none px-3 py-3 mt-2 w-full bg-[#F0F0F0]" %>
+          <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "กรอกอีเมล", value: params[:email_address], class: "block rounded-lg focus:outline-none px-3 py-3 mt-2 w-full bg-textfield-background" %>
         </div>
         <div class="mt-5">
           <%= form.label :password, "รหัสผ่าน", class: "text-gray-500" %>
-          <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "กรอกรหัสผ่าน", maxlength: 72, class: "block rounded-lg focus:outline-none px-3 py-3 mt-2 w-full bg-[#F0F0F0]" %>
+          <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "กรอกรหัสผ่าน", maxlength: 72, class: "block rounded-lg focus:outline-none px-3 py-3 mt-2 w-full bg-textfield-background" %>
         </div>
 
         <% if alert = flash[:alert] %>
@@ -32,7 +32,7 @@
         <div class="<%= "pt-10" unless notice || alert %>">
           <%= form.submit "เข้าสู่ระบบ",
             class: "flex items-center justify-center gap-2 py-3 w-full cursor-pointer hover:scale-[1.01] transition-all
-                   bg-[#FF6159] text-white hover:bg-[#FF6C64]
+                   bg-primary text-white hover:bg-primary-hover
                    text-lg rounded-lg" %>
         </div>
         <%# TODO: Wait for implement forgot password %>

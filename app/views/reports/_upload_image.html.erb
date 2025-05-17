@@ -6,7 +6,7 @@
         </i>
     </div>
   
-    <label for="report_images" class="bg-[#FF6159] w-[90%] mx-auto text-white hover:bg-[#FF6C64] text-lg px-1 py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] transition-all">
+    <label for="report_images" class="bg-primary w-[90%] mx-auto text-white hover:bg-primary-hover text-lg px-1 py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] transition-all">
         <i class="fas fa-plus"></i>
         เพิ่มรูปภาพ
         <%= form.file_field :images, multiple: true, class: "hidden", data: { report_target: "imagesInput", action: "change->report#handleImageUpload" } %>

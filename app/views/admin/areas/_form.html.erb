@@ -5,7 +5,7 @@
 
             <div data-area-map-target="map" class="h-full min-h-[500px] w-full rounded-xl" id="area-management-map"> </div>
 
-            <div class="w-full xl:w-[550px] bg-[#F3F3F3] flex h-full  flex-col p-5 rounded-xl">
+            <div class="w-full xl:w-[550px] bg-background flex h-full  flex-col p-5 rounded-xl">
                 <div class="flex gap-3 w-full mb-4">
                     <button type="button" data-area-map-target="setAreaButton" class="bg-white w-full text-gray-500 px-3 py-2 rounded-md hover:bg-gray-50 transition-all cursor-pointer" data-action="click->area-map#startEditPolygon">
                         <i class="fa-solid fa-draw-polygon mr-2"></i> กำหนดพื้นที่
@@ -57,7 +57,7 @@
                 <% end %>
 
                 <p data-area-map-target="plsDrawArea" class="text-gray-400 font-light">โปรดระบุพื้นที่ก่อนบันทึก</p>
-                <%= form.submit "บันทึกพื้นที่", data: { area_map_target: "saveButton", action: "click->area-map#savePolygon" }, disabled: true, class: "disabled:bg-gray-200 disabled:text-gray-400 bg-primary w-full text-white mt-3 px-3 py-3 rounded-md hover:bg-[#fb5951] transition-all cursor-pointer" %>
+                <%= form.submit "บันทึกพื้นที่", data: { area_map_target: "saveButton", action: "click->area-map#savePolygon" }, disabled: true, class: "disabled:bg-gray-200 disabled:text-gray-400 bg-primary w-full text-white mt-3 px-3 py-3 rounded-md hover:bg-primary-hover transition-all cursor-pointer" %>
 
           </div>
     </div>

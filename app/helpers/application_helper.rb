@@ -1,6 +1,6 @@
 module ApplicationHelper
   def active_link_class(path)
-    request.path.start_with?(path) ? "bg-[#FF6159] text-white" : "bg-white text-gray-500 hover:bg-gray-50 transition-all"
+    request.path.start_with?(path) ? "bg-primary text-white" : "bg-white text-gray-500 hover:bg-gray-50 transition-all"
   end
 
   def breadcrumb_links
