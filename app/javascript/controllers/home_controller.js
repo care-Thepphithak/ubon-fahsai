@@ -76,17 +76,14 @@ export default class extends Controller {
           }
         }
       );
+
       const data = await response.json();
-
-      let locationString = data.display_name || "";
-
-      locationString = locationString
-        .replace(/, /g, " ")
+      let locationString = data.display_name.replace(/, /g, " ")
         .replace(/ประเทศไทย/g, "")
         .replace(/\d{5}/g, "")
-        .trim();
-
+        .trim() || "";
       return locationString || "ไม่พบข้อมูลตำแหน่ง";
+      
     } catch (error) {
       console.error("Error fetching location name:", error);
       return "ไม่พบข้อมูลตำแหน่ง";
