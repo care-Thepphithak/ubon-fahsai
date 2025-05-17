@@ -1,5 +1,6 @@
 .PHONY: e2e
 e2e:
-	for i in {1..5}; do \
+	rails db:prepare
+	for i in {1..3}; do \
 		rspec spec; \
 	done

@@ -44,6 +44,7 @@ describe "Client Report" do
     end
 
     it "no displays report button and not allow to click the report button" do
+       sleep 4
       client_cannot_see '[data-testid="client-report-button"]'
     end
   end
@@ -129,7 +130,6 @@ describe "Client Report" do
   end
 
   def client_click(selector)
-    sleep 2
     button = find(selector)
     expect(button).to be_visible
     button.click
