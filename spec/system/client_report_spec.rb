@@ -129,6 +129,7 @@ describe "Client Report" do
   end
 
   def client_click(selector)
+    sleep 2
     button = find(selector)
     expect(button).to be_visible
     button.click
@@ -151,7 +152,7 @@ describe "Client Report" do
   end
 
   def client_click_report_button
-    sleep 3
+    sleep 4
     client_click '[data-testid="client-report-button"]'
   end
 

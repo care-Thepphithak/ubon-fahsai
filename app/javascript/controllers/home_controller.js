@@ -14,7 +14,8 @@ export default class extends Controller {
   getCurrentLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        this.showCurrentLocation.bind(this),
+        this.showTitleCurrentLocation.bind(this),
+        this.updateReportDistances.bind(this),
         this.showError.bind(this)
       );
     } else {
@@ -23,7 +24,7 @@ export default class extends Controller {
     }
   }
 
-  async showCurrentLocation(position) {
+  async showTitleCurrentLocation(position) {
     const lat = position.coords.latitude;
     const long = position.coords.longitude;
     const locationName = await this.getLocationName(lat, long);
@@ -91,7 +92,9 @@ export default class extends Controller {
     return nearestDistance;
   }
 
-  updateReportDistances(lat, long) {
+    updateReportDistances(position) {
+    const lat = position.coords.latitude;
+    const long = position.coords.longitude;
     const toRad = (value) => (value * Math.PI) / 180;
     const earthRadiusKm = 6371;
 
