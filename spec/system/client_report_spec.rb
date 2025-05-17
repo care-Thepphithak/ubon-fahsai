@@ -151,6 +151,7 @@ describe "Client Report" do
   end
 
   def client_click_report_button
+    sleep 3
     client_click '[data-testid="client-report-button"]'
   end
 
