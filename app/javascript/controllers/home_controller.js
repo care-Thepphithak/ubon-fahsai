@@ -14,7 +14,7 @@ export default class extends Controller {
   getCurrentLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        this.passPosition.bind(this),
+        this.distributePosition.bind(this),
         this.showError.bind(this)
       );
     } else {
@@ -23,7 +23,7 @@ export default class extends Controller {
     }
   }
 
-  async passPosition(position) {
+  async distributePosition(position) {
     const lat = position.coords.latitude;
     const long = position.coords.longitude;
     this.showTitleCurrentLocation(lat, long);
