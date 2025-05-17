@@ -83,7 +83,7 @@ export default class extends Controller {
         .replace(/\d{5}/g, "")
         .trim() || "";
       return locationString || "ไม่พบข้อมูลตำแหน่ง";
-      
+
     } catch (error) {
       console.error("Error fetching location name:", error);
       return "ไม่พบข้อมูลตำแหน่ง";
