@@ -207,12 +207,12 @@ export default class extends Controller {
 
     if (this.selectedTags.includes(tag)) {
       this.selectedTags = this.selectedTags.filter(t => t !== tag);
-      event.target.classList.remove("bg-[#FF6C64]", "text-white");
+      event.target.classList.remove("bg-primary", "text-white");
       event.target.classList.add("bg-gray-200", "text-gray-700");
     } else {
       this.selectedTags.push(tag);
       event.target.classList.remove("bg-gray-200", "text-gray-700");
-      event.target.classList.add("bg-[#FF6C64]", "text-white");
+      event.target.classList.add("bg-primary", "text-white");
     }
     document.querySelector("input[name='report[tags]']").value = JSON.stringify(this.selectedTags);
   }

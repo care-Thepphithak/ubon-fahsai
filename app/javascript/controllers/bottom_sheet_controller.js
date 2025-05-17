@@ -4,17 +4,17 @@ export default class extends Controller {
   static targets = ["bottomSheet"]
 
   connect() {
-    const openFlag = this.data.get("open");
-
-    if (openFlag === "true") {
+    if (this.isOpen()) {
       this.open();
     }
   }
 
+  isOpen() {
+    return this.data.get("open") === "true";
+  }
+
   open(event) {
-    if (event) {
-      event.preventDefault();
-    }
+    event?.preventDefault();
 
     const locationNameBottomSheet = document.getElementById("location-name-bottom-sheet");
     const locationName = document.getElementById("location-name");
@@ -33,7 +33,7 @@ export default class extends Controller {
     modalContent.classList.remove("slide-down");
     modalContent.classList.add("slide-up");
 
-    if (this.data.get("open") === "true") {
+    if (this.isOpen()) {
       setTimeout(() => this.close(), 6000);
     }
 
@@ -54,7 +54,7 @@ export default class extends Controller {
 
     this.bottomSheetTarget.removeEventListener('click', this.handleBackdropClick);
 
-    if (this.data.get("open") === "true") {
+    if (this.isOpen()) {
       setTimeout(() => this.bottomSheetTarget.remove(), 300);
     }
   }
