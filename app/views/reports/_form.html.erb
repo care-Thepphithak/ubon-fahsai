@@ -14,10 +14,10 @@
     <div data-report-target="step" >
       <div class="h-svh overflow-y-scroll w-full flex flex-col items-center py-6 justify-between">
         <div class="w-[90%] mx-auto relative text-center">
-          <%= link_to root_path, class: "absolute text-[#FF6159] px-1 py-2 top-0 left-0 text-2xl" do %>
+          <%= link_to root_path, class: "absolute text-primary px-1 py-2 top-0 left-0 text-2xl" do %>
             <i class="fa-solid fa-angle-left"></i>
           <% end %>
-          <h1 class="text-2xl font-medium text-[#FF6159]">รายงานไฟไหม้</h1>
+          <h1 class="text-2xl font-medium text-primary">รายงานไฟไหม้</h1>
           <p class="text-sm text-gray-500"><%= l(Time.current, format: :full, locale: :th) %></p>
         </div>
 
@@ -30,7 +30,7 @@
             disabled
             data-testid="upload-step-next-button"
             data-action="click->report#next"
-            class="flex items-center justify-center gap-2 text-lg px-1 py-3 rounded-xl text-[#FF6159] hover:scale-[1.01] hover:text-[#FF6C64] transition-all opacity-50 mt-3 cursor-pointer">
+            class="flex items-center justify-center gap-2 text-lg px-1 py-3 rounded-xl text-primary hover:scale-[1.01] hover:text-[#FF6C64] transition-all opacity-50 mt-3 cursor-pointer">
             <span>ถัดไป</span>
             <i class="fa-solid fa-angle-right"></i>
           </button>
@@ -45,10 +45,10 @@
             <button 
               type="button"
               data-action="click->report#prev"
-              class="absolute px-0 top-0 left-0 text-2xl text-[#FF6159] cursor-pointer hover:scale-[1.01] hover:text-[#FF6C64] transition-all">
+              class="absolute px-0 top-0 left-0 text-2xl text-primary cursor-pointer hover:scale-[1.01] hover:text-[#FF6C64] transition-all">
               <i class="fa-solid fa-angle-left"></i>
             </button>
-            <h1 class="text-2xl font-meduim text-[#FF6159]">ระบุรายละเอียด</h1>
+            <h1 class="text-2xl font-meduim text-primary">ระบุรายละเอียด</h1>
             <p class="text-sm text-gray-500"><%= l(Time.current, format: :full, locale: :th) %></p>
           </div>
 
@@ -60,7 +60,7 @@
             type="button"
             data-testid="detail-step-next-button"
             data-action="click->report#next"
-            class="flex items-center justify-center gap-2 text-lg px-1 py-3 rounded-xl text-[#FF6159] cursor-pointer hover:scale-[1.01] hover:text-[#FF6C64] transition-all">
+            class="flex items-center justify-center gap-2 text-lg px-1 py-3 rounded-xl text-primary cursor-pointer hover:scale-[1.01] hover:text-[#FF6C64] transition-all">
             <span>ถัดไป</span>
             <i class="fa-solid fa-angle-right"></i>
           </button>
@@ -75,10 +75,10 @@
             <button 
               type="button"
               data-action="click->report#prev"
-              class="absolute px-0 top-0 left-0 text-2xl text-[#FF6159] cursor-pointer hover:scale-[1.01] hover:text-[#FF6C64] transition-all">
+              class="absolute px-0 top-0 left-0 text-2xl text-primary cursor-pointer hover:scale-[1.01] hover:text-[#FF6C64] transition-all">
               <i class="fa-solid fa-angle-left"></i>
             </button>
-            <h1 class="text-2xl font-meduim text-[#FF6159]">ระบุตำแหน่งไฟไหม้</h1>
+            <h1 class="text-2xl font-meduim text-primary">ระบุตำแหน่งไฟไหม้</h1>
             <p id="location-name" class="mt-2 text-base w-[80%] line-clamp-1 mx-auto text-gray-500">กำลังหาตำแหน่ง...</p>
             <p class="text-sm text-gray-500"><%= l(Time.current, format: :full, locale: :th) %></p>
           </div>

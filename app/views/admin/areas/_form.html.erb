@@ -34,7 +34,7 @@
                                 @area.users.include?(user), 
                                 id: checkbox_id, 
                                 class: "peer absolute opacity-0 h-0 w-0" %>
-                            <div class="w-5 h-5 border border-gray-300 rounded flex items-center justify-center peer-checked:bg-[#FF6159] peer-checked:border-[#FF6159] transition-colors">
+                            <div class="w-5 h-5 border border-gray-300 rounded flex items-center justify-center peer-checked:bg-primary peer-checked:border-primary transition-colors">
                                 <i class="fa-solid fa-check text-white text-sm"></i>
                             </div>
                             </div>
@@ -57,7 +57,7 @@
                 <% end %>
 
                 <p data-area-map-target="plsDrawArea" class="text-gray-400 font-light">โปรดระบุพื้นที่ก่อนบันทึก</p>
-                <%= form.submit "บันทึกพื้นที่", data: { area_map_target: "saveButton", action: "click->area-map#savePolygon" }, disabled: true, class: "disabled:bg-gray-200 disabled:text-gray-400 bg-[#FF6159] w-full text-white mt-3 px-3 py-3 rounded-md hover:bg-[#fb5951] transition-all cursor-pointer" %>
+                <%= form.submit "บันทึกพื้นที่", data: { area_map_target: "saveButton", action: "click->area-map#savePolygon" }, disabled: true, class: "disabled:bg-gray-200 disabled:text-gray-400 bg-primary w-full text-white mt-3 px-3 py-3 rounded-md hover:bg-[#fb5951] transition-all cursor-pointer" %>
 
           </div>
     </div>

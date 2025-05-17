@@ -1,8 +1,8 @@
 <%= render "shared/bottom_sheet" do %>
-    <h2 class="text-2xl text-[#FF6159] pb-[20px]">ส่งรายงานไฟไหม้</h2>
+    <h2 class="text-2xl text-primary pb-[20px]">ส่งรายงานไฟไหม้</h2>
     <p class="text-sm text-gray-500 pb-2"><%= l(Time.current, format: :full, locale: :th) %></p>
     <p id="location-name-bottom-sheet" class="text-center text-lg text-gray-500 pb-[30px]"></p>
 
-    <%= form.submit "ยืนยัน", data: { action: "click->bottom-sheet#submit", testid: "submit-report-button" }, class:["cursor-pointer bg-[#FF6159] w-full text-white hover:bg-[#FF6C64] text-lg px-1 py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] transition-all"] %>
+    <%= form.submit "ยืนยัน", data: { action: "click->bottom-sheet#submit", testid: "submit-report-button" }, class:["cursor-pointer bg-primary w-full text-white hover:bg-primary-hover text-lg px-1 py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] transition-all"] %>
     <button data-action="click->bottom-sheet#close" class="w-full mt-2 text-lg px-1 py-3 rounded-xl text-center text-[#8D8D8D] hover:text-[#5D5D5D] cursor-pointer hover:scale-[1.01] transition-all">ยกเลิก</button>
 <% end %>

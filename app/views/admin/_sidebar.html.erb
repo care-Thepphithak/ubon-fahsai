@@ -1,7 +1,7 @@
 <div data-sidebar-target="sidebar" class="fixed lg:relative top-0 px-4 left-0 z-[2000] min-w-[250px] w-[250px] flex flex-col py-6 justify-between h-svh bg-gray-100 transition-transform transform -translate-x-full duration-500 lg:translate-x-0">
     <div class="flex w-full flex-col items-center gap-3">
         <div class="w-full flex items-center justify-center">
-            <div class="flex items-center justify-center text-2xl text-[#FF6159]">
+            <div class="flex items-center justify-center text-2xl text-primary">
                 <i class="fa-solid fa-chart-pie mr-3"></i> <span class="font-medium">Admin</span>
             </div>
             <button data-action="click->sidebar#toggle" class="ml-auto p-2 lg:hidden rounded-lg flex items-center text-gray-400 text-2xl cursor-pointer hover:scale-110 transition-all">
@@ -14,7 +14,7 @@
     </div>
 
     <div class="flex flex-col w-full items-center gap-3 lg:hidden">
-        <h2 class="text-[#FF6159] flex items-center gap-2 mt-4 line-clamp-1">
+        <h2 class="text-primary flex items-center gap-2 mt-4 line-clamp-1">
             <i class="fa-solid fa-circle-user"></i>
             <%=Current.user.email_address%>
         </h2>
