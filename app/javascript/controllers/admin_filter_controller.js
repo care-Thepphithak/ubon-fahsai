@@ -27,6 +27,19 @@ export default class extends Controller {
     this.filter();
   }
 
+  parseTags(tags) {
+    if (typeof tags === "string") {
+      try {
+        return JSON.parse(tags);
+      } catch (error) {
+        return [];
+      }
+    } else if (Array.isArray(tags)) {
+      return tags;
+    }
+    return [];
+  }
+
   filter() {
     if (!this.hasReportsValue) {
       return;
@@ -34,35 +47,22 @@ export default class extends Controller {
 
     let filteredReports = this.reportsValue;
 
-    // Filter by selectedTag
     if (this.selectedTag) {
       filteredReports = filteredReports.filter((report) => {
-        let tags = [];
-
-        if (typeof report.tags === "string") {
-          try {
-            tags = JSON.parse(report.tags);
-          } catch (error) {
-            tags = [];
-          }
-        } else if (Array.isArray(report.tags)) {
-          tags = report.tags;
-        }
-
+        const tags = this.parseTags(report.tags);
         return tags.includes(this.selectedTag);
       });
     }
 
-    // Sort by selectedDateRange (latest or oldest)
     if (this.selectedDateRange) {
       filteredReports = filteredReports.sort((a, b) => {
         const dateA = new Date(a.created_at);
         const dateB = new Date(b.created_at);
 
         if (this.selectedDateRange === "latest") {
-          return dateB - dateA; // Sort descending (latest first)
+          return dateB - dateA;
         } else if (this.selectedDateRange === "oldest") {
-          return dateA - dateB; // Sort ascending (oldest first)
+          return dateA - dateB;
         }
         return 0;
       });
@@ -74,17 +74,7 @@ export default class extends Controller {
   updateReportList(reports) {
     this.reportContainerTarget.innerHTML = reports
       .map((report, index) => {
-        let tags = [];
-
-        if (typeof report.tags === "string") {
-          try {
-            tags = JSON.parse(report.tags);
-          } catch (error) {
-            tags = [];
-          }
-        } else if (Array.isArray(report.tags)) {
-          tags = report.tags;
-        }
+        const tags = this.parseTags(report.tags);
 
         let tagsHtml = tags
           .map((tag) => `<p class="px-2 py-1 text-gray-500 bg-gray-100 rounded-md font-normal" data-testid="tags">${tag || "ไม่มีข้อมูล"}</p>`)
@@ -106,7 +96,7 @@ export default class extends Controller {
               </div>
             </div>
           </div>
-         `;
+        `;
       })
       .join("");
   }
