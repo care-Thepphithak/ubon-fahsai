@@ -80,6 +80,8 @@ export default class extends Controller {
   }
 
   updateReportList(reports) {
+    this.reportContainerTarget.scrollTop = 0;
+
     this.reportContainerTarget.innerHTML = reports
       .map((report, index) => {
         const tags = this.parseTags(report.tags);
