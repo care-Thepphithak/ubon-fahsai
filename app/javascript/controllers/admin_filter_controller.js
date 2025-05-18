@@ -48,27 +48,35 @@ export default class extends Controller {
     let filteredReports = this.reportsValue;
 
     if (this.selectedTag) {
-      filteredReports = filteredReports.filter((report) => {
-        const tags = this.parseTags(report.tags);
-        return tags.includes(this.selectedTag);
-      });
+      filteredReports = this.filterBySelectedTag(filteredReports);
     }
 
     if (this.selectedDateRange) {
-      filteredReports = filteredReports.sort((a, b) => {
-        const dateA = new Date(a.created_at);
-        const dateB = new Date(b.created_at);
-
-        if (this.selectedDateRange === "latest") {
-          return dateB - dateA;
-        } else if (this.selectedDateRange === "oldest") {
-          return dateA - dateB;
-        }
-        return 0;
-      });
+      filteredReports = this.sortByDateRange(filteredReports);
     }
 
     this.updateReportList(filteredReports);
+  }
+
+  filterBySelectedTag(reports) {
+    return reports.filter((report) => {
+      const tags = this.parseTags(report.tags);
+      return tags.includes(this.selectedTag);
+    });
+  }
+
+  sortByDateRange(reports) {
+    return reports.sort((a, b) => {
+      const dateA = new Date(a.created_at);
+      const dateB = new Date(b.created_at);
+
+      if (this.selectedDateRange === "latest") {
+        return dateB - dateA;
+      } else if (this.selectedDateRange === "oldest") {
+        return dateA - dateB;
+      }
+      return 0;
+    });
   }
 
   updateReportList(reports) {
