@@ -19,7 +19,7 @@ today_two:
   created_at: <%= [Time.zone.now, Time.zone.now.change(hour: 10, min: 30)].min %>
 
 today_three:
-  lat: "15.2314"
+  lat: "15.25"
   long: "104.8567"
   location_name: "กลางเมือง"
   description: "Test Description"
