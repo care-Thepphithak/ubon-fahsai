@@ -11,7 +11,6 @@ export default class extends Controller {
       console.error("Map element not found.");
       return;
     }
-
     this.addCustomEventListeners();
   }
 
@@ -25,7 +24,6 @@ export default class extends Controller {
 
   handleTurboStream(event) {
     const turboStream = event.detail.newStream;
-
     if (turboStream.target === "location-name") {
       document.getElementById("location-name").classList.remove("line-clamp-1");
     }
@@ -35,7 +33,6 @@ export default class extends Controller {
     if (this.mapTarget._leaflet_id) {
       return;
     }
-
     const map = L.map("map", {
       center: [15.2313, 104.8567],
       zoom: 13,
@@ -50,7 +47,6 @@ export default class extends Controller {
 
     this.locateUser(map);
     const locationButton = L.control({ position: "bottomright" });
-
     locationButton.onAdd = () => {
       const div = L.DomUtil.create("div", "leaflet-bar leaflet-control");
       const button = L.DomUtil.create("a", "flex items-center justify-center w-7 h-7 text-2xl", div);
@@ -82,17 +78,10 @@ export default class extends Controller {
     this.userAreasValue.forEach((area) => {
       const areaId = Object.keys(area);
       const polygon = L.polygon(area[areaId], { fillOpacity: 0 }).addTo(map);
-
       map.on('moveend', () => polygon.redraw());
       map.on('zoomend', () => polygon.redraw());
       map.on('movestart', () => polygon.bringToFront());
     });
-
-    // this.userAreaPolygon = L.polygon(this.userAreasValue, {
-    //   fillOpacity: 0
-    // }).addTo(map);
-
-
   }
 
   isInsideArea(lat, lng) {
@@ -133,29 +122,30 @@ export default class extends Controller {
 
   enableSubmitButton() {
     const confirmButton = document.getElementById("submit");
-
     if (confirmButton) {
       confirmButton.removeAttribute("disabled");
       confirmButton.classList.remove("bg-gray-200", "cursor-not-allowed");
-      confirmButton.classList.add("bg-[#FF6159]", "hover:bg-[#FF6C64]");
+      confirmButton.classList.add("bg-primary", "hover:bg-primary-hover");
     }
   }
 
   disableSubmitButton() {
     const confirmButton = document.getElementById("submit");
-
     if (confirmButton) {
       confirmButton.setAttribute("disabled", "true");
       confirmButton.classList.add("bg-gray-200", "cursor-not-allowed");
-      confirmButton.classList.remove("bg-[#FF6159]", "hover:bg-[#FF6C64]");
+      confirmButton.classList.remove("bg-primary", "hover:bg-primary-hover");
     }
   }
 
   async getLocationName(lat, lng) {
     try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=th`
-      );
+      const referer = ["https://ubon-fahsai-dev.odd.works", "https://ubon-fahsai-uat.odd.works"];
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=th`, {
+          headers: {
+            "Referer": referer,
+          }
+      });
       const data = await response.json();
       let locationString = data.display_name || "";
       locationString = locationString.replace(/, /g, " ").replace(/ประเทศไทย/g, "").replace(/\d{5}/g, "").trim();
@@ -166,31 +156,31 @@ export default class extends Controller {
     }
   }
 
+  createLoadingControl() {
+  const loadingControl = L.control({ position: "topright" });
+  loadingControl.onAdd = () => {
+    const div = L.DomUtil.create(
+      "div",
+      "leaflet-bar leaflet-control bg-white px-3 py-2 rounded-lg shadow-md"
+    );
+    div.innerHTML = `
+      <div class="flex items-center gap-2" data-testid="location-loading">
+        <span class="text-sm text-gray-700">กำลังหาตำแหน่ง...</span>
+        <i class="fa-solid fa-circle-notch fa-spin"></i>
+      </div>
+    `;
+    return div;
+  };
+  return loadingControl;
+}
+
   locateUser(map) {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported by this browser.");
       return;
     }
-
-    const loadingControl = L.control({ position: "topright" });
-    loadingControl.onAdd = () => {
-      const div = L.DomUtil.create(
-        "div",
-        "leaflet-bar leaflet-control bg-white px-3 py-2 rounded-lg shadow-md"
-      );
-
-      div.innerHTML = `
-          <div class="flex items-center gap-2">
-            <span class="text-sm text-gray-700">กำลังหาตำแหน่ง...</span>
-            <i class="fa-solid fa-circle-notch fa-spin"></i>
-          </div>
-        `;
-
-      return div;
-    };
-
+    const loadingControl = this.createLoadingControl();
     loadingControl.addTo(map);
-
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const lat = position.coords.latitude;

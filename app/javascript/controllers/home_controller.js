@@ -14,7 +14,7 @@ export default class extends Controller {
   getCurrentLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        this.showCurrentLocation.bind(this),
+        this.distributePosition.bind(this),
         this.showError.bind(this)
       );
     } else {
@@ -23,35 +23,67 @@ export default class extends Controller {
     }
   }
 
-  async showCurrentLocation(position) {
+  async distributePosition(position) {
     const lat = position.coords.latitude;
     const long = position.coords.longitude;
+    this.showTitleCurrentLocation(lat, long);
+    this.showNumberNearestDistance(lat, long);
+    this.updateReportDistances(lat, long);
+  }
+
+  async showTitleCurrentLocation(lat, long) {
     const locationName = await this.getLocationName(lat, long);
     this.currentLocationTarget.innerHTML = locationName;
+  }
 
+  async showNumberNearestDistance(lat, long) {
     const nearestDistance = this.calculateNearestDistance(lat, long, this.reportsValue);
     this.nearestDistanceTarget.innerHTML = isFinite(nearestDistance) ? nearestDistance.toFixed(2) : " -";
-  
-    // Remove the specified classes
-    this.updateReportDistances(lat, long);
+  }
+
+  updateReportDistances(lat, long) {
+    const toRad = (value) => (value * Math.PI) / 180;
+    const earthRadiusKm = 6371;
+
+    this.reportsValue.forEach((report, index) => {
+      const dLat = toRad(report.lat - lat);
+      const dLong = toRad(report.long - long);
+
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat)) *
+        Math.cos(toRad(report.lat)) *
+        Math.sin(dLong / 2) *
+        Math.sin(dLong / 2);
+
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = earthRadiusKm * c;
+
+      const distanceElement = this.distanceTargets[index];
+      distanceElement.innerHTML = `${distance.toFixed(2)} <span class="text-sm text-end">กม.</span>`;
+
+      distanceElement.classList.remove('min-h-[50px]', 'animate-pulse', 'bg-gray-300', 'rounded-md');
+    });
   }
 
   async getLocationName(lat, lng) {
     try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=th`
+      const referer = ["https://ubon-fahsai-dev.odd.works", "https://ubon-fahsai-uat.odd.works"];
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=th`,
+        {
+          headers: {
+            "Referer": referer
+          }
+        }
       );
+
       const data = await response.json();
-
-      let locationString = data.display_name || "";
-
-      locationString = locationString
-        .replace(/, /g, " ")
+      let locationString = data.display_name.replace(/, /g, " ")
         .replace(/ประเทศไทย/g, "")
         .replace(/\d{5}/g, "")
-        .trim();
-
+        .trim() || "";
       return locationString || "ไม่พบข้อมูลตำแหน่ง";
+
     } catch (error) {
       console.error("Error fetching location name:", error);
       return "ไม่พบข้อมูลตำแหน่ง";
@@ -61,7 +93,6 @@ export default class extends Controller {
   calculateNearestDistance(lat, long, reports) {
     const toRad = (value) => (value * Math.PI) / 180;
     const earthRadiusKm = 6371;
-
     let nearestDistance = Infinity;
 
     reports.forEach((report) => {
@@ -71,9 +102,9 @@ export default class extends Controller {
       const a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(toRad(lat)) *
-          Math.cos(toRad(report.lat)) *
-          Math.sin(dLong / 2) *
-          Math.sin(dLong / 2);
+        Math.cos(toRad(report.lat)) *
+        Math.sin(dLong / 2) *
+        Math.sin(dLong / 2);
 
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const distance = earthRadiusKm * c;
@@ -84,32 +115,6 @@ export default class extends Controller {
     });
 
     return nearestDistance;
-  }
-
-    updateReportDistances(lat, long) {
-    const toRad = (value) => (value * Math.PI) / 180;
-    const earthRadiusKm = 6371;
-  
-    this.reportsValue.forEach((report, index) => {
-      const dLat = toRad(report.lat - lat);
-      const dLong = toRad(report.long - long);
-  
-      const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(toRad(lat)) *
-          Math.cos(toRad(report.lat)) *
-          Math.sin(dLong / 2) *
-          Math.sin(dLong / 2);
-  
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      const distance = earthRadiusKm * c;
-  
-      const distanceElement = this.distanceTargets[index];
-      distanceElement.innerHTML = `${distance.toFixed(2)} <span class="text-sm text-end">กม.</span>`;
-  
-      // Remove the specified classes
-      distanceElement.classList.remove('min-h-[50px]', 'animate-pulse', 'bg-gray-300', 'rounded-md');
-    });
   }
 
   showError(error) {

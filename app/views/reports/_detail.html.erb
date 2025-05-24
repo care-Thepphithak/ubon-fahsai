@@ -22,7 +22,7 @@
         <div class="mt-4">
             <div class="flex items-center">
                 <%= form.label :severity_level, "ระดับความรุนแรง ", class: "text-gray-400" %>
-                <span data-testid="severity-level-label" data-report-target="severityLabel" class="ml-2 text-[#FF6C64]">ปานกลาง</span>
+                <span data-testid="severity-level-label" data-report-target="severityLabel" class="ml-2 text-primary">ปานกลาง</span>
             </div>
             
             <div class="relative mb-6">
@@ -35,7 +35,7 @@
                         [&::-webkit-slider-thumb]:h-6 
                         [&::-webkit-slider-thumb]:w-6 
                         [&::-webkit-slider-thumb]:rounded-full 
-                        [&::-webkit-slider-thumb]:bg-[#FF6C64] 
+                        [&::-webkit-slider-thumb]:bg-primary
                         [&::-webkit-slider-thumb]:-mt-[10px] 
                         [&::-webkit-slider-thumb]:cursor-pointer"
                     name="report[severity_level]"

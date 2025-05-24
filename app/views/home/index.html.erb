@@ -8,9 +8,9 @@
   </div>
 <% end %>
 
-<div data-controller="home" class="bg-[#F5F5F5] min-h-svh" data-home-reports-value="<%= @reports.to_json %>">
+<div data-controller="home" class="bg-background min-h-svh" data-home-reports-value="<%= @reports.to_json %>">
 
-  <div  class="bg-[#FF6159] overflow-hidden h-75 sm:h-70">
+  <div  class="bg-primary overflow-hidden h-75 sm:h-70">
 
     <div class="py-10 sm:py-20 w-[90%] mx-auto ">
       <div class="flex justify-between items-center">
@@ -19,10 +19,10 @@
                 <div data-controller="bottom-sheet">
                   <i data-action="click->bottom-sheet#open" class="fa-solid fa-bars p2 rounded-lg flex gap-2 items-center text-white text-3xl cursor-pointer hover:scale-110 transition-all"></i>
                   <%= render "shared/bottom_sheet" do %>
-                      <i class="fa-solid fa-circle-user text-6xl text-[#FF6159] pb-[20px]"></i>
-                      <h2 class="text-2xl text-[#FF6159] pb-[30px]"><%=Current.user.email_address%></h2>
+                      <i class="fa-solid fa-circle-user text-6xl text-primary pb-[20px]"></i>
+                      <h2 class="text-2xl text-primary pb-[30px]"><%=Current.user.email_address%></h2>
                       <%= button_to session_path, method: :delete, class: "w-full", form_class: "w-[90%]" do %>
-                        <div class="flex items-center justify-center gap-2 w-full bg-[#F3F3F3] text-gray-500 hover:bg-gray-200 text-lg py-3 rounded-xl cursor-pointer hover:scale-[1.01] transition-all">
+                        <div class="flex items-center justify-center gap-2 w-full bg-accent text-gray-500 hover:bg-accent-hover text-lg py-3 rounded-xl cursor-pointer hover:scale-[1.01] transition-all">
                           <span>ออกจากระบบ</span>
                         </div>
                       <% end %>
@@ -53,7 +53,7 @@
           <div class="flex flex-col w-[100%] bg-white p-4 rounded-lg  text-gray-600">
             <h3>พื้นที่ไฟไหม้</h3>
             <div class="flex items-start w-full justify-between gap-5">
-                <h4 data-testid="client-report-counter" class="text-4xl text-start"><%=@total_today_report%></h4>
+                <h4 data-testid="client-report-counter" class="text-4xl text-start" id="report_counter"><%=@total_today_report%></h4>
                 <div class="flex flex-col items-end w-max">
                     <%= render "shared/trend", trend: @report_trend %>
                     <p class="text-gray-400">การรายงาน</p>
@@ -102,7 +102,7 @@
 
           </div>
           <%if @user_areas_exist %>
-            <%= link_to reports_path, class: "w-[90%] flex fixed bottom-4  text-center items-center justify-center block px-5 py-3 bg-[#FF6159] text-white rounded-md cursor-pointer hover:scale-[1.01] transition-all ", data: { testid: "client-report-button" } do %>
+            <%= link_to reports_path, class: "w-[90%] flex fixed bottom-4  text-center items-center justify-center block px-5 py-3 bg-primary text-white rounded-md cursor-pointer hover:scale-[1.01] transition-all ", data: { testid: "client-report-button" } do %>
               <svg class="inline-block mr-2" width="20" height="26" viewBox="0 0 30 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M8.27344 35.0512C1.092 31.0038 -0.798717 27.1728 0.282262 21.9405C1.08029 18.077 3.69339 14.9336 3.94394 11.0775C5.06018 13.1088 5.52659 14.5736 5.65132 16.6963C9.20151 12.3466 11.5475 6.32517 11.6865 0C11.6865 0 20.9334 5.43323 21.5402 13.6402C22.3362 11.9486 22.7369 9.26193 21.9409 7.5207C24.329 9.26202 38.3067 24.7203 20.0476 35.0512C23.4805 28.367 20.9332 19.3479 14.9728 15.1825C15.3709 16.9736 14.673 23.6538 12.036 26.5892C12.7667 21.6845 11.3409 19.6105 11.3409 19.6105C11.3409 19.6105 10.8515 22.3578 8.95276 25.133C7.2189 27.6673 6.01752 30.357 8.27344 35.0512Z" fill="currentColor"/>
               </svg>

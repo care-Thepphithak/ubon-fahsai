@@ -11,7 +11,7 @@
               <span class="mr-4 text-gray-50 pt-2 truncate">
                 <i class="fa-solid fa-circle-user pr-2"></i><%= Current.user.email_address %>
               </span>
-              <%= button_to session_path, method: :delete, class: "px-4 py-2 rounded-lg flex bg-[#F3F3F3] gap-2 items-center text-gray-500 text-base cursor-pointer hover:bg-gray-200 transition-all" do %>
+              <%= button_to session_path, method: :delete, class: "px-4 py-2 rounded-lg flex bg-background gap-2 items-center text-gray-500 text-base cursor-pointer hover:bg-gray-200 transition-all" do %>
                 <i class="fa fa-sign-out-alt"></i>
                 <span>ออกจากระบบ</span>
               <% end %>

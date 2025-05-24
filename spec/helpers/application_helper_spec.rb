@@ -9,7 +9,7 @@ RSpec.describe ApplicationHelper, type: :helper do
         allow(helper.request).to receive(:path).and_return('/areas/edit')
       end
       it 'returns the active class' do
-        expect(helper.active_link_class(path)).to eq('bg-[#FF6159] text-white')
+        expect(helper.active_link_class(path)).to eq('bg-primary text-white')
       end
     end
 

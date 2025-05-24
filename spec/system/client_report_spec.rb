@@ -44,6 +44,7 @@ describe "Client Report" do
     end
 
     it "no displays report button and not allow to click the report button" do
+       sleep 4
       client_cannot_see '[data-testid="client-report-button"]'
     end
   end
@@ -151,6 +152,7 @@ describe "Client Report" do
   end
 
   def client_click_report_button
+    sleep 4
     client_click '[data-testid="client-report-button"]'
   end
 

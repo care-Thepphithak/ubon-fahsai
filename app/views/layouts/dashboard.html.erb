@@ -8,9 +8,9 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="icon" href="/ubon_fahshi_logo.png" type="image/png">
+    <link rel="icon" href="/ubon_fahshi_logo.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/ubon_fahshi_logo.png">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
@@ -24,11 +24,11 @@
   <div data-controller="sidebar" class="w-full flex">
     <%= render "admin/sidebar" %>
     <div class="w-full flex flex-col h-screen relative lg:overflow-y-scroll">
-      <div class="w-full absolute z-[-1] flex mx-auto h-64 bg-[#FF6159]"></div>
+      <div class="w-full absolute z-[-1] flex mx-auto h-64 bg-primary"></div>
       <%= render "admin/header"%>
       <%= yield %>
       <div class="w-full p-4 mt-4 text-center text-gray-400">
-        Ubon Fahsai &copy; <%= Time.current.year %>, Made with <i class="fa-solid fa-heart text-[#FF6159]"></i> by ODDS TEAM
+        Ubon Fahsai &copy; <%= Time.current.year %>, Made with <i class="fa-solid fa-heart text-primary"></i> by ODDS TEAM
       </div>
     </div>
   </div>
