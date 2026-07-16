@@ -17,7 +17,7 @@ gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 # Use PostgreSQL as the database for Active Record
-gem "pg", "~> 1.5", ">= 1.5.4"
+gem "pg", "~> 1.6"
 # Aws S3
 gem "aws-sdk-s3"
 
