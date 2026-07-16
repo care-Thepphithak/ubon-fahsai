@@ -39,7 +39,7 @@ jobs:
           echo "${{ secrets.AZURE_CREDENTIALS }}" | base64 --decode > azure_credentials.json
 
       - name: Deploy to Azure VM using docker-compose
-        uses: azure/cli@v1
+        uses: azure/cli@v3
         with:
           inlineScript: |
             az login --service-principal --username "$(jq -r .clientId azure_credentials.json)" \
